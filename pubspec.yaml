@@ -36,7 +36,10 @@ dependencies:
   cupertino_icons: ^1.0.8
   google_fonts: ^5.0.0
   google_nav_bar: ^5.0.6
-  provider:
+
+  isar: ^3.1.0  # Hoặc phiên bản mới nhất
+  isar_flutter_libs: ^3.1.0  # Để sử dụng Isar trên Flutter
+  path_provider: ^2.0.0
 
 dev_dependencies:
   flutter_test:
@@ -48,7 +51,9 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^5.0.0
-
+  build_runner: ^2.3.0
+  isar_generator: ^3.1.0 
+  analyzer: 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 

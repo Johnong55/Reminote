@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:study_app/components/commons/bottom_nav.dart';
-import 'package:study_app/pages/NoteHome.dart';
+import 'package:study_app/screens/NoteHome.dart';
 
 class Homepage extends StatefulWidget {
   const Homepage({super.key});
