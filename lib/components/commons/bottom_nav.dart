@@ -32,6 +32,7 @@ class myBottomNav extends StatelessWidget {
             iconSize: 25.0,
             gap: 10.0,
           ),
+         
         ],
       ),
     );
