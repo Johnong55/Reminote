@@ -73,16 +73,38 @@ class _HomepageState extends State<Homepage> {
                       },
                     ),
                   ),
+                    Container(
+                    margin: const EdgeInsets.only(right: 10),
+                    decoration: BoxDecoration(
+                      color: Colors.grey[800],
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: IconButton(
+                      icon: const Icon(Icons.settings, color: Colors.white),
+                      onPressed: () {
+                        setState(() {
+                          _isSearching = true;
+                        });
+                      },
+                    ),
+                  ),
                 ],
               ),
         ),
       ),
       bottomNavigationBar: myBottomNav(
         onTabChange: (index) {
-          // Xử lý thay đổi tab
+          if (index == 0) {
+            Navigator.pushReplacementNamed(context,'/notes');
+          } else if (index == 1) {
+            Navigator.pushReplacementNamed(context, '/calendar');
+          } else if (index == 2) {
+            Navigator.pushReplacementNamed(context, '/profile');
+          }
         },
       ),
       body: Notehome(), // Gọi widget Notehome ở đây
+      
     );
   }
 }

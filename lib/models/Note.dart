@@ -9,6 +9,7 @@ class Note {
   String? content;
   DateTime? createdAt;
   DateTime? updatedAt;
+  @Index()
   bool? isPinned;
   Note({this.title});
 }
