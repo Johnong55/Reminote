@@ -20,14 +20,14 @@ class myBottomNav extends StatelessWidget {
         tabs: [
           GButton(
             icon: Icons.book,
-            text: 'NOTE',
+            text: 'N O T E',
             textColor: Colors.grey[900],
             iconSize: 25.0,
             gap: 10.0,
           ),
           GButton(
             icon: Icons.task_rounded,
-            text: 'TASK',
+            text: 'R E M I N D E R',
             textColor: Colors.grey[900],
             iconSize: 25.0,
             gap: 10.0,

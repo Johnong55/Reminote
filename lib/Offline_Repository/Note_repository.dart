@@ -6,7 +6,6 @@ class Note_Repository{
   static late Isar _isar;
   final List<Note> currentNotes = [];
 
-
   // Make this method static if you're using _isar as static
   Future<void> initializeIsar() async {
     final dir = await getApplicationDocumentsDirectory();
@@ -17,9 +16,10 @@ class Note_Repository{
   }
   
   // Create a new note
-  Future<void> createNote(String title) async{
-    final newNote = Note(title: title);
-
+  Future<void> createNote(Note newNote) async{
+ 
+    newNote.createdAt = DateTime.now();
+    newNote.updatedAt = DateTime.now();
     // save to db
 
    await _isar.writeTxn(() async {
@@ -62,22 +62,5 @@ class Note_Repository{
   } 
  
   // swap the note position to the top of list when it is pinned
-  Future<void> swapNotePosition(Note note) async {
-    
-
-    await _isar.writeTxn(() async {
-      await _isar.notes.put(note);
-    });
-    // Refresh the currentNotes list to reflect the changes
-    await fetchNote();
-    // Sort the currentNotes list to ensure pinned notes are on top
-    currentNotes.sort((a, b) {
-      if (b.isPinned == true && a.isPinned == false) {
-        return 1;
-      } else if (a.isPinned == true && b.isPinned == false) {
-        return -1;
-      }
-      return 0;
-    });
-  }
+  
 }

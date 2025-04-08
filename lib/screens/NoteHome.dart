@@ -1,57 +1,56 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:study_app/Offline_Repository/Note_repository.dart';
+import 'package:study_app/components/commons/AddNoteDialog.dart';
 import 'package:study_app/components/commons/confirm_dialog.dart';
 import 'package:study_app/components/widgets/Note_Tile.dart';
 import 'package:study_app/models/Note.dart';
+import 'package:study_app/screens/NoteDetailPage.dart';
+import 'package:study_app/services/isar_service.dart';
 
 class Notehome extends StatefulWidget {
-  // final Note note;
-
   const Notehome({super.key});
 
   @override
   State<Notehome> createState() => _NotehomeState();
 }
-class _NotehomeState extends State<Notehome> {
-  final Note_Repository _repository = Note_Repository();
-  List<Note> notes = [];
 
+class _NotehomeState extends State<Notehome> {
+  final NoteService _noteService = NoteService();
+  List<Note> notes = [];
+  Function(Note) onsaveNote(Note note) {
+    print(note.color);   
+    return (Note note) async{
+      await _noteService.createNote(note);
+      setState(() {
+        notes.add(note);
+        _loadNotes();
+      });
+    };
+  }
   @override
   void initState() {
     super.initState();
     _loadNotes();
   }
-// loadnotes from the database
+
   Future<void> _loadNotes() async {
-    await _repository.fetchNote();
+    await _noteService.getAllNotes();
     setState(() {
-      notes = _repository.currentNotes;
+      notes = _noteService.currentNotes;
     });
   }
-  // Rerange the notes in the current note
-
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Notes'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.add),
-            onPressed: () {
-              // Navigate to create note screen or show dialog
-              _showAddNoteDialog();
-            },
-          ),
-        ],
-      ),
+      backgroundColor: Theme.of(context).colorScheme.background,
       body: notes.isEmpty
-          ? const Center(
-            
+          ? Center(
               child: Text(
                 'No notes yet. Tap + to add a new note',
-                style: TextStyle(color: Colors.grey),
+                style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6)),
               ),
             )
           : ListView.builder(
@@ -60,77 +59,55 @@ class _NotehomeState extends State<Notehome> {
                 return NoteTile(
                   note: notes[index],
                   onTap: () {
-                    // Navigate to edit note screen
                     _navigateToEditNote(notes[index]);
                   },
                   onDelete: () async {
-                    await _repository.deleteNote(notes[index]);
+                    await _noteService.deleteNote(notes[index]);
                     _loadNotes();
-                 // Close the confirmation dialog
                   },
                   onPin: () async {
-                    print("Pin pressed");
                     final updatedNote = notes[index];
                     updatedNote.isPinned = !(updatedNote.isPinned ?? false);
-                    await _repository.updateNote(updatedNote);
-                    
+                    await _noteService.updateNote(updatedNote);
                     _loadNotes();
                   },
                 );
               },
             ),
+      floatingActionButton: FloatingActionButton(
+        shape: const CircleBorder(),
+        elevation: 2,
+        onPressed: () {
+
+          Note note = Note();
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => AddNoteDialog(onSave: onsaveNote(note),note: note,),
+            ),
+          ).then((_) {
+              log("notehome : ${note.color}");
+              log("note:${note.toString()}");
+            _loadNotes();
+          });
+       
+        },
+        backgroundColor: Colors.lightBlue[300],
+        child: const Icon(Icons.add, color: Colors.white),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
     );
   }
 
-  void _showAddNoteDialog() {
-    final TextEditingController titleController = TextEditingController();
-
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Add New Note'),
-          content: TextField(
-            cursorColor: Colors.white,
-            style: const TextStyle(color: Colors.white),
-            // titleController ,
-            controller: titleController,
-            decoration: const InputDecoration(
-              hintText: 'Enter note title', focusColor: Colors.white,
-              hintStyle: TextStyle(color: Colors.white),
-              border: InputBorder.none,
-            ),
-            autofocus: true,
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('Cancel',
-                style: TextStyle(color: Colors.white,fontSize: 18,fontWeight: FontWeight.bold),
-              ),
-            ),
-            TextButton(
-              onPressed: () async {
-                if (titleController.text.isNotEmpty) {
-                  await _repository.createNote(titleController.text);
-                  _loadNotes();
-                  Navigator.of(context).pop();
-                }
-              },
-              child: const Text('Add',
-                style: TextStyle(color: Colors.blue,fontSize: 18,fontWeight: FontWeight.bold),  
-              ),
-            ),
-          ],
-        );
-      },
-    );
-  }
 
   void _navigateToEditNote(Note note) {
-
-    print("hehe");
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => NoteDetailPage(note: note),
+      ),
+    ).then((_) {
+      _loadNotes();
+    });
   }
 }

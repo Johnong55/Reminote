@@ -11,5 +11,7 @@ class Note {
   DateTime? updatedAt;
   @Index()
   bool? isPinned;
-  Note({this.title});
+  String? category;
+  String? color;
+  Note({this.title, this.content, this.createdAt, this.updatedAt, this.isPinned, this.category, this.color});
 }
