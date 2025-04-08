@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:study_app/components/commons/confirm_dialog.dart';
 import 'package:study_app/models/Note.dart';
+import 'package:study_app/utils/Color_helper.dart';
  // Updated import
 
 class NoteTile extends StatelessWidget {
@@ -20,6 +21,9 @@ class NoteTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Color_helper colorHelper = Color_helper();
+    Color backgroundcolor = colorHelper.HexToColor(note.color!);
+   
     // Format the date (if available)
     String formattedDate = 'No date';
     if (note.createdAt != null) {
@@ -33,10 +37,12 @@ class NoteTile extends StatelessWidget {
             : note.content!
         : 'No content';
 
-    return Card(
+    return Card(  
+      color: backgroundcolor,
       elevation: 2,
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       shape: RoundedRectangleBorder(
+        
         borderRadius: BorderRadius.circular(12),
         side: BorderSide(
           color: note.isPinned == true
@@ -62,6 +68,7 @@ class NoteTile extends StatelessWidget {
                       style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
+                        color: Colors.black,
                       ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
