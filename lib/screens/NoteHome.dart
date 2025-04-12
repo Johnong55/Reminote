@@ -1,13 +1,12 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:study_app/Offline_Repository/Note_repository.dart';
+import 'package:provider/provider.dart';
 import 'package:study_app/components/commons/AddNoteDialog.dart';
-import 'package:study_app/components/commons/confirm_dialog.dart';
 import 'package:study_app/components/widgets/Note_Tile.dart';
 import 'package:study_app/models/Note.dart';
+import 'package:study_app/providers/note_provider.dart';
 import 'package:study_app/screens/NoteDetailPage.dart';
-import 'package:study_app/services/isar_service.dart';
 
 class Notehome extends StatefulWidget {
   const Notehome({super.key});
@@ -17,36 +16,33 @@ class Notehome extends StatefulWidget {
 }
 
 class _NotehomeState extends State<Notehome> {
-  final NoteService _noteService = NoteService();
-  List<Note> notes = [];
-  Function(Note) onsaveNote(Note note) {
-    print(note.color);   
-    return (Note note) async{
-      await _noteService.createNote(note);
-      setState(() {
-        notes.add(note);
-        _loadNotes();
-      });
-    };
-  }
   @override
   void initState() {
     super.initState();
-    _loadNotes();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      // Gọi fetchAllNotes từ noteProvider để lấy dữ liệu từ repository
+      Provider.of<NoteProvider>(context, listen: false).fetchAllNotes();
+    });
   }
 
-  Future<void> _loadNotes() async {
-    await _noteService.getAllNotes();
-    setState(() {
-      notes = _noteService.currentNotes;
-    });
+  Function(Note) onsaveNote(Note note) {
+    print(note.color);   
+    return (Note note) async {
+      final noteProvider = Provider.of<NoteProvider>(context, listen: false);
+      await noteProvider.createNote(note);
+    };
   }
 
   @override
   Widget build(BuildContext context) {
+    // Sử dụng listen: true để widget rebuild khi dữ liệu thay đổi
+    final noteProvider = Provider.of<NoteProvider>(context, listen: true);
+    final notes = noteProvider.notes; // Lấy danh sách notes từ provider
+    final filteredNotes =noteProvider.searchQuery.isEmpty?notes:noteProvider.filterNotes;
+    
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
-      body: notes.isEmpty
+      body: filteredNotes.isEmpty
           ? Center(
               child: Text(
                 'No notes yet. Tap + to add a new note',
@@ -54,22 +50,20 @@ class _NotehomeState extends State<Notehome> {
               ),
             )
           : ListView.builder(
-              itemCount: notes.length,
+              itemCount: filteredNotes.length,
               itemBuilder: (context, index) {
                 return NoteTile(
-                  note: notes[index],
+                  note: filteredNotes[index],
                   onTap: () {
-                    _navigateToEditNote(notes[index]);
+                    _navigateToEditNote(filteredNotes[index]);
                   },
                   onDelete: () async {
-                    await _noteService.deleteNote(notes[index]);
-                    _loadNotes();
+                    await noteProvider.deleteNote(filteredNotes[index]);
                   },
                   onPin: () async {
-                    final updatedNote = notes[index];
+                    final updatedNote = filteredNotes[index];
                     updatedNote.isPinned = !(updatedNote.isPinned ?? false);
-                    await _noteService.updateNote(updatedNote);
-                    _loadNotes();
+                    await noteProvider.updateNote(updatedNote);
                   },
                 );
               },
@@ -78,19 +72,18 @@ class _NotehomeState extends State<Notehome> {
         shape: const CircleBorder(),
         elevation: 2,
         onPressed: () {
-
           Note note = Note();
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => AddNoteDialog(onSave: onsaveNote(note),note: note,),
+              builder: (context) => AddNoteDialog(onSave: onsaveNote(note), note: note),
             ),
           ).then((_) {
-              log("notehome : ${note.color}");
-              log("note:${note.toString()}");
-            _loadNotes();
+            log("notehome : ${note.color}");
+            log("note:${note.toString()}");
+            // Refresh không cần thiết nếu Provider đã được cấu hình đúng
+            // noteProvider.fetchAllNotes(); // Có thể thêm nếu cần refresh
           });
-       
         },
         backgroundColor: Colors.lightBlue[300],
         child: const Icon(Icons.add, color: Colors.white),
@@ -99,7 +92,6 @@ class _NotehomeState extends State<Notehome> {
     );
   }
 
-
   void _navigateToEditNote(Note note) {
     Navigator.push(
       context,
@@ -107,7 +99,8 @@ class _NotehomeState extends State<Notehome> {
         builder: (context) => NoteDetailPage(note: note),
       ),
     ).then((_) {
-      _loadNotes();
+      // Refresh từ provider nếu cần
+      Provider.of<NoteProvider>(context, listen: false).fetchAllNotes();
     });
   }
 }

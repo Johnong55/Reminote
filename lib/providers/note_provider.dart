@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:study_app/models/Note.dart';
 import 'package:study_app/Offline_Repository/Note_repository.dart';
@@ -5,26 +7,34 @@ import 'package:study_app/Offline_Repository/Note_repository.dart';
 class NoteProvider extends ChangeNotifier {
   final Note_Repository _repository = Note_Repository();
   List<Note> _notes = [];
+  List<Note> _filterNotes = [];
   Note? _currentNote;
   bool _isLoading = false;
-
+  String _searchQuery = '';
   // Getters
   List<Note> get notes => _notes;
   List<Note> get pinnedNotes => _notes.where((note) => note.isPinned == true).toList();
   List<Note> get unpinnedNotes => _notes.where((note) => note.isPinned != true).toList();
   Note? get currentNote => _currentNote;
   bool get isLoading => _isLoading;
-
+  List<Note> get filterNotes => _filterNotes;
+  String get searchQuery => _searchQuery;
   // Initialize
   Future<void> initialize() async {
     await _repository.initializeIsar();
     await fetchAllNotes();
   }
-  Future<void> searchNotes(String title) async {
-    _setLoading(true);
-    _notes = await _repository.findByTitle(title);
-    _setLoading(false);
-    notifyListeners();
+  Future<void> searchNotes(String query) async {
+      _searchQuery = query.trim();
+      _setLoading(true);
+      if(_searchQuery.isEmpty){
+        _filterNotes = _notes;
+      }else{
+        _filterNotes  = await _repository.findByString(_searchQuery);
+      }
+ 
+      _setLoading(false);
+      notifyListeners();
   }
   // CRUD Operations
   Future<void> fetchAllNotes() async {
@@ -83,6 +93,17 @@ class NoteProvider extends ChangeNotifier {
   Future<void> togglePinStatus(Note note) async {
     note.isPinned = !(note.isPinned ?? false);
     await updateNote(note);
+  }
+  void setSearchQuery(String query) {
+    _searchQuery = query;
+    notifyListeners();
+  }
+
+  // Xóa query tìm kiếm và hiển thị tất cả notes
+  void clearSearch() {
+    _searchQuery = '';
+    _filterNotes = _notes;
+    notifyListeners();
   }
 
   // Helper
