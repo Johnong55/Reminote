@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:lottie/lottie.dart';
 
 class myBottomNav extends StatelessWidget {
   void Function(int)? onTabChange;
@@ -19,20 +20,40 @@ class myBottomNav extends StatelessWidget {
         onTabChange: (value) => onTabChange!(value),
         tabs: [
           GButton(
-            icon: Icons.book,
+            icon: Icons.sticky_note_2_outlined,
             text: 'N O T E',
+            textSize : 30,
             textColor: Colors.grey[900],
-            iconSize: 25.0,
-            gap: 10.0,
+
           ),
           GButton(
-            icon: Icons.task_rounded,
+            icon: Icons.space_bar, // không dùng icon mặc định
             text: 'R E M I N D E R',
+            textSize: 30,
+            leading: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(
+                  height: 30,
+                  width: 30,
+                  child: Lottie.asset(
+                    'assets/lottie/fire.json',
+                    fit: BoxFit.contain,
+                  ),
+                ),
+                const SizedBox(height: 5),
+                
+              ],
+            ),
+          ),
+
+          GButton(
+            icon: Icons.settings,
+            text: 'S E T T I N G S',
             textColor: Colors.grey[900],
             iconSize: 25.0,
             gap: 10.0,
           ),
-         
         ],
       ),
     );

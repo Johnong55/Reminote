@@ -8,39 +8,40 @@ import 'package:study_app/screens/NoteHome.dart';
 import 'package:study_app/screens/SettingsPage.dart';
 import 'package:provider/provider.dart';
 
-
 void main() async {
-    WidgetsFlutterBinding.ensureInitialized();
+  // Đảm bảo Flutter đã được khởi tạo
+  WidgetsFlutterBinding.ensureInitialized();
   
-  final noteRepository = Note_Repository();
-  await noteRepository.initializeIsar();
+  // Khởi tạo NoteProvider và chờ nó hoàn tất khởi tạo
+  final noteProvider = NoteProvider();
+  await noteProvider.initialize(); // Phương thức này sẽ khởi tạo Isar và tải notes
   
-  runApp(const MyApp());
+  runApp(MyApp(noteProvider: noteProvider));
 }
+
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final NoteProvider noteProvider;
+  
+  const MyApp({Key? key, required this.noteProvider}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-
     return MultiProvider(
-
       providers: [
-        ChangeNotifierProvider(create: (_) => NoteProvider()),
+        // Sử dụng provider đã khởi tạo thay vì tạo mới
+        ChangeNotifierProvider.value(value: noteProvider),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Reminote',
-        theme: ThemeData.light(),
-        darkTheme: ThemeData.dark(),
+        theme: minimalistLightMode,
+        darkTheme:minimalistDarkMode ,
         home: Homepage(),
         routes: {
           '/home': (context) => const Homepage(),
           '/note': (context) => const Notehome(),
           '/settings': (context) => const Settingspage(),
-          
         },
-      
       ),
     );
   }

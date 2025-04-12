@@ -1,3 +1,6 @@
+
+import 'dart:developer';
+
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:study_app/models/Note.dart';
@@ -60,7 +63,21 @@ class Note_Repository{
     final notes = await _isar.notes.filter().titleEqualTo( title).findAll();
     return notes;
   } 
- 
+ Future<List<Note>> findByString(String search) async{
+    final notes = await _isar.notes.filter().titleContains(search).findAll();
+    final notes2 = await _isar.notes.filter().contentContains(search).findAll();
+    for(var note in notes2){
+      if(!notes.contains(note)){
+        notes.add(note);
+      
+      }
+      else{
+        log(note.title.toString());
+      }
+    }
+    return notes;
+
+ }
   // swap the note position to the top of list when it is pinned
   
 }

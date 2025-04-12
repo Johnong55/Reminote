@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:study_app/components/widgets/List_Streak.dart';
 
 class Reminder extends StatefulWidget {
   const Reminder({super.key});
@@ -9,14 +10,12 @@ class Reminder extends StatefulWidget {
 }
 
 class ReminderState extends State<Reminder> {
+  List<Reminder> reminders = [];
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-          child: Text(
-        'Reminder',   
-      ),
-    )
+    body: ListStreak(),
     );
   }
 }

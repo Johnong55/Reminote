@@ -30,7 +30,12 @@ class NoteService {
     await _repository.deleteNote(note);
   }
   
-  
+  Future<List<Note>> findByTitle(String title) async {
+    return await _repository.findByTitle(title);
+  }
+  Future<List<Note>> findByString(String text) async {
+    return await _repository.findByString(text);
+  }
   // Logic nghiệp vụ bổ sung
   Future<void> archiveNote(Note note) async {
     // Logic để lưu trữ ghi chú

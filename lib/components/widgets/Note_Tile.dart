@@ -66,7 +66,7 @@ class NoteTile extends StatelessWidget {
                     child: Text(
                       note.title ?? 'Untitled Note',
                       style: const TextStyle(
-                        fontSize: 18,
+                        fontSize: 27,
                         fontWeight: FontWeight.bold,
                         color: Colors.black,
                       ),
@@ -85,7 +85,7 @@ class NoteTile extends StatelessWidget {
                         ),
                         onPressed: onPin,
                         tooltip: 'Pin note',
-                        iconSize: 20,
+                        iconSize: 28,
                         splashRadius: 20,
                         padding: EdgeInsets.zero,
                         constraints: const BoxConstraints(),
@@ -107,7 +107,7 @@ class NoteTile extends StatelessWidget {
                           );
                         },
                         tooltip: 'Delete note',
-                        iconSize: 20,
+                        iconSize: 28,
                         splashRadius: 20,
                         padding: EdgeInsets.zero,
                         constraints: const BoxConstraints(),
@@ -120,7 +120,7 @@ class NoteTile extends StatelessWidget {
               Text(
                 contentPreview,
                 style: TextStyle(
-                  fontSize: 14,
+                  fontSize: 20,
                   color: Colors.grey.shade700,
                 ),
                 maxLines: 2,
@@ -130,7 +130,7 @@ class NoteTile extends StatelessWidget {
               Text(
                 formattedDate,
                 style: TextStyle(
-                  fontSize: 12,
+                  fontSize: 15,
                   color: Colors.grey.shade500,
                   fontStyle: FontStyle.italic,
                 ),
