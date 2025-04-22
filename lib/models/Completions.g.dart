@@ -73,10 +73,11 @@ Completions _completionsDeserialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  final object = Completions();
-  object.allCompleted = reader.readBoolOrNull(offsets[0]);
-  object.dateCompleted = reader.readDateTimeOrNull(offsets[1]);
-  object.habitID = reader.readLongOrNull(offsets[2]);
+  final object = Completions(
+    allCompleted: reader.readBoolOrNull(offsets[0]),
+    dateCompleted: reader.readDateTimeOrNull(offsets[1]),
+    habitID: reader.readLongOrNull(offsets[2]),
+  );
   object.id = id;
   return object;
 }

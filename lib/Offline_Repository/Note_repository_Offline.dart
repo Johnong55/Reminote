@@ -5,7 +5,7 @@ import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:study_app/models/Note.dart';
 
-class Note_Repository{
+class NoteRepositoryOffline{
   static late Isar _isar;
   final List<Note> currentNotes = [];
 
@@ -20,7 +20,8 @@ class Note_Repository{
   
   // Create a new note
   Future<void> createNote(Note newNote) async{
- 
+    
+    log("============== im creating in local");
     newNote.createdAt = DateTime.now();
     newNote.updatedAt = DateTime.now();
     // save to db
@@ -31,6 +32,7 @@ class Note_Repository{
 
     // reread the notes
     fetchNote();
+    log("local has :${currentNotes.length} note");
   }
 // fetching notes from the database
   Future<void> fetchNote() async{
@@ -38,6 +40,7 @@ class Note_Repository{
     .where()
     .sortByIsPinnedDesc() // Sort pinned notes first (true comes before false)
     .findAll();
+    log("query a bit:${notes.length.toString()}");
     currentNotes.clear();
     currentNotes.addAll(notes);
   }
@@ -52,7 +55,7 @@ class Note_Repository{
 // delete notes
   Future<void> deleteNote(Note note) async{
     await _isar.writeTxn(() async {
-      await _isar.notes.delete(note.id!);
+      await _isar.notes.delete(note.id);
 
     });
 
@@ -64,19 +67,26 @@ class Note_Repository{
     return notes;
   } 
  Future<List<Note>> findByString(String search) async{
+
     final notes = await _isar.notes.filter().titleContains(search).findAll();
+  
     final notes2 = await _isar.notes.filter().contentContains(search).findAll();
+ 
     for(var note in notes2){
       if(!notes.contains(note)){
         notes.add(note);
-      
       }
       else{
         log(note.title.toString());
       }
     }
+       
     return notes;
 
+ }
+ Future<List<Note>> findByEmail(String email) async{
+    final notes = await _isar.notes.filter().userEmailEqualTo(email).findAll();
+    return notes;
  }
   // swap the note position to the top of list when it is pinned
   

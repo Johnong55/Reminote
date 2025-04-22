@@ -2,13 +2,14 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:study_app/components/commons/AddNoteDialog.dart';
-import 'package:study_app/components/widgets/Note_Tile.dart';
+import 'package:study_app/Page/Screens/NoteDetailPage.dart';
+import 'package:study_app/components/commons/dialog/AddNoteDialog.dart';
+import 'package:study_app/components/commons/Note_Tile.dart';
 import 'package:study_app/models/Note.dart';
 import 'package:study_app/providers/note_provider.dart';
-import 'package:study_app/screens/NoteDetailPage.dart';
 
 class Notehome extends StatefulWidget {
+  
   const Notehome({super.key});
 
   @override
@@ -26,10 +27,13 @@ class _NotehomeState extends State<Notehome> {
   }
 
   Function(Note) onsaveNote(Note note) {
-    print(note.color);   
+   
     return (Note note) async {
       final noteProvider = Provider.of<NoteProvider>(context, listen: false);
       await noteProvider.createNote(note);
+      setState(() {
+        
+      });
     };
   }
 
@@ -38,8 +42,9 @@ class _NotehomeState extends State<Notehome> {
     // Sử dụng listen: true để widget rebuild khi dữ liệu thay đổi
     final noteProvider = Provider.of<NoteProvider>(context, listen: true);
     final notes = noteProvider.notes; // Lấy danh sách notes từ provider
-    final filteredNotes =noteProvider.searchQuery.isEmpty?notes:noteProvider.filterNotes;
-    
+    final filteredNotes =noteProvider.searchQuery.isEmpty?notes:noteProvider.filteredNotes;
+
+
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       body: filteredNotes.isEmpty
@@ -55,7 +60,10 @@ class _NotehomeState extends State<Notehome> {
                 return NoteTile(
                   note: filteredNotes[index],
                   onTap: () {
+                    log(" USER Email : ${filteredNotes[index].userEmail.toString()}");
+                    log("SyncStatus : ${filteredNotes[index].syncStatus.toString()}");
                     _navigateToEditNote(filteredNotes[index]);
+
                   },
                   onDelete: () async {
                     await noteProvider.deleteNote(filteredNotes[index]);
@@ -79,10 +87,7 @@ class _NotehomeState extends State<Notehome> {
               builder: (context) => AddNoteDialog(onSave: onsaveNote(note), note: note),
             ),
           ).then((_) {
-            log("notehome : ${note.color}");
-            log("note:${note.toString()}");
-            // Refresh không cần thiết nếu Provider đã được cấu hình đúng
-            // noteProvider.fetchAllNotes(); // Có thể thêm nếu cần refresh
+         noteProvider.fetchAllNotes(); 
           });
         },
         backgroundColor: Colors.lightBlue[300],

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "342593624444",
+    "project_id": "reminote-f5a59",
+    "storage_bucket": "reminote-f5a59.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:342593624444:android:bbef8bc72b4e523cb32cf9",
+        "android_client_info": {
+          "package_name": "com.example.study_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD6LMzdEidmTbxodeBpX3N7PK4WyM6naBo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

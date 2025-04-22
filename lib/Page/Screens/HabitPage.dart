@@ -1,6 +1,6 @@
 
 import 'package:flutter/material.dart';
-import 'package:study_app/components/widgets/List_Streak.dart';
+import 'package:study_app/components/commons/List_Streak.dart';
 
 class Reminder extends StatefulWidget {
   const Reminder({super.key});

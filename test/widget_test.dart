@@ -17,7 +17,7 @@ void main() {
     // Build our app and trigger a frame.
      final noteProvider = NoteProvider();
   await noteProvider.initialize(); //
-    await tester.pumpWidget(MyApp(noteProvider: noteProvider));
+  await tester.pumpWidget(MyApp(noteProvider: noteProvider));
 
     // Verify that our counter starts at 0.
     expect(find.text('0'), findsOneWidget);

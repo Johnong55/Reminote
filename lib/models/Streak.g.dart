@@ -32,15 +32,15 @@ const StreakSchema = CollectionSchema(
       name: r'lastUpdated',
       type: IsarType.dateTime,
     ),
-    r'longestStreak': PropertySchema(
-      id: 3,
-      name: r'longestStreak',
-      type: IsarType.long,
-    ),
     r'streakStartDate': PropertySchema(
-      id: 4,
+      id: 3,
       name: r'streakStartDate',
       type: IsarType.dateTime,
+    ),
+    r'userID': PropertySchema(
+      id: 4,
+      name: r'userID',
+      type: IsarType.string,
     )
   },
   estimateSize: _streakEstimateSize,
@@ -63,6 +63,12 @@ int _streakEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
+  {
+    final value = object.userID;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
   return bytesCount;
 }
 
@@ -75,8 +81,8 @@ void _streakSerialize(
   writer.writeLong(offsets[0], object.currentStreak);
   writer.writeDateTime(offsets[1], object.lastCompletedDate);
   writer.writeDateTime(offsets[2], object.lastUpdated);
-  writer.writeLong(offsets[3], object.longestStreak);
-  writer.writeDateTime(offsets[4], object.streakStartDate);
+  writer.writeDateTime(offsets[3], object.streakStartDate);
+  writer.writeString(offsets[4], object.userID);
 }
 
 Streak _streakDeserialize(
@@ -87,12 +93,12 @@ Streak _streakDeserialize(
 ) {
   final object = Streak(
     currentStreak: reader.readLongOrNull(offsets[0]),
+    lastCompletedDate: reader.readDateTimeOrNull(offsets[1]),
     lastUpdated: reader.readDateTimeOrNull(offsets[2]),
-    longestStreak: reader.readLongOrNull(offsets[3]),
+    streakStartDate: reader.readDateTimeOrNull(offsets[3]),
+    userID: reader.readStringOrNull(offsets[4]),
   );
   object.id = id;
-  object.lastCompletedDate = reader.readDateTimeOrNull(offsets[1]);
-  object.streakStartDate = reader.readDateTimeOrNull(offsets[4]);
   return object;
 }
 
@@ -110,9 +116,9 @@ P _streakDeserializeProp<P>(
     case 2:
       return (reader.readDateTimeOrNull(offset)) as P;
     case 3:
-      return (reader.readLongOrNull(offset)) as P;
-    case 4:
       return (reader.readDateTimeOrNull(offset)) as P;
+    case 4:
+      return (reader.readStringOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
@@ -468,75 +474,6 @@ extension StreakQueryFilter on QueryBuilder<Streak, Streak, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Streak, Streak, QAfterFilterCondition> longestStreakIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'longestStreak',
-      ));
-    });
-  }
-
-  QueryBuilder<Streak, Streak, QAfterFilterCondition> longestStreakIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'longestStreak',
-      ));
-    });
-  }
-
-  QueryBuilder<Streak, Streak, QAfterFilterCondition> longestStreakEqualTo(
-      int? value) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'longestStreak',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<Streak, Streak, QAfterFilterCondition> longestStreakGreaterThan(
-    int? value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'longestStreak',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<Streak, Streak, QAfterFilterCondition> longestStreakLessThan(
-    int? value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'longestStreak',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<Streak, Streak, QAfterFilterCondition> longestStreakBetween(
-    int? lower,
-    int? upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'longestStreak',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-      ));
-    });
-  }
-
   QueryBuilder<Streak, Streak, QAfterFilterCondition> streakStartDateIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
@@ -607,6 +544,152 @@ extension StreakQueryFilter on QueryBuilder<Streak, Streak, QFilterCondition> {
       ));
     });
   }
+
+  QueryBuilder<Streak, Streak, QAfterFilterCondition> userIDIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'userID',
+      ));
+    });
+  }
+
+  QueryBuilder<Streak, Streak, QAfterFilterCondition> userIDIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'userID',
+      ));
+    });
+  }
+
+  QueryBuilder<Streak, Streak, QAfterFilterCondition> userIDEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'userID',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Streak, Streak, QAfterFilterCondition> userIDGreaterThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'userID',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Streak, Streak, QAfterFilterCondition> userIDLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'userID',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Streak, Streak, QAfterFilterCondition> userIDBetween(
+    String? lower,
+    String? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'userID',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Streak, Streak, QAfterFilterCondition> userIDStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'userID',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Streak, Streak, QAfterFilterCondition> userIDEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'userID',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Streak, Streak, QAfterFilterCondition> userIDContains(
+      String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'userID',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Streak, Streak, QAfterFilterCondition> userIDMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'userID',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Streak, Streak, QAfterFilterCondition> userIDIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'userID',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<Streak, Streak, QAfterFilterCondition> userIDIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'userID',
+        value: '',
+      ));
+    });
+  }
 }
 
 extension StreakQueryObject on QueryBuilder<Streak, Streak, QFilterCondition> {}
@@ -650,18 +733,6 @@ extension StreakQuerySortBy on QueryBuilder<Streak, Streak, QSortBy> {
     });
   }
 
-  QueryBuilder<Streak, Streak, QAfterSortBy> sortByLongestStreak() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'longestStreak', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Streak, Streak, QAfterSortBy> sortByLongestStreakDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'longestStreak', Sort.desc);
-    });
-  }
-
   QueryBuilder<Streak, Streak, QAfterSortBy> sortByStreakStartDate() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'streakStartDate', Sort.asc);
@@ -671,6 +742,18 @@ extension StreakQuerySortBy on QueryBuilder<Streak, Streak, QSortBy> {
   QueryBuilder<Streak, Streak, QAfterSortBy> sortByStreakStartDateDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'streakStartDate', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Streak, Streak, QAfterSortBy> sortByUserID() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'userID', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Streak, Streak, QAfterSortBy> sortByUserIDDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'userID', Sort.desc);
     });
   }
 }
@@ -724,18 +807,6 @@ extension StreakQuerySortThenBy on QueryBuilder<Streak, Streak, QSortThenBy> {
     });
   }
 
-  QueryBuilder<Streak, Streak, QAfterSortBy> thenByLongestStreak() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'longestStreak', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Streak, Streak, QAfterSortBy> thenByLongestStreakDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'longestStreak', Sort.desc);
-    });
-  }
-
   QueryBuilder<Streak, Streak, QAfterSortBy> thenByStreakStartDate() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'streakStartDate', Sort.asc);
@@ -745,6 +816,18 @@ extension StreakQuerySortThenBy on QueryBuilder<Streak, Streak, QSortThenBy> {
   QueryBuilder<Streak, Streak, QAfterSortBy> thenByStreakStartDateDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'streakStartDate', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Streak, Streak, QAfterSortBy> thenByUserID() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'userID', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Streak, Streak, QAfterSortBy> thenByUserIDDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'userID', Sort.desc);
     });
   }
 }
@@ -768,15 +851,16 @@ extension StreakQueryWhereDistinct on QueryBuilder<Streak, Streak, QDistinct> {
     });
   }
 
-  QueryBuilder<Streak, Streak, QDistinct> distinctByLongestStreak() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'longestStreak');
-    });
-  }
-
   QueryBuilder<Streak, Streak, QDistinct> distinctByStreakStartDate() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'streakStartDate');
+    });
+  }
+
+  QueryBuilder<Streak, Streak, QDistinct> distinctByUserID(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'userID', caseSensitive: caseSensitive);
     });
   }
 }
@@ -807,15 +891,15 @@ extension StreakQueryProperty on QueryBuilder<Streak, Streak, QQueryProperty> {
     });
   }
 
-  QueryBuilder<Streak, int?, QQueryOperations> longestStreakProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'longestStreak');
-    });
-  }
-
   QueryBuilder<Streak, DateTime?, QQueryOperations> streakStartDateProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'streakStartDate');
+    });
+  }
+
+  QueryBuilder<Streak, String?, QQueryOperations> userIDProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'userID');
     });
   }
 }
