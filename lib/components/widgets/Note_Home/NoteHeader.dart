@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:study_app/components/commons/dialog/confirm_dialog.dart';
+import 'package:study_app/components/widgets/Note_Home/NoteDate.dart';
 import 'package:study_app/models/Note.dart';
 
 class NoteHeader extends StatelessWidget {
@@ -23,7 +24,7 @@ class NoteHeader extends StatelessWidget {
           child: Text(
             note.title ?? 'Untitled Note',
             style: const TextStyle(
-              fontSize: 24,
+              fontSize: 22,
               fontWeight: FontWeight.bold,
               color: Colors.black,
             ),
@@ -33,39 +34,7 @@ class NoteHeader extends StatelessWidget {
         ),
         Row(
           children: [
-            IconButton(
-              icon: Icon(
-                note.isPinned == true ? Icons.push_pin : Icons.push_pin_outlined,
-                color: note.isPinned == true ? Colors.amber : Colors.grey,
-              ),
-              onPressed: onPin,
-              tooltip: 'Pin note',
-              iconSize: 25,
-              splashRadius: 20,
-              padding: EdgeInsets.zero,
-              constraints: const BoxConstraints(),
-            ),
-            const SizedBox(width: 8),
-            IconButton(
-              icon: const Icon(Icons.delete_outline, color: Colors.red),
-              onPressed: () {
-                DeleteConfirmationDialog.show(
-                  context: context,
-                  title: 'Xác nhận xóa',
-                  content: 'Bạn có chắc chắn muốn xóa ghi chú này không?',
-                  onConfirm: () {
-                    if (onDelete != null) {
-                      onDelete!();
-                    }
-                  },
-                );
-              },
-              tooltip: 'Delete note',
-              iconSize: 25,
-              splashRadius: 20,
-              padding: EdgeInsets.zero,
-              constraints: const BoxConstraints(),
-            ),
+              NoteDate(createdAt: note.updatedAt,)
           ],
         ),
       ],

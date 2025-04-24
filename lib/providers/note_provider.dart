@@ -78,9 +78,8 @@ class NoteProvider extends ChangeNotifier {
 
     if (_currentNote?.ID == note.ID) _currentNote = note;
 
-    _sortNotes();
-    _applyFilter();
-
+   await fetchAllNotes();
+    
     _setLoading(false);
     notifyListeners();
   }

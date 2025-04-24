@@ -53,10 +53,10 @@ class HabitTile extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               if (habit.description != null && habit.description!.isNotEmpty)
-                Text(habit.description!),
+                Text(habit.description!   ,style: textTheme.titleSmall?.copyWith(color: colorScheme.onSurface),),
               Text(
                 "Due: $dueDateStr ${dueTimeStr.isNotEmpty ? 'at $dueTimeStr' : ''}",
-                style: textTheme.titleSmall?.copyWith(color: colorScheme.onSecondary),
+                style: textTheme.titleSmall?.copyWith(color: colorScheme.onSurface),
               ),
             ],
           ),

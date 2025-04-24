@@ -3,9 +3,9 @@ import 'package:study_app/models/Habit.dart';
 
 
 class HabitService {
-  final HabitRepository _habitRepository;
+  final HabitRepository _habitRepository  = HabitRepository();
 
-  HabitService(this._habitRepository);
+  
 
   // Initialize the database
   Future<void> init() async {

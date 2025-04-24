@@ -4,13 +4,15 @@ import 'package:study_app/components/widgets/Streak_Home/Habit_Tile.dart';
 import 'package:study_app/models/Habit.dart';
 
 class HabitsPlaceholder extends StatefulWidget {
-  const HabitsPlaceholder({super.key});
+  DateTime chosenDate;
+   HabitsPlaceholder({super.key, required this.chosenDate});
 
   @override
   State<HabitsPlaceholder> createState() => _HabitsPlaceholderState();
 }
 
 class _HabitsPlaceholderState extends State<HabitsPlaceholder> {
+  DateTime get chosenDate => widget.chosenDate;
  List<Habit> habits = [
   Habit(title: 'Read 10 pages', isCompleted: false, color: '#FFECB3'), // Amber light
   Habit(title: 'Morning Walk', isCompleted: true, color: '#C8E6C9'),   // Green light

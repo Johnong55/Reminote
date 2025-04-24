@@ -7,6 +7,7 @@ import 'package:study_app/Page/Screens/SettingsPage.dart';
 import 'package:study_app/Page/Screens/SignIn.dart';
 import 'package:study_app/Page/Screens/SignUp.dart';
 import 'package:study_app/config/app_theme.dart';
+import 'package:study_app/providers/habit_provider.dart';
 import 'package:study_app/providers/note_provider.dart';
 
 
@@ -20,15 +21,17 @@ void main() async {
 
   // Khởi tạo NoteProvider và chờ nó hoàn tất khởi tạo
   final noteProvider = NoteProvider();
+  final habitProvider  = HabitProvider();
+    
   await noteProvider.initialize(); // Phương thức này sẽ khởi tạo Isar và tải notes
-  
-  runApp(MyApp(noteProvider: noteProvider));
+  await habitProvider.intialize();
+  runApp(MyApp(noteProvider: noteProvider,habitProvider: habitProvider,));
 }
 
 class MyApp extends StatelessWidget {
   final NoteProvider noteProvider;
-  
-  const MyApp({Key? key, required this.noteProvider}) : super(key: key);
+  final HabitProvider habitProvider;
+  const MyApp({Key? key, required this.noteProvider , required this.habitProvider}) : super(key: key);
 @override
 Widget build(BuildContext context) {
   return MultiProvider(

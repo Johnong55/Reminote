@@ -27,10 +27,11 @@ class ListStreak extends StatelessWidget {
           completedDays: completedDays,
           streakColor: streakColor,
           isDarkMode: isDarkMode,
+          ontap:  (){},
         ),
 
         // ✅ Placeholder for today's habits (can be replaced with real data later)
-        const Expanded(child: HabitsPlaceholder()),
+        Expanded(child: HabitsPlaceholder(chosenDate: DateTime.now(),)),
       ],
     );
   }

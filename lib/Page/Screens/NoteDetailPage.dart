@@ -192,6 +192,7 @@ class _NoteDetailPageState extends State<NoteDetailPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Card(
+                    
                     margin: const EdgeInsets.only(bottom: 16.0),
                     child: Padding(
                       padding: const EdgeInsets.all(10.0),
@@ -204,13 +205,7 @@ class _NoteDetailPageState extends State<NoteDetailPage> {
                                 style: textTheme.bodySmall,
                               ),
                             ),
-                          if (widget.note.updatedAt != null)
-                            Expanded(
-                              child: Text(
-                                'Updated: ${_formatDate(widget.note.updatedAt)}',
-                                style: textTheme.bodySmall,
-                              ),
-                            ),
+                        
                         ],
                       ),
                     ),

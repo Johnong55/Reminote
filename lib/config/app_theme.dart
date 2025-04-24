@@ -20,10 +20,10 @@ class AppTheme {
         secondary: isDark ? Colors.grey.shade500 : Colors.grey.shade700,
         background: isDark ? const Color(0xFF121212) : Colors.white,
         surface: isDark ? const Color(0xFF1E1E1E) : Colors.grey.shade50,
-        onPrimary: isDark ? Colors.black : Colors.white,
-        onSecondary: isDark ? Colors.black : Colors.white,
+        onPrimary: isDark ? Colors.black : Colors.black,
+        onSecondary: isDark ? Colors.black : Colors.grey.shade300,
         onBackground: isDark ? Colors.white : Colors.black,
-        onSurface: isDark ? Colors.white : Colors.black,
+        onSurface: isDark ? Colors.grey.shade600 : Colors.grey.shade600,
         error: isDark ? Colors.redAccent.shade100 : Colors.redAccent,
         onError: isDark ? Colors.black : Colors.white,
         tertiary: isDark ? _accentSuccessDark : _accentSuccess,
@@ -58,7 +58,7 @@ class AppTheme {
       titleMedium: TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: baseColor),
       bodyLarge: TextStyle(fontSize: 18, fontWeight: FontWeight.w400, color: secondary),
       bodyMedium: TextStyle(fontSize: 16, fontWeight: FontWeight.w400, color: isDark ? Colors.grey.shade400 : Colors.grey.shade700),
-      bodySmall: TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: isDark ? Colors.grey.shade500 : Colors.grey.shade600),
+      bodySmall: TextStyle(fontSize: 12, fontWeight: FontWeight.w400, color: isDark ? Colors.grey.shade500 : Colors.grey.shade600),
     );
   }
 

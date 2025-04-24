@@ -14,7 +14,7 @@ class NoteContent extends StatelessWidget {
     return Text(
       preview,
       style: TextStyle(
-        fontSize: 18,
+        fontSize: 16,
         color: Colors.grey.shade700,
       ),
       maxLines: 2,
