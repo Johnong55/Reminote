@@ -35,9 +35,7 @@ class StreakRepository {
         streak.lastUpdated = DateTime.now();
         
         // Update longest streak if current is greater
-        if (newStreak > (streak.longestStreak ?? 0)) {
-          streak.longestStreak = newStreak;
-        }
+  
         
         await _isar.streaks.put(streak);
       });
@@ -65,7 +63,7 @@ class StreakRepository {
       // First time, create new streak record
       streak = Streak(
         currentStreak: 1,
-        longestStreak: 1,
+      
         lastUpdated: DateTime.now(),
       );
       streak.lastCompletedDate = completionDate;
@@ -73,11 +71,9 @@ class StreakRepository {
     } else {
       await _isar.writeTxn(() async {
         final lastDate = streak!.lastCompletedDate;
-        
         if (lastDate == null) {
           // First completion ever
           streak.currentStreak = 1;
-          streak.longestStreak = 1;
           streak.streakStartDate = completionDate;
         } else {
           // Check if this is the next day (continuing streak)
@@ -87,9 +83,7 @@ class StreakRepository {
           if (yesterday.isAtSameMomentAs(lastCompletionDay)) {
             // Next consecutive day
             streak.currentStreak = (streak.currentStreak ?? 0) + 1;
-            if ((streak.currentStreak ?? 0) > (streak.longestStreak ?? 0)) {
-              streak.longestStreak = streak.currentStreak;
-            }
+      
           } else if (completionDate.isAfter(lastDate) && !yesterday.isAtSameMomentAs(lastCompletionDay)) {
             // Broke the streak, start new one
             streak.currentStreak = 1;

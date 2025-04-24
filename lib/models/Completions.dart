@@ -9,5 +9,9 @@ class Completions{
   int? habitID;
   bool? allCompleted;
   DateTime? dateCompleted;
-  
+  Completions({
+    this.habitID,
+    this.allCompleted,
+    this.dateCompleted,
+  });
 }

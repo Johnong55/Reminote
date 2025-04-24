@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:study_app/models/Note.dart';
-import 'dart:math';
 
 import 'package:study_app/utils/Color_helper.dart';
 
@@ -15,6 +14,7 @@ class AddNoteDialog extends StatefulWidget {
 }
 
 class _AddNoteDialogState extends State<AddNoteDialog> {
+
   Color_helper colorHelper = Color_helper();
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _contentController = TextEditingController();
@@ -32,14 +32,15 @@ class _AddNoteDialogState extends State<AddNoteDialog> {
 
   // Predefined colors for notes
   final List<String> _colorOptions = [
-    '#FFECB3', // Amber light
-    '#FFCCBC', // Deep Orange light
-    '#C8E6C9', // Green light
-    '#BBDEFB', // Blue light
-    '#D1C4E9', // Deep Purple light
-    '#F8BBD0', // Pink light
-    '#B2DFDB', // Teal light
-    '#E1BEE7', // Purple light
+   "#FFFFFF", // White
+    "#F8BBD0", // Pink
+    "#FFCDD2", // Light Red
+    "#FFE0B2", // Light Orange
+    "#FFF9C4", // Light Yellow
+    "#C8E6C9", // Light Green
+    "#B2DFDB", // Light Teal
+    "#B3E5FC", // Light Blue
+    "#D1C4E9", // Light Purple
   ];
 
   @override
@@ -91,7 +92,7 @@ class _AddNoteDialogState extends State<AddNoteDialog> {
     if (widget.onSave != null) {
       widget.onSave!(note);
     }
-
+   
     Navigator.of(context).pop();
   }
 

@@ -5,6 +5,8 @@ part 'Note.g.dart'; // bat buoc ten Note phai giong ten file
 @collection
 class Note {
   Id id = Isar.autoIncrement;
+  @Index(unique: true)
+  String? ID;
   String? title;
   String? content;
   DateTime? createdAt;
@@ -13,7 +15,10 @@ class Note {
   bool? isPinned;
   String? category;
   String? color;
-  Note({this.title, this.content, this.createdAt, this.updatedAt, this.isPinned, this.category, this.color});
+  String? syncStatus;
+  String? userEmail;
+
+  Note({this.title, this.content, this.createdAt, this.updatedAt, this.isPinned, this.category, this.color,this.userEmail,this.ID});
   
     @override
   bool operator ==(Object other) {
