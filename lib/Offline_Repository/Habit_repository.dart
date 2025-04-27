@@ -132,7 +132,7 @@ class HabitRepository {
 
   Future<List<Habit>> getListHabitInSpecDay(DateTime date) async {
     final specificHabits = await getListOnceTimeHabits(date);
-        
+
     final dailyHabits = await getListDailyHabits(date);
     final weeklyHabits = await getListWeeklyHabit(date);
     final monthlyHabits = await getListMonthlyHabits(date);
@@ -147,23 +147,27 @@ class HabitRepository {
 
   Future<List<Habit>> getListOnceTimeHabits(DateTime date) async {
     final onceHabit =
-        await _isar.habits
-            .filter()
-            .start_dateEqualTo(date.microsecondsSinceEpoch)
-            .and()
-            .frequency_typeEqualTo(0) // dayly
-            .findAll();
+      await _isar.habits
+        .filter()
+        .frequency_typeEqualTo(0) // once-time
+        .and()
+        .start_dateBetween(
+          DateTime(date.year, date.month, date.day).millisecondsSinceEpoch,
+          DateTime(date.year, date.month, date.day, 23, 59, 59).millisecondsSinceEpoch,
+        )
+        .findAll();
     return [...onceHabit];
   }
 
   Future<List<Habit>> getListDailyHabits(DateTime date) async {
-      final dateInMicroseconds = date.microsecondsSinceEpoch;
+    
+      final dateinmilli = date.millisecondsSinceEpoch;
     log("date: ${date.microsecondsSinceEpoch}");
   
     final dailyHabit =
         await _isar.habits
             .filter()
-            .start_dateLessThan(dateInMicroseconds)
+            .start_dateLessThan(dateinmilli)
             .and()
             .frequency_typeEqualTo(1)
             .and() // dayly
@@ -175,6 +179,7 @@ class HabitRepository {
   }
 
   Future<List<Habit>> getListWeeklyHabit(DateTime date) async {
+    DateTime currentDate = DateTime(date.year, date.month, date.day,0,0,0); 
     final allWeeklyHabits =
         await _isar.habits
             .filter()
@@ -192,7 +197,7 @@ class HabitRepository {
           );
 
           // Calculate days difference from start date to current date
-          final diffDays = date.difference(startDateTime).inDays;
+          final diffDays = currentDate.difference(startDateTime).inDays;
 
           // Check if today is a day when the habit should occur (every 7 days from start)
           return diffDays >= 0 && diffDays % 7 == 0;

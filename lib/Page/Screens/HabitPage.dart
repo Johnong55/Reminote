@@ -1,21 +1,13 @@
-
 import 'package:flutter/material.dart';
 import 'package:study_app/components/commons/List_Streak.dart';
 
-class Reminder extends StatefulWidget {
-  const Reminder({super.key});
+class Habitpage extends StatelessWidget {
+  const Habitpage({super.key});
 
-  @override
-  State<Reminder> createState() => ReminderState();
-}
-
-class ReminderState extends State<Reminder> {
-  List<Reminder> reminders = [];
-  
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-    body: ListStreak(),
+    return const Scaffold(
+      body: ListStreak()
     );
   }
 }

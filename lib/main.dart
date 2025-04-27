@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:study_app/Offline_Repository/Note_repository_Offline.dart';
 import 'package:study_app/Page/Authentication/Auth_page.dart';
+import 'package:study_app/Page/Screens/ContactPage.dart';
 import 'package:study_app/Page/Screens/HomePage.dart';
 import 'package:study_app/Page/Screens/NoteHome.dart';
 import 'package:study_app/Page/Screens/SettingsPage.dart';
@@ -51,7 +52,8 @@ Widget build(BuildContext context) {
         '/note': (context) => const Notehome(),
         '/settings': (context) => const Settingspage(),
         '/signup': (context) => const SignUpScreen(),
-        '/login' : (context) => const LoginScreen()
+        '/login' : (context) => const LoginScreen(),
+        '/contact': (context) => const Contactpage(),
       },
     ),
   );

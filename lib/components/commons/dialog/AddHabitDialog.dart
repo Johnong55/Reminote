@@ -65,7 +65,9 @@ class _AddHabitDialogState extends State<AddHabitDialog> {
     if (pickedDate != null) {
       setState(() {
         _dueDate = pickedDate;
-        _startDate = Provider.of<HabitProvider>(context,listen: false).currentDate!.millisecondsSinceEpoch;
+        final currentDate = Provider.of<HabitProvider>(context, listen: false).currentDate!;
+        _startDate = DateTime(currentDate.year, currentDate.month, currentDate.day).millisecondsSinceEpoch;
+   
       });
     }
   }
