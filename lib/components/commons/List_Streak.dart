@@ -3,9 +3,11 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:study_app/components/widgets/Streak_Home/HabitPlaceHolder.dart';
 import 'package:study_app/components/widgets/Streak_Home/StreakCalendar.dart';
 import 'package:study_app/components/widgets/Streak_Home/streak_header.dart';
+import 'package:study_app/providers/habit_provider.dart';
 
 class ListStreak extends StatefulWidget {
   const ListStreak({super.key});
@@ -34,6 +36,7 @@ class _ListStreakState extends State<ListStreak> {
   void _onDateSelected(DateTime date) {
     setState(() {
       _chosenDate = date;
+      Provider.of<HabitProvider>(context, listen: false).setCurrentDate(date);
       log("Selected date: $_chosenDate");
     });
   }

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:study_app/Offline_Repository/Completions_repository.dart';
@@ -155,16 +157,20 @@ class HabitRepository {
   }
 
   Future<List<Habit>> getListDailyHabits(DateTime date) async {
+      final dateInMicroseconds = date.microsecondsSinceEpoch;
+    log("date: ${date.microsecondsSinceEpoch}");
+  
     final dailyHabit =
         await _isar.habits
             .filter()
-            .start_dateLessThan(date.microsecondsSinceEpoch)
+            .start_dateLessThan(dateInMicroseconds)
             .and()
             .frequency_typeEqualTo(1)
             .and() // dayly
             .due_dateGreaterThan(date)
             .sortByDue_time()
             .findAll();
+    
     return [...dailyHabit];
   }
 

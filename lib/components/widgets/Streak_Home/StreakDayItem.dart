@@ -61,7 +61,7 @@ class StreakDayItem extends StatelessWidget {
               isToday ? "Today" : dayOfWeek,
               style: textTheme.bodySmall?.copyWith(
                 color: textColor,
-                fontWeight: shouldHighlight ? FontWeight.bold : FontWeight.normal,
+                fontWeight: shouldHighlight ? FontWeight.w800 : FontWeight.w900,
               ),
             ),
             const SizedBox(height: 4),
