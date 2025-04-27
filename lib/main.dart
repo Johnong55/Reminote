@@ -38,6 +38,7 @@ Widget build(BuildContext context) {
     providers: [
       // Sử dụng provider đã khởi tạo thay vì tạo mới
       ChangeNotifierProvider.value(value: noteProvider),
+      ChangeNotifierProvider.value(value: habitProvider),
     ],
     child: MaterialApp(
       debugShowCheckedModeBanner: false,

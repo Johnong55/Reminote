@@ -21,7 +21,7 @@ class AppTheme {
         background: isDark ? const Color(0xFF121212) : Colors.white,
         surface: isDark ? const Color(0xFF1E1E1E) : Colors.grey.shade50,
         onPrimary: isDark ? Colors.black : Colors.black,
-        onSecondary: isDark ? Colors.black : Colors.grey.shade300,
+        onSecondary: isDark ? Colors.white : Colors.grey.shade300,
         onBackground: isDark ? Colors.white : Colors.black,
         onSurface: isDark ? Colors.grey.shade600 : Colors.grey.shade600,
         error: isDark ? Colors.redAccent.shade100 : Colors.redAccent,

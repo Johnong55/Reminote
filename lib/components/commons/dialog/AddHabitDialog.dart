@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'dart:math';
 
 import 'package:study_app/models/Habit.dart';
+import 'package:study_app/providers/habit_provider.dart';
 
 class AddHabitDialog extends StatefulWidget {
   final Function(Habit) onSave;
@@ -28,6 +30,7 @@ class _AddHabitDialogState extends State<AddHabitDialog> {
       '#${Random().nextInt(0xFFFFFF).toRadixString(16).padLeft(6, '0')}';
 
   final List<String> _frequencyOptions = [
+    'Once',
     'Daily',
     'Weekly',
     'Monthly',
@@ -62,7 +65,7 @@ class _AddHabitDialogState extends State<AddHabitDialog> {
     if (pickedDate != null) {
       setState(() {
         _dueDate = pickedDate;
-        _startDate = pickedDate.millisecondsSinceEpoch;
+        _startDate = Provider.of<HabitProvider>(context,listen: false).currentDate!.millisecondsSinceEpoch;
       });
     }
   }

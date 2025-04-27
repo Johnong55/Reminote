@@ -23,13 +23,13 @@ DateTime? get currentDate => _currentDate;
 Future<void> intialize() async{
     _setLoading(true);
     await _service.init();
-    await fetchHabits(DateTime.now());
+    await fetchHabits();
     _setLoading(false);
 }
 
-Future<void> fetchHabits(DateTime date) async{
+Future<void> fetchHabits() async{
     _setLoading(true);
-    _habits = await _service.getHabitsForDay(date);
+    _habits = await _service.getHabitsForDay(currentDate?? DateTime.now());
     _setLoading(false);
     notifyListeners();
 
@@ -39,7 +39,7 @@ Future<void> createHabit(Habit habit ) async{
   try{
     log("Creatingg habit ${habit}");
     await _service.addHabit(habit);
-    fetchHabits(currentDate?? DateTime.now());
+    fetchHabits();
 
   }
   catch (e) {
@@ -55,7 +55,7 @@ Future<void> updateHabit(Habit habit) async {
   _setLoading(true);
   try {
     await _service.updateHabit(habit);
-    await fetchHabits(_currentDate ?? DateTime.now());
+    await fetchHabits();
   } catch (e) {
     log("Error updating habit: $e");
   } finally {
@@ -71,7 +71,7 @@ Future<void> updateHabit(Habit habit) async {
 void setCurrentDate(DateTime date){
   _currentDate  = date;
   notifyListeners();
-  fetchHabits(date);
+  fetchHabits();
 }
 
 }

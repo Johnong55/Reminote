@@ -358,8 +358,8 @@ class _AddNoteDialogState extends State<AddNoteDialog> {
                     ElevatedButton(
                       onPressed: _saveNote,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Theme.of(context).colorScheme.primary,
-                        foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                        backgroundColor: Theme.of(context).colorScheme.onPrimary,
+                   
                         padding: const EdgeInsets.symmetric(
                           horizontal: 20,
                           vertical: 12,
@@ -368,7 +368,12 @@ class _AddNoteDialogState extends State<AddNoteDialog> {
                           borderRadius: BorderRadius.circular(8),
                         ),
                       ),
-                      child: const Text('Save'),
+                      child:  Text('Save',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Theme.of(context).colorScheme.onSecondary,
+                          )),
                     ),
                   ],
                 ),
