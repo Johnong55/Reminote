@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:study_app/Offline_Repository/Note_repository_Offline.dart';
 import 'package:study_app/Page/Authentication/Auth_page.dart';
+import 'package:study_app/Page/Screens/ContactPage.dart';
 import 'package:study_app/Page/Screens/HomePage.dart';
 import 'package:study_app/Page/Screens/NoteHome.dart';
 import 'package:study_app/Page/Screens/SettingsPage.dart';
 import 'package:study_app/Page/Screens/SignIn.dart';
 import 'package:study_app/Page/Screens/SignUp.dart';
 import 'package:study_app/config/app_theme.dart';
+import 'package:study_app/providers/Completion_provider.dart';
 import 'package:study_app/providers/habit_provider.dart';
 import 'package:study_app/providers/note_provider.dart';
 
@@ -22,22 +24,26 @@ void main() async {
   // Khởi tạo NoteProvider và chờ nó hoàn tất khởi tạo
   final noteProvider = NoteProvider();
   final habitProvider  = HabitProvider();
-    
+    final CompletionProvider completionProvider = CompletionProvider();  
+    completionProvider.intialize();
   await noteProvider.initialize(); // Phương thức này sẽ khởi tạo Isar và tải notes
   await habitProvider.intialize();
-  runApp(MyApp(noteProvider: noteProvider,habitProvider: habitProvider,));
+  runApp(MyApp(noteProvider: noteProvider,habitProvider: habitProvider,completionProvider: completionProvider,));
 }
 
 class MyApp extends StatelessWidget {
   final NoteProvider noteProvider;
   final HabitProvider habitProvider;
-  const MyApp({Key? key, required this.noteProvider , required this.habitProvider}) : super(key: key);
+  final CompletionProvider completionProvider;
+  const MyApp({Key? key, required this.noteProvider , required this.habitProvider, required this.completionProvider}) : super(key: key);
 @override
 Widget build(BuildContext context) {
   return MultiProvider(
     providers: [
       // Sử dụng provider đã khởi tạo thay vì tạo mới
       ChangeNotifierProvider.value(value: noteProvider),
+      ChangeNotifierProvider.value(value: habitProvider),
+      ChangeNotifierProvider.value(value: completionProvider),
     ],
     child: MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -50,7 +56,8 @@ Widget build(BuildContext context) {
         '/note': (context) => const Notehome(),
         '/settings': (context) => const Settingspage(),
         '/signup': (context) => const SignUpScreen(),
-        '/login' : (context) => const LoginScreen()
+        '/login' : (context) => const LoginScreen(),
+        '/contact': (context) => const Contactpage(),
       },
     ),
   );

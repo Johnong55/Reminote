@@ -1,37 +1,72 @@
+
+// ListStreak.dart
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:study_app/components/widgets/Streak_Home/HabitPlaceHolder.dart';
 import 'package:study_app/components/widgets/Streak_Home/StreakCalendar.dart';
 import 'package:study_app/components/widgets/Streak_Home/streak_header.dart';
+import 'package:study_app/providers/habit_provider.dart';
 
-class ListStreak extends StatelessWidget {
-  ListStreak({super.key});
+class ListStreak extends StatefulWidget {
+  const ListStreak({super.key});
 
+  @override
+  State<ListStreak> createState() => _ListStreakState();
+}
+
+class _ListStreakState extends State<ListStreak> {
   // Example streak data (you may want to get this from a provider/controller)
   final int currentStreak = 5;
-  final int maxDaysToShow = 7;
+
   final List<bool> completedDays = [true, true, true, true, true, false, false];
+  
+  // Initially null, which means no day is selected yet and today will be highlighted
+  DateTime? _chosenDate;
+  
+  @override
+  void initState() {
+    super.initState();
+    // Initially no date is chosen, will default to highlighting today
+    _chosenDate = null;
+  }
+  
+  // Update chosen date when user taps on a day
+  void _onDateSelected(DateTime date) {
+    setState(() {
+      _chosenDate = date;
+      Provider.of<HabitProvider>(context, listen: false).setCurrentDate(date);
+      Provider.of<HabitProvider>(context,listen: false).fetchHabits();
+      log("Selected date: $_chosenDate");
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     final streakColor = Colors.orange; // You can customize this color
-    
+   
     return Column(
       children: [
         // 🔥 Header with animation and current streak
         StreakHeader(currentStreak: currentStreak),
-
-        // 📅 Calendar showing streak history
+        
+        // 📅 Calendar showing streak history - now with Monday to Sunday
         StreakCalendar(
-          maxDaysToShow: maxDaysToShow,
           completedDays: completedDays,
           streakColor: streakColor,
           isDarkMode: isDarkMode,
-          ontap:  (){},
+          chosenDate: _chosenDate,
+          onDateSelected: _onDateSelected,
         ),
-
-        // ✅ Placeholder for today's habits (can be replaced with real data later)
-        Expanded(child: HabitsPlaceholder(chosenDate: DateTime.now(),)),
+        
+        // ✅ Placeholder for habits of the chosen date
+        Expanded(
+          child: HabitsPlaceholder(
+            chosenDate: _chosenDate ?? DateTime.now(), // Use today if no date is chosen
+          ),
+        ),
       ],
     );
   }

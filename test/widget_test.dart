@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:study_app/main.dart';
+import 'package:study_app/providers/Completion_provider.dart';
 import 'package:study_app/providers/habit_provider.dart';
 import 'package:study_app/providers/note_provider.dart';
 
@@ -17,10 +18,12 @@ void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
      final noteProvider = NoteProvider();
-  await noteProvider.initialize(); //
+  final completionProvider = CompletionProvider();
   final habitProvider = HabitProvider();
+  await completionProvider.intialize();
   await habitProvider.intialize();
-  await tester.pumpWidget(MyApp(noteProvider: noteProvider,habitProvider: habitProvider,));
+  await noteProvider.initialize();
+  await tester.pumpWidget(MyApp(noteProvider: noteProvider,habitProvider: habitProvider,completionProvider:completionProvider,));
 
     // Verify that our counter starts at 0.
     expect(find.text('0'), findsOneWidget);

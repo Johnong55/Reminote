@@ -129,6 +129,7 @@ class Habit {
   String toString() {
     return 'Habit(id: $id, title: $title, '
            'frequencyType: ${frequencyType?.name}, '
-           'due_date: $due_date, isCompleted: $isCompleted)';
+           'due_date: $due_date, isCompleted: $isCompleted)'
+           'start_date: $start_date, color: $color)';   
   }
 }

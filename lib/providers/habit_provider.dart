@@ -11,8 +11,7 @@ List<Habit> _filterHabits = [];
 Habit? _currentHabit ;
  bool _isLoading = false;
  String _searchType = '';
-
-DateTime? _currentDate ;
+DateTime? _currentDate = DateTime.now(); // Default to today;
  // Getters 
  List<Habit> get habits  => _habits;
  List<Habit> get filterHabits => _filterHabits;
@@ -23,13 +22,17 @@ DateTime? get currentDate => _currentDate;
 Future<void> intialize() async{
     _setLoading(true);
     await _service.init();
-    await fetchHabits(DateTime.now());
+    await fetchHabits();
     _setLoading(false);
 }
 
-Future<void> fetchHabits(DateTime date) async{
+Future<void> fetchHabits() async{
+  log("--------------------------");
     _setLoading(true);
-    _habits = await _service.getHabitsForDay(date);
+    _habits = await _service.getHabitsForDay(currentDate?? DateTime.now());
+    for(var habit in _habits){
+      log("habit startDate : ${habit.start_date}");
+    }
     _setLoading(false);
     notifyListeners();
 
@@ -39,8 +42,8 @@ Future<void> createHabit(Habit habit ) async{
   try{
     log("Creatingg habit ${habit}");
     await _service.addHabit(habit);
-    fetchHabits(currentDate?? DateTime.now());
-
+    fetchHabits();
+    log(habit.toString());
   }
   catch (e) {
     log("error when creating.....");
@@ -55,7 +58,7 @@ Future<void> updateHabit(Habit habit) async {
   _setLoading(true);
   try {
     await _service.updateHabit(habit);
-    await fetchHabits(_currentDate ?? DateTime.now());
+    await fetchHabits();
   } catch (e) {
     log("Error updating habit: $e");
   } finally {
@@ -71,7 +74,8 @@ Future<void> updateHabit(Habit habit) async {
 void setCurrentDate(DateTime date){
   _currentDate  = date;
   notifyListeners();
-  fetchHabits(date);
-}
+  fetchHabits();
+} 
+
 
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart'; // For date formatting
+import 'package:study_app/models/Completions.dart';
 import 'package:study_app/models/Habit.dart';
 import 'package:study_app/utils/Color_helper.dart';
 
@@ -7,16 +8,18 @@ class HabitTile extends StatelessWidget {
   final Habit habit;
   final VoidCallback? onTap;
   final VoidCallback? onToggleComplete;
-
+  final bool? isCompletion;
   const HabitTile({
     super.key,
     required this.habit,
     this.onTap,
     this.onToggleComplete,
+    required this.isCompletion
   });
 
   @override
   Widget build(BuildContext context) {
+    
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
@@ -28,20 +31,20 @@ class HabitTile extends StatelessWidget {
     final dueTimeStr =
         habit.due_time != null ? DateFormat.Hm().format(habit.due_time!) : '';
 
-    final isCompleted = habit.isCompleted ?? false;
+    
     final color_helper = Color_helper();
     return GestureDetector(
       onTap: onTap,
       child: Card(
         color:
-            isCompleted ? color_helper.HexToColor(habit.color!) : Colors.white,
+            (isCompletion ?? false) ? color_helper.HexToColor(habit.color!) : Colors.white,
         margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         child: ListTile(
           leading: IconButton(
             icon: Icon(
-              isCompleted ? Icons.check_circle : Icons.radio_button_unchecked,
-              color: isCompleted ? Colors.green : Colors.grey,
+              (isCompletion ?? false)  ? Icons.check_circle : Icons.radio_button_unchecked,
+              color:      (isCompletion ?? false)  ? Colors.green : Colors.grey,
             ),
             onPressed: onToggleComplete,
           ),

@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:study_app/models/Note.dart';
+import 'package:study_app/utils/Isar_Util.dart';
 
 class NoteRepositoryOffline{
   static late Isar _isar;
@@ -11,11 +12,7 @@ class NoteRepositoryOffline{
 
   // Make this method static if you're using _isar as static
   Future<void> initializeIsar() async {
-    final dir = await getApplicationDocumentsDirectory();
-    _isar = await Isar.open(
-      [NoteSchema],
-      directory: dir.path,
-    );
+    _isar = await IsarUtil.getIsarInstance();
   }
   
   // Create a new note

@@ -1,27 +1,32 @@
+// StreakCalendar.dart
 import 'package:flutter/material.dart';
 import 'package:study_app/components/widgets/Streak_Home/StreakDayItem.dart';
 import 'package:intl/intl.dart';
 
 class StreakCalendar extends StatelessWidget {
   final List<bool> completedDays;
-  final int maxDaysToShow;
   final Color streakColor;
   final bool isDarkMode;
-  final void Function() ontap;
+  final DateTime? chosenDate; // Can be null if no date is chosen yet
+  final void Function(DateTime) onDateSelected;
+  
   const StreakCalendar({
     super.key,
     required this.completedDays,
-    required this.maxDaysToShow,
     required this.streakColor,
     required this.isDarkMode,
-    required this.ontap,
+    required this.chosenDate,
+    required this.onDateSelected,
   });
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
+    
+    // Get the date of Monday of the current week
     final today = DateTime.now();
+    final mondayOfWeek = _getMondayOfWeek(today);
 
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
@@ -50,36 +55,30 @@ class StreakCalendar extends StatelessWidget {
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
               physics: const BouncingScrollPhysics(),
-              itemCount: maxDaysToShow,
+              itemCount: 12, // Monday to Sunday (7 days)
               padding: const EdgeInsets.symmetric(horizontal: 12),
               itemBuilder: (context, index) {
-                // Calculate days from today
-                final middleIndex = maxDaysToShow ~/ 2; // Center position (today)
-                final dayOffset = index - middleIndex; // 0 is today, -1 is yesterday, +1 is tomorrow
-                final date = today.add(Duration(days: dayOffset));
+                // Calculate date from Monday to Sunday
+                final date = mondayOfWeek.add(Duration(days: index));
                 
+                // Check if day is completed based on index
                 final isCompleted = 
                     completedDays.length > index ? completedDays[index] : false;
-
-                // Enable scroll position to center on today
-                WidgetsBinding.instance.addPostFrameCallback((_) {
-                  if (index == middleIndex) {
-                    final scrollController = PrimaryScrollController.of(context);
-                    scrollController?.animateTo(
-                      middleIndex * 56.0 - (MediaQuery.of(context).size.width / 2) + 28,
-                      duration: const Duration(milliseconds: 300),
-                      curve: Curves.easeInOut,
-                    );
-                  }
-                });
+                
+                // Check if this is the chosen date
+                final isChosen = chosenDate != null && _isSameDay(date, chosenDate!);
+                
+                // Check if this is today
+                final isToday = _isSameDay(date, today);
 
                 return StreakDayItem(
                   date: date,
-                  isToday: dayOffset == 0,
+                  isToday: isToday,
+                  isChosen: isChosen,
                   isCompleted: isCompleted,
                   streakColor: streakColor,
                   isDarkMode: isDarkMode,
-                  ontap: ontap  ,
+                  ontap: () => onDateSelected(date),
                 );
               },
             ),
@@ -87,5 +86,19 @@ class StreakCalendar extends StatelessWidget {
         ],
       ),
     );
+  }
+  
+  // Helper to get Monday of the current week
+  DateTime _getMondayOfWeek(DateTime date) {
+    // Weekday is 1-based where 1 is Monday and 7 is Sunday
+    int difference = date.weekday - 1;
+    return date.subtract(Duration(days: difference));
+  }
+  
+  // Helper to check if two dates are the same day
+  bool _isSameDay(DateTime date1, DateTime date2) {
+    return date1.year == date2.year && 
+           date1.month == date2.month && 
+           date1.day == date2.day;
   }
 }

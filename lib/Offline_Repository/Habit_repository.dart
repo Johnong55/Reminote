@@ -1,7 +1,10 @@
+import 'dart:developer';
+
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:study_app/Offline_Repository/Completions_repository.dart';
 import 'package:study_app/models/Habit.dart';
+import 'package:study_app/utils/Isar_Util.dart';
 
 class HabitRepository {
   static late Isar _isar;
@@ -10,8 +13,7 @@ class HabitRepository {
 
   // Initialize Isar
   Future<void> initializeIsar() async {
-    final dir = await getApplicationDocumentsDirectory();
-    _isar = await Isar.open([HabitSchema], directory: dir.path);
+    _isar = await IsarUtil.getIsarInstance();
   }
 
   // Create a new Habit
@@ -129,9 +131,8 @@ class HabitRepository {
   }
 
   Future<List<Habit>> getListHabitInSpecDay(DateTime date) async {
-    final DateOnly = DateTime(date.year, date.month, date.day);
-    final specificHabits =
-        await _isar.habits.filter().due_dateEqualTo(date).findAll();
+    final specificHabits = await getListOnceTimeHabits(date);
+
     final dailyHabits = await getListDailyHabits(date);
     final weeklyHabits = await getListWeeklyHabit(date);
     final monthlyHabits = await getListMonthlyHabits(date);
@@ -144,52 +145,88 @@ class HabitRepository {
     ];
   }
 
+  Future<List<Habit>> getListOnceTimeHabits(DateTime date) async {
+    final onceHabit =
+      await _isar.habits
+        .filter()
+        .frequency_typeEqualTo(0) // once-time
+        .and()
+        .start_dateBetween(
+          DateTime(date.year, date.month, date.day).millisecondsSinceEpoch,
+          DateTime(date.year, date.month, date.day, 23, 59, 59).millisecondsSinceEpoch,
+        )
+        .findAll();
+    return [...onceHabit];
+  }
+
   Future<List<Habit>> getListDailyHabits(DateTime date) async {
+    
+      final dateinmilli = date.millisecondsSinceEpoch;
+    log("date: ${date.microsecondsSinceEpoch}");
+  
     final dailyHabit =
         await _isar.habits
             .filter()
-            .due_dateLessThan(date)
+            .start_dateLessThan(dateinmilli)
             .and()
-            .frequency_typeEqualTo(1) // dayly
+            .frequency_typeEqualTo(1)
+            .and() // dayly
+            .due_dateGreaterThan(date)
+            .sortByDue_time()
             .findAll();
+    
     return [...dailyHabit];
   }
 
   Future<List<Habit>> getListWeeklyHabit(DateTime date) async {
+    DateTime currentDate = DateTime(date.year, date.month, date.day,0,0,0); 
     final allWeeklyHabits =
         await _isar.habits
             .filter()
-            .frequency_typeEqualTo(2) // weekly
-            .and()
-            .due_dateLessThan(date)
+            .frequency_typeEqualTo(2)
+            .and() // weekly
+            .due_dateGreaterThan(date)
+            .sortByDue_time()
             .findAll();
+
     final weeklyHabits =
         allWeeklyHabits.where((habit) {
-          final due = DateTime(
-            habit.due_date!.year,
-            habit.due_date!.month,
-            habit.due_date!.day,
+          // Convert milliseconds since epoch to DateTime
+          final startDateTime = DateTime.fromMillisecondsSinceEpoch(
+            habit.start_date!,
           );
-          final diffDays = date.difference(due).inDays;
-          return diffDays % 7 ==
-              0; // Assuming weekly habits repeat every 7 days
+
+          // Calculate days difference from start date to current date
+          final diffDays = currentDate.difference(startDateTime).inDays;
+
+          // Check if today is a day when the habit should occur (every 7 days from start)
+          return diffDays >= 0 && diffDays % 7 == 0;
         }).toList();
+
     return weeklyHabits;
   }
 
   Future<List<Habit>> getListMonthlyHabits(DateTime date) async {
-    final allMonthLyHabit =
+    final allMonthlyHabit =
         await _isar.habits
             .filter()
-            .due_dateLessThan(date)
-            .and()
-            .frequency_typeEqualTo(3)
+            .frequency_typeEqualTo(3) // monthly
+            .and() // weekly
+            .due_dateGreaterThan(date)
+            .sortByDue_time()
             .findAll();
+
     final monthlyHabits =
-        allMonthLyHabit.where((habit) {
-          final due = habit.due_date!.day;
-          return due == date.day;
+        allMonthlyHabit.where((habit) {
+          // Convert milliseconds since epoch to DateTime
+          final startDateTime = DateTime.fromMillisecondsSinceEpoch(
+            habit.start_date!,
+          );
+
+          // Check if the day of month matches
+          return startDateTime.day == date.day;
         }).toList();
+
     return monthlyHabits;
   }
 }

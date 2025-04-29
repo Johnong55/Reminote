@@ -1,24 +1,23 @@
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:study_app/Offline_Repository/Habit_repository.dart';
 import 'package:study_app/models/Completions.dart';
+import 'package:study_app/models/Habit.dart';
+import 'package:study_app/utils/Isar_Util.dart';
 
 class CompletionsRepository {
   static late Isar _isar;
-  
+  static final habitRepository = HabitRepository();
   // Initialize Isar
   Future<void> initializeIsar() async {
-    final dir = await getApplicationDocumentsDirectory();
-    _isar = await Isar.open(
-      [CompletionsSchema],
-      directory: dir.path,  
-    );
+    _isar = await IsarUtil.getIsarInstance();
   }
   
   // Record a completion
-  Future<void> recordCompletion(int habitId, bool allCompleted, DateTime dateCompleted) async {
+  Future<void> recordCompletion(int habitId, isCompleted, DateTime dateCompleted) async {
     final completion = Completions()
       ..habitID = habitId
-      ..allCompleted = allCompleted
+      ..isCompleted = isCompleted
       ..dateCompleted = dateCompleted;
       
     await _isar.writeTxn(() async {
@@ -39,17 +38,11 @@ class CompletionsRepository {
   
   // Check if all habits were completed on a specific date
   Future<bool> wereAllCompletedOnDate(DateTime date) async {
-    final startOfDay = DateTime(date.year, date.month, date.day);
-    final endOfDay = DateTime(date.year, date.month, date.day, 23, 59, 59);
-    
-    final completions = await _isar.completions
-      .filter()
-      .dateCompletedBetween(startOfDay, endOfDay)
-      .findAll();
-      
+    List<Completions> completions = await getCompletionsForDate(date);
+    List<Habit> habits = habitRepository.getListHabitInSpecDay(date) as List<Habit>; // Assuming this method exists in HabitRepository
+    return habits.isNotEmpty && completions.length == habits.length; // Check if all habits are completed
+  
     // Check if at least one completion exists and all are marked as allCompleted=true
-    return completions.isNotEmpty && 
-           completions.every((completion) => completion.allCompleted == true);
   }
   
   // Get completions for a specific habit
@@ -74,29 +67,14 @@ class CompletionsRepository {
       .dateCompletedBetween(startDate, endDate)
       .findAll();
   }
-  
-  // Count days with all completions in a date range (for streak calculations)
-  Future<int> countDaysWithAllCompletions(DateTime startDate, DateTime endDate) async {
-    final completions = await _isar.completions
-      .filter()
-      .dateCompletedBetween(startDate, endDate)
-      .and()
-      .allCompletedEqualTo(true)
-      .findAll();
-    
-    // Group by date and count days
-    final completionDays = <DateTime>{};
+  Future<bool> isHabitCompletedinDate(int habitID, DateTime date) async {
+    List<Completions> completions = await getCompletionsForDate(date);
     for (var completion in completions) {
-      if (completion.dateCompleted != null) {
-        final day = DateTime(
-          completion.dateCompleted!.year,
-          completion.dateCompleted!.month,
-          completion.dateCompleted!.day,
-        );
-        completionDays.add(day);
+      if (completion.habitID == habitID) {
+        return completion.isCompleted ?? false;
       }
     }
-    
-    return completionDays.length;
+    return false;
   }
+  
 }

@@ -19,7 +19,7 @@ class _HomepageState extends State<Homepage> {
   bool _isSearching = false;
   final TextEditingController _searchController = TextEditingController();
 
-  final List<Widget> routes = [const Notehome(), const Reminder(), const Settingspage()];
+  final List<Widget> routes = [const Notehome(), const Habitpage(), const Settingspage()];
 
   @override
   void dispose() {
