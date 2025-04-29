@@ -37,6 +37,7 @@ class _ListStreakState extends State<ListStreak> {
     setState(() {
       _chosenDate = date;
       Provider.of<HabitProvider>(context, listen: false).setCurrentDate(date);
+      Provider.of<HabitProvider>(context,listen: false).fetchHabits();
       log("Selected date: $_chosenDate");
     });
   }

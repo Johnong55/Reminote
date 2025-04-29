@@ -1,5 +1,6 @@
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:study_app/models/Completions.dart';
 import 'package:study_app/models/Habit.dart';
 import 'package:study_app/models/Note.dart';
 
@@ -8,7 +9,7 @@ class IsarUtil {
   static Future<Isar> getIsarInstance() async{
     if(_isar == null || !_isar!.isOpen){
       final dir = await getApplicationDocumentsDirectory();
-      _isar = await Isar.open([NoteSchema,HabitSchema], directory: dir.path);
+      _isar = await Isar.open([NoteSchema,HabitSchema,CompletionsSchema], directory: dir.path);
 
     }
     return _isar!;

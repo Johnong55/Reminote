@@ -7,11 +7,12 @@ part 'Completions.g.dart';
 class Completions{
   Id id = Isar.autoIncrement;
   int? habitID;
-
+  @Index()
+  bool? isCompleted;
   DateTime? dateCompleted;
   Completions({
     this.habitID,
-
+    this.isCompleted,
     this.dateCompleted,
   });
 }

@@ -10,10 +10,12 @@ class CompletionService {
   }
 
   // Record a completion
-  Future<void> recordCompletion(int habitId, bool allCompleted, DateTime dateCompleted) async {
-    await _completionsRepository.recordCompletion(habitId, allCompleted, dateCompleted);
+  Future<void> recordCompletion(int habitId, bool isCompleted, DateTime dateCompleted) async {
+    await _completionsRepository.recordCompletion(habitId, isCompleted, dateCompleted);
   }
-
+  Future<bool> isHabitCompleted(int habitID, DateTime date) async {
+    return await _completionsRepository.isHabitCompletedinDate(habitID, date);
+  }
   // Get completions for a specific date
   Future<List<Completions>> getCompletionsForDate(DateTime date) async {
     return await _completionsRepository.getCompletionsForDate(date);

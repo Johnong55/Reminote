@@ -14,10 +14,10 @@ class CompletionsRepository {
   }
   
   // Record a completion
-  Future<void> recordCompletion(int habitId, bool allCompleted, DateTime dateCompleted) async {
+  Future<void> recordCompletion(int habitId, isCompleted, DateTime dateCompleted) async {
     final completion = Completions()
       ..habitID = habitId
-
+      ..isCompleted = isCompleted
       ..dateCompleted = dateCompleted;
       
     await _isar.writeTxn(() async {
@@ -66,6 +66,15 @@ class CompletionsRepository {
       .filter()
       .dateCompletedBetween(startDate, endDate)
       .findAll();
+  }
+  Future<bool> isHabitCompletedinDate(int habitID, DateTime date) async {
+    List<Completions> completions = await getCompletionsForDate(date);
+    for (var completion in completions) {
+      if (completion.habitID == habitID) {
+        return completion.isCompleted ?? false;
+      }
+    }
+    return false;
   }
   
 }

@@ -26,6 +26,11 @@ const CompletionsSchema = CollectionSchema(
       id: 1,
       name: r'habitID',
       type: IsarType.long,
+    ),
+    r'isCompleted': PropertySchema(
+      id: 2,
+      name: r'isCompleted',
+      type: IsarType.bool,
     )
   },
   estimateSize: _completionsEstimateSize,
@@ -59,6 +64,7 @@ void _completionsSerialize(
 ) {
   writer.writeDateTime(offsets[0], object.dateCompleted);
   writer.writeLong(offsets[1], object.habitID);
+  writer.writeBool(offsets[2], object.isCompleted);
 }
 
 Completions _completionsDeserialize(
@@ -70,6 +76,7 @@ Completions _completionsDeserialize(
   final object = Completions(
     dateCompleted: reader.readDateTimeOrNull(offsets[0]),
     habitID: reader.readLongOrNull(offsets[1]),
+    isCompleted: reader.readBoolOrNull(offsets[2]),
   );
   object.id = id;
   return object;
@@ -86,6 +93,8 @@ P _completionsDeserializeProp<P>(
       return (reader.readDateTimeOrNull(offset)) as P;
     case 1:
       return (reader.readLongOrNull(offset)) as P;
+    case 2:
+      return (reader.readBoolOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
@@ -382,6 +391,34 @@ extension CompletionsQueryFilter
       ));
     });
   }
+
+  QueryBuilder<Completions, Completions, QAfterFilterCondition>
+      isCompletedIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'isCompleted',
+      ));
+    });
+  }
+
+  QueryBuilder<Completions, Completions, QAfterFilterCondition>
+      isCompletedIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'isCompleted',
+      ));
+    });
+  }
+
+  QueryBuilder<Completions, Completions, QAfterFilterCondition>
+      isCompletedEqualTo(bool? value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'isCompleted',
+        value: value,
+      ));
+    });
+  }
 }
 
 extension CompletionsQueryObject
@@ -414,6 +451,18 @@ extension CompletionsQuerySortBy
   QueryBuilder<Completions, Completions, QAfterSortBy> sortByHabitIDDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'habitID', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Completions, Completions, QAfterSortBy> sortByIsCompleted() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isCompleted', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Completions, Completions, QAfterSortBy> sortByIsCompletedDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isCompleted', Sort.desc);
     });
   }
 }
@@ -456,6 +505,18 @@ extension CompletionsQuerySortThenBy
       return query.addSortBy(r'id', Sort.desc);
     });
   }
+
+  QueryBuilder<Completions, Completions, QAfterSortBy> thenByIsCompleted() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isCompleted', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Completions, Completions, QAfterSortBy> thenByIsCompletedDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isCompleted', Sort.desc);
+    });
+  }
 }
 
 extension CompletionsQueryWhereDistinct
@@ -469,6 +530,12 @@ extension CompletionsQueryWhereDistinct
   QueryBuilder<Completions, Completions, QDistinct> distinctByHabitID() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'habitID');
+    });
+  }
+
+  QueryBuilder<Completions, Completions, QDistinct> distinctByIsCompleted() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'isCompleted');
     });
   }
 }
@@ -491,6 +558,12 @@ extension CompletionsQueryProperty
   QueryBuilder<Completions, int?, QQueryOperations> habitIDProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'habitID');
+    });
+  }
+
+  QueryBuilder<Completions, bool?, QQueryOperations> isCompletedProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'isCompleted');
     });
   }
 }

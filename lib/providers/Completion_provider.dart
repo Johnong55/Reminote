@@ -28,10 +28,22 @@ class CompletionProvider extends ChangeNotifier {
     attachCompletions( await _service.getCompletionsForDate(date));
     _setloading(false);
   }
+  Future<void> recordCompletions(int habit, DateTime date, bool isCompleted) async {
+    _setloading(true);
+    await _service.recordCompletion(habit, isCompleted, date);
+    await getCompletionsForDate(date);
+    _setloading(false);
+  }
+
   Future<void> attachCompletions(List<Completions> completions) async {
      _completions.clear();
      _completions.addAll(completions);
 
+  
+  }
+
+  Future<bool> isHabitCompleted(int habitID, DateTime date) async{
+    return await _service.isHabitCompleted(habitID, date);
   }
 
 }

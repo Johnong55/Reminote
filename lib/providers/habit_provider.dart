@@ -75,6 +75,7 @@ void setCurrentDate(DateTime date){
   _currentDate  = date;
   notifyListeners();
   fetchHabits();
-}
+} 
+
 
 }
