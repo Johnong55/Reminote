@@ -1,10 +1,11 @@
 import 'package:study_app/Offline_Repository/Habit_repository.dart';
 import 'package:study_app/models/Habit.dart';
+import 'package:study_app/services/CompletionService.dart';
 
 
 class HabitService {
   final HabitRepository _habitRepository  = HabitRepository();
-
+  final CompletionService completionService = CompletionService();
   
 
   // Initialize the database
@@ -47,7 +48,7 @@ class HabitService {
 
   // Toggle a habit's completion state
   Future<void> toggleCompletion(int id, bool isCompleted) async {
-    await _habitRepository.toggleHabitCompletion(id, isCompleted);
+    await completionService.recordCompletion(id, isCompleted, DateTime.now());
   }
 
   // Get habits for a specific day (including repeating ones)

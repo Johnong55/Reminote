@@ -4,11 +4,34 @@ import 'package:study_app/services/CompletionService.dart';
 
 class CompletionProvider extends ChangeNotifier {
   static CompletionService _service = CompletionService();
-  DateTime? _currentDate;
+  DateTime? _currentDate = DateTime.now();
   List<Completions> _completions = [];
   // Getters 
   DateTime? get currentDate => _currentDate;
   List<Completions> get completions => _completions;
   bool _isLoading = false;
-  
+  bool get isLoading => _isLoading;
+  void _setloading(bool value) {
+    _isLoading = value;
+    notifyListeners();
+  }
+  Future<void> intialize() async{
+    _setloading(true);
+    await _service.initialize();
+
+    await _service.getCompletionsForDate(currentDate!);
+    _setloading(false);
+}
+  Future<void> getCompletionsForDate(DateTime date) async {
+    _setloading(true);
+    _currentDate = date;
+    attachCompletions( await _service.getCompletionsForDate(date));
+    _setloading(false);
+  }
+  Future<void> attachCompletions(List<Completions> completions) async {
+     _completions.clear();
+     _completions.addAll(completions);
+
+  }
+
 }

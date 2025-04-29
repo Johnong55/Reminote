@@ -17,18 +17,13 @@ const CompletionsSchema = CollectionSchema(
   name: r'Completions',
   id: -2694847889342375707,
   properties: {
-    r'allCompleted': PropertySchema(
-      id: 0,
-      name: r'allCompleted',
-      type: IsarType.bool,
-    ),
     r'dateCompleted': PropertySchema(
-      id: 1,
+      id: 0,
       name: r'dateCompleted',
       type: IsarType.dateTime,
     ),
     r'habitID': PropertySchema(
-      id: 2,
+      id: 1,
       name: r'habitID',
       type: IsarType.long,
     )
@@ -62,9 +57,8 @@ void _completionsSerialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  writer.writeBool(offsets[0], object.allCompleted);
-  writer.writeDateTime(offsets[1], object.dateCompleted);
-  writer.writeLong(offsets[2], object.habitID);
+  writer.writeDateTime(offsets[0], object.dateCompleted);
+  writer.writeLong(offsets[1], object.habitID);
 }
 
 Completions _completionsDeserialize(
@@ -74,9 +68,8 @@ Completions _completionsDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = Completions(
-    allCompleted: reader.readBoolOrNull(offsets[0]),
-    dateCompleted: reader.readDateTimeOrNull(offsets[1]),
-    habitID: reader.readLongOrNull(offsets[2]),
+    dateCompleted: reader.readDateTimeOrNull(offsets[0]),
+    habitID: reader.readLongOrNull(offsets[1]),
   );
   object.id = id;
   return object;
@@ -90,10 +83,8 @@ P _completionsDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
-      return (reader.readBoolOrNull(offset)) as P;
-    case 1:
       return (reader.readDateTimeOrNull(offset)) as P;
-    case 2:
+    case 1:
       return (reader.readLongOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -193,34 +184,6 @@ extension CompletionsQueryWhere
 
 extension CompletionsQueryFilter
     on QueryBuilder<Completions, Completions, QFilterCondition> {
-  QueryBuilder<Completions, Completions, QAfterFilterCondition>
-      allCompletedIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'allCompleted',
-      ));
-    });
-  }
-
-  QueryBuilder<Completions, Completions, QAfterFilterCondition>
-      allCompletedIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'allCompleted',
-      ));
-    });
-  }
-
-  QueryBuilder<Completions, Completions, QAfterFilterCondition>
-      allCompletedEqualTo(bool? value) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'allCompleted',
-        value: value,
-      ));
-    });
-  }
-
   QueryBuilder<Completions, Completions, QAfterFilterCondition>
       dateCompletedIsNull() {
     return QueryBuilder.apply(this, (query) {
@@ -429,19 +392,6 @@ extension CompletionsQueryLinks
 
 extension CompletionsQuerySortBy
     on QueryBuilder<Completions, Completions, QSortBy> {
-  QueryBuilder<Completions, Completions, QAfterSortBy> sortByAllCompleted() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'allCompleted', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Completions, Completions, QAfterSortBy>
-      sortByAllCompletedDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'allCompleted', Sort.desc);
-    });
-  }
-
   QueryBuilder<Completions, Completions, QAfterSortBy> sortByDateCompleted() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'dateCompleted', Sort.asc);
@@ -470,19 +420,6 @@ extension CompletionsQuerySortBy
 
 extension CompletionsQuerySortThenBy
     on QueryBuilder<Completions, Completions, QSortThenBy> {
-  QueryBuilder<Completions, Completions, QAfterSortBy> thenByAllCompleted() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'allCompleted', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Completions, Completions, QAfterSortBy>
-      thenByAllCompletedDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'allCompleted', Sort.desc);
-    });
-  }
-
   QueryBuilder<Completions, Completions, QAfterSortBy> thenByDateCompleted() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'dateCompleted', Sort.asc);
@@ -523,12 +460,6 @@ extension CompletionsQuerySortThenBy
 
 extension CompletionsQueryWhereDistinct
     on QueryBuilder<Completions, Completions, QDistinct> {
-  QueryBuilder<Completions, Completions, QDistinct> distinctByAllCompleted() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'allCompleted');
-    });
-  }
-
   QueryBuilder<Completions, Completions, QDistinct> distinctByDateCompleted() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'dateCompleted');
@@ -547,12 +478,6 @@ extension CompletionsQueryProperty
   QueryBuilder<Completions, int, QQueryOperations> idProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'id');
-    });
-  }
-
-  QueryBuilder<Completions, bool?, QQueryOperations> allCompletedProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'allCompleted');
     });
   }
 
