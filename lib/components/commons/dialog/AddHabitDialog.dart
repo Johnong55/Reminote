@@ -23,7 +23,7 @@ class _AddHabitDialogState extends State<AddHabitDialog> {
   DateTime? _dueDate;
   TimeOfDay? _dueTime;
   bool _isCompleted = false;
-  int _frequencyType = 0; // Default: Daily
+  int _frequencyType = 0; // Default: Once
   int _targetCount = 1;
   int? _startDate;
   String _color =
@@ -90,9 +90,9 @@ class _AddHabitDialogState extends State<AddHabitDialog> {
       final newHabit = Habit(
         title: _titleController.text,
         description: _descriptionController.text,
-        due_date: _dueDate,
+        due_date: _frequencyType == 0 ? null : _dueDate,
         due_time:
-            _dueDate != null && _dueTime != null
+            _frequencyType != 0 && _dueDate != null && _dueTime != null
                 ? DateTime(
                   _dueDate!.year,
                   _dueDate!.month,
@@ -103,7 +103,7 @@ class _AddHabitDialogState extends State<AddHabitDialog> {
                 : null,
         isCompleted: _isCompleted,
         frequency_type: _frequencyType,
-        target_count: _targetCount,
+        target_count: _frequencyType == 0 ? 1 : _targetCount,
         start_date: _startDate,
         color: _color,
       );
@@ -201,70 +201,73 @@ class _AddHabitDialogState extends State<AddHabitDialog> {
                   },
                 ),
                 const SizedBox(height: 16),
-                Row(
-                  children: [
-                    Expanded(
-                      child: InkWell(
-                        onTap: _pickDate,
-                        child: InputDecorator(
-                          decoration: const InputDecoration(
-                            labelText: 'Due Date',
-                            border: OutlineInputBorder(),
-                          ),
-                          child: Text(
-                            _dueDate != null
-                                ? DateFormat('yyyy-MM-dd').format(_dueDate!)
-                                : 'Select Date',
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: InkWell(
-                        onTap: _pickTime,
-                        child: InputDecorator(
-                          decoration: const InputDecoration(
-                            labelText: 'Due Time',
-                            border: OutlineInputBorder(),
-                          ),
-                          child: Text(
-                            _dueTime != null
-                                ? _dueTime!.format(context)
-                                : 'Select Time',
+                // Only show date/time pickers if frequency is not "Once"
+                if (_frequencyType != 0) ...[
+                  Row(
+                    children: [
+                      Expanded(
+                        child: InkWell(
+                          onTap: _pickDate,
+                          child: InputDecorator(
+                            decoration: const InputDecoration(
+                              labelText: 'Due Date',
+                              border: OutlineInputBorder(),
+                            ),
+                            child: Text(
+                              _dueDate != null
+                                  ? DateFormat('yyyy-MM-dd').format(_dueDate!)
+                                  : 'Select Date',
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16),
-                Row(
-                  children: [
-                    const Text('Target Count:'),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: Slider(
-                        value: _targetCount.toDouble(),
-                        min: 1,
-                        max: 30,
-                        divisions: 29,
-                        label: _targetCount.toString(),
-                        onChanged: (value) {
-                          setState(() {
-                            _targetCount = value.toInt();
-                          });
-                        },
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: InkWell(
+                          onTap: _pickTime,
+                          child: InputDecorator(
+                            decoration: const InputDecoration(
+                              labelText: 'Due Time',
+                              border: OutlineInputBorder(),
+                            ),
+                            child: Text(
+                              _dueTime != null
+                                  ? _dueTime!.format(context)
+                                  : 'Select Time',
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
-                    Container(
-                      width: 30,
-                      alignment: Alignment.center,
-                      child: Text('$_targetCount'),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  Row(
+                    children: [
+                      const Text('Target Count:'),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: Slider(
+                          value: _targetCount.toDouble(),
+                          min: 1,
+                          max: 30,
+                          divisions: 29,
+                          label: _targetCount.toString(),
+                          onChanged: (value) {
+                            setState(() {
+                              _targetCount = value.toInt();
+                            });
+                          },
+                        ),
+                      ),
+                      Container(
+                        width: 30,
+                        alignment: Alignment.center,
+                        child: Text('$_targetCount'),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                ],
                 const Text(
                   'Color',
                   style: TextStyle(fontWeight: FontWeight.bold),
