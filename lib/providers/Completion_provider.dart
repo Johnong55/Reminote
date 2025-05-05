@@ -35,7 +35,7 @@ class CompletionProvider extends ChangeNotifier {
   }
   Future<void> recordCompletions(int habit, DateTime date, bool isCompleted) async {
     _setloading(true);
-    await _service.recordCompletion(habit, isCompleted, date);
+    await _service.recordCompletion(habit,  date);
     await getCompletionsForDate(date);
       _completed = await _service.wereAllCompletedOnDate(currentDate!);
     _setloading(false);
@@ -61,7 +61,9 @@ Future<bool> wereCompletedonDate() async {
 }
 
 
-  void setCurrentDate(DateTime date) {
+  Future<void> setCurrentDate(DateTime date) async {
     _currentDate = date;
+
+    notifyListeners();
   }
 }

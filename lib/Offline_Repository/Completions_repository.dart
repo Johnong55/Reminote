@@ -15,7 +15,7 @@ class CompletionsRepository {
     _isar = await IsarUtil.getIsarInstance();
   }
   
-Future<void> recordCompletion(int habitId, bool isCompleted, DateTime dateCompleted) async {
+Future<void> recordCompletion(int habitId, DateTime dateCompleted) async {
   final normalizedDate = DateTime(dateCompleted.year, dateCompleted.month, dateCompleted.day);
 
   final existing = await _isar.completions
@@ -26,7 +26,7 @@ Future<void> recordCompletion(int habitId, bool isCompleted, DateTime dateComple
 
   if (existing != null) {
     // 🔁 Đã tồn tại → cập nhật
-    existing.isCompleted = isCompleted;
+    existing.isCompleted = !existing.isCompleted!;
 
     await _isar.writeTxn(() async {
       await _isar.completions.put(existing);
@@ -36,7 +36,7 @@ Future<void> recordCompletion(int habitId, bool isCompleted, DateTime dateComple
     // ➕ Chưa có → thêm mới
     final completion = Completions()
       ..habitID = habitId
-      ..isCompleted = isCompleted
+      ..isCompleted = true
       ..dateCompleted = normalizedDate;
 
     await _isar.writeTxn(() async {
@@ -55,6 +55,8 @@ Future<void> recordCompletion(int habitId, bool isCompleted, DateTime dateComple
     return await _isar.completions
       .filter()
       .dateCompletedBetween(startOfDay, endOfDay)
+      .and()
+      .isCompletedEqualTo(true)
       .findAll();
   }
   

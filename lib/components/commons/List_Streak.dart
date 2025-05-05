@@ -39,6 +39,10 @@ class _ListStreakState extends State<ListStreak> {
       Provider.of<HabitProvider>(context, listen: false).setCurrentDate(date);
 
       Provider.of<HabitProvider>(context, listen: false).fetchHabits();
+      Provider.of<CompletionProvider>(
+        context,
+        listen: false,
+      ).wereCompletedonDate();
       log("Selected date: $_chosenDate");
     });
   }

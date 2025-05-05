@@ -48,6 +48,12 @@ class _AddHabitDialogState extends State<AddHabitDialog> {
   ];
 
   @override
+  void initState() {
+    super.initState();
+    final currentDate = Provider.of<HabitProvider>(context, listen: false).currentDate!;
+    _startDate = DateTime(currentDate.year, currentDate.month, currentDate.day).millisecondsSinceEpoch;
+  }
+  @override
   void dispose() {
     _titleController.dispose();
     _descriptionController.dispose();
@@ -70,6 +76,11 @@ class _AddHabitDialogState extends State<AddHabitDialog> {
    
       });
     }
+    else{
+      setState((){
+        _startDate = DateTime(DateTime.now().year,DateTime.now().month, DateTime.now().day).millisecondsSinceEpoch;
+      });
+    }
   }
 
   void _pickTime() async {
@@ -90,7 +101,7 @@ class _AddHabitDialogState extends State<AddHabitDialog> {
       final newHabit = Habit(
         title: _titleController.text,
         description: _descriptionController.text,
-        due_date: _frequencyType == 0 ? null : _dueDate,
+        due_date: _frequencyType == 0 ? DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day) : _dueDate,
         due_time:
             _frequencyType != 0 && _dueDate != null && _dueTime != null
                 ? DateTime(
@@ -100,7 +111,7 @@ class _AddHabitDialogState extends State<AddHabitDialog> {
                   _dueTime!.hour,
                   _dueTime!.minute,
                 )
-                : null,
+                : DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day),
         isCompleted: _isCompleted,
         frequency_type: _frequencyType,
         target_count: _frequencyType == 0 ? 1 : _targetCount,

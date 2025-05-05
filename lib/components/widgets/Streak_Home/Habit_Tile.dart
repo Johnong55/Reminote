@@ -54,7 +54,7 @@ class HabitTile extends StatelessWidget {
                 onPressed: (context) {
                   onToggleComplete!();
                 },
-                backgroundColor: colorScheme.primary,
+                backgroundColor: colorScheme.tertiary,
                 foregroundColor: Colors.white,
                 icon: Icons.done_outline_rounded,
                 label: 'Done',

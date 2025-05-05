@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:study_app/components/widgets/Streak_Home/MotivationalText.dart';
 import 'package:study_app/components/widgets/Streak_Home/streak_animation.dart';
 import 'package:study_app/config/app_theme.dart';
 
@@ -23,21 +24,11 @@ class StreakHeader extends StatelessWidget {
         ),
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 4),
-          child: Text(
-            _getMotivationalText(currentStreak),
-            style: textTheme.titleMedium?.copyWith(color: colorScheme.secondary),
-          ),
+          child: MotivationalText(streak: currentStreak,isCompleted: isCompleted),
         ),
       ],
     );
   }
 
-  String _getMotivationalText(int streak) {
-    if (streak == 0) return 'Start your streak today!';
-    if (streak < 3) return 'Good start, keep going!';
-    if (streak < 7) return 'Great work, keep it up!';
-    if (streak < 14) return 'You\'re on fire!';
-    if (streak < 30) return 'Incredible consistency!';
-    return 'You\'re unstoppable!';
-  }
+
 }
