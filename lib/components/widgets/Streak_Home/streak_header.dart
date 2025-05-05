@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:study_app/components/widgets/Streak_Home/streak_animation.dart';
 import 'package:study_app/config/app_theme.dart';
 
 class StreakHeader extends StatelessWidget {
   final int currentStreak;
-
-  const StreakHeader({super.key, required this.currentStreak});
+  final bool isCompleted;
+  const StreakHeader({super.key, required this.currentStreak,required this.isCompleted});
 
   @override
   Widget build(BuildContext context) {
@@ -15,11 +16,7 @@ class StreakHeader extends StatelessWidget {
 
     return Column(
       children: [
-        SizedBox(
-          height: 100,
-          width: 100,
-          child: Lottie.asset('assets/lottie/fire.json'),
-        ),
+       StreakAnimation(isCompleted: isCompleted),
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 4),
           child: Text('$currentStreak-day streak', style: textTheme.headlineMedium),

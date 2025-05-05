@@ -21,8 +21,8 @@ class HabitsPlaceholder extends StatefulWidget {
 class _HabitsPlaceholderState extends State<HabitsPlaceholder> {
   void onToggleComplete(Habit habit) {
       log("heheh");
-      Provider.of<CompletionProvider>(context,listen: false).recordCompletions(habit.id, DateTime.now(), true);
-    
+      Provider.of<CompletionProvider>(context,listen: false).recordCompletions(habit.id,widget.chosenDate, true);
+      Provider.of<CompletionProvider>(context,listen: false).wereCompletedonDate();
   }
 
   @override
@@ -76,6 +76,7 @@ class _HabitsPlaceholderState extends State<HabitsPlaceholder> {
                               context,
                               listen: false,
                             ).createHabit(habit);
+                            Provider.of<CompletionProvider>(context,listen: false).wereCompletedonDate();
                           },
                         );
                       },

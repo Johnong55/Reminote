@@ -7,13 +7,15 @@ import 'package:study_app/providers/Completion_provider.dart';
 
 class AnimatedHabitList extends StatefulWidget {
   final List<Habit> habits;
+  final DateTime chosenDate;
   final void Function(Habit habit) onToggleComplete;
-  final DateTime? chosenDate;
+
   const AnimatedHabitList({
     super.key,
     required this.habits,
     required this.onToggleComplete,
-    required this.chosenDate });
+    required this.chosenDate,
+  });
 
   @override
   State<AnimatedHabitList> createState() => _AnimatedHabitListState();
@@ -22,12 +24,10 @@ class AnimatedHabitList extends StatefulWidget {
 class _AnimatedHabitListState extends State<AnimatedHabitList> {
   final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
   List<Habit> _displayedHabits = [];
-   late final CompletionProvider completionProvider;
 
   @override
   void initState() {
     super.initState();
-    completionProvider = Provider.of<CompletionProvider>(context, listen: false);
     _displayedHabits = List.from(widget.habits);
   }
 
@@ -65,22 +65,27 @@ class _AnimatedHabitListState extends State<AnimatedHabitList> {
       sizeFactor: animation,
       child: FadeTransition(
         opacity: animation,
-        child: FutureBuilder<bool>(
-          future: completionProvider.isHabitCompleted(habit.id, widget.chosenDate!),
-          builder: (context, snapshot) {
-            final isCompletion = snapshot.data ?? false;
-            return HabitTile(
-              habit: habit,
-              isCompletion: isCompletion,
-              onToggleComplete: () {},
+          child: Consumer<CompletionProvider>(
+          builder: (context, provider, _) {
+            final isCompletionFuture = provider.isHabitCompleted(habit.id, widget.chosenDate);
+            return FutureBuilder<bool>(
+              future: isCompletionFuture,
+              builder: (context, snapshot) {
+                final isCompletion = snapshot.data ?? false;
+                return HabitTile(
+                  habit: habit,
+                  isCompletion: isCompletion,
+                  onToggleComplete: () => widget.onToggleComplete(habit),
+                );
+              },
             );
-          },
+          }
         ),
       ),
     );
   }
 
-  Widget _buildAnimatedItem(Habit habit, Animation<double> animation) {
+  Widget _buildAnimatedItem(Habit habit, Animation<double> animation)  {
     return SlideTransition(
       position: Tween<Offset>(
         begin: const Offset(1, 0),
@@ -88,18 +93,23 @@ class _AnimatedHabitListState extends State<AnimatedHabitList> {
       ).animate(animation),
       child: FadeTransition(
         opacity: animation,
-        child: FutureBuilder<bool>(
-          future: completionProvider.isHabitCompleted(habit.id, widget.chosenDate!),
-          builder: (context, snapshot) {
-            final isCompletion = snapshot.data ?? false;
-            return HabitTile(
-              habit: habit,
-              isCompletion: isCompletion,
-              onToggleComplete: () => widget.onToggleComplete(habit),
+        child:  Consumer<CompletionProvider>(
+          builder: (context, provider, _) {
+            final isCompletionFuture = provider.isHabitCompleted(habit.id, widget.chosenDate);
+            return FutureBuilder<bool>(
+              future: isCompletionFuture,
+              builder: (context, snapshot) {
+                final isCompletion = snapshot.data ?? false;
+                return HabitTile(
+                  habit: habit,
+                  isCompletion: isCompletion,
+                  onToggleComplete: () => widget.onToggleComplete(habit),
+                );
+              },
             );
-          },
-        ),
+          }
       ),
+    )
     );
   }
 
@@ -109,7 +119,7 @@ class _AnimatedHabitListState extends State<AnimatedHabitList> {
       key: _listKey,
       initialItemCount: _displayedHabits.length,
       itemBuilder: (context, index, animation) {
-        return  _buildAnimatedItem(_displayedHabits[index], animation);
+        return _buildAnimatedItem(_displayedHabits[index], animation);
       },
     );
   }

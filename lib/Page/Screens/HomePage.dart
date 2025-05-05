@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:study_app/Page/Screens/ContactPage.dart';
 import 'package:study_app/Page/Screens/NoteHome.dart';
 import 'package:study_app/Page/Screens/HabitPage.dart';
 import 'package:study_app/Page/Screens/SettingsPage.dart';
@@ -19,7 +20,7 @@ class _HomepageState extends State<Homepage> {
   bool _isSearching = false;
   final TextEditingController _searchController = TextEditingController();
 
-  final List<Widget> routes = [const Notehome(), const Habitpage(), const Settingspage()];
+  final List<Widget> routes = [const Notehome(), const Habitpage(), const Contactpage(),const Settingspage()];
 
   @override
   void dispose() {

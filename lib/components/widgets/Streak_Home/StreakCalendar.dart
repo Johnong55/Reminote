@@ -55,7 +55,7 @@ class StreakCalendar extends StatelessWidget {
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
               physics: const BouncingScrollPhysics(),
-              itemCount: 12, // Monday to Sunday (7 days)
+              itemCount: 7, // Monday to Sunday (7 days)
               padding: const EdgeInsets.symmetric(horizontal: 12),
               itemBuilder: (context, index) {
                 // Calculate date from Monday to Sunday
