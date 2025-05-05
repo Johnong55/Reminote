@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:study_app/API/firebase_api.dart';
 import 'package:study_app/Offline_Repository/Note_repository_Offline.dart';
 import 'package:study_app/Page/Authentication/Auth_page.dart';
 import 'package:study_app/Page/Screens/ContactPage.dart';
+import 'package:study_app/Page/Screens/HabitPage.dart';
 import 'package:study_app/Page/Screens/HomePage.dart';
 import 'package:study_app/Page/Screens/NoteHome.dart';
 import 'package:study_app/Page/Screens/SettingsPage.dart';
@@ -16,10 +18,13 @@ import 'package:study_app/providers/note_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 
+  final navigatorKey = GlobalKey<NavigatorState>();
 void main() async {
   // Đảm bảo Flutter đã được khởi tạo
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  await FirebaseApi().initNotifications();
+
 
   // Khởi tạo NoteProvider và chờ nó hoàn tất khởi tạo
   final noteProvider = NoteProvider();
@@ -51,6 +56,7 @@ Widget build(BuildContext context) {
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
       home: AuthPage(),
+      navigatorKey: navigatorKey,
       routes: {
         '/home': (context) => Homepage(isLoggedIn: true ,),
         '/note': (context) => const Notehome(),
@@ -58,6 +64,8 @@ Widget build(BuildContext context) {
         '/signup': (context) => const SignUpScreen(),
         '/login' : (context) => const LoginScreen(),
         '/contact': (context) => const Contactpage(),
+        '/habit': (context) => const Habitpage(),
+        '/auth': (context) => const AuthPage(),
       },
     ),
   );

@@ -15,4 +15,12 @@ class Completions{
     this.isCompleted,
     this.dateCompleted,
   });
+
+  @override
+  String toString() {
+    // TODO: implement toString
+    return "completions : habitID =${habitID}"
+    " dateCompleted = ${dateCompleted}"
+    " isCompleted = ${isCompleted}";
+  }
 }

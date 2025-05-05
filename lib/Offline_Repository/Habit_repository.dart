@@ -136,7 +136,7 @@ class HabitRepository {
     final dailyHabits = await getListDailyHabits(date);
     final weeklyHabits = await getListWeeklyHabit(date);
     final monthlyHabits = await getListMonthlyHabits(date);
-
+  
     return [
       ...specificHabits,
       ...dailyHabits,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:intl/intl.dart'; // For date formatting
 import 'package:study_app/models/Completions.dart';
 import 'package:study_app/models/Habit.dart';
@@ -35,41 +36,59 @@ class HabitTile extends StatelessWidget {
     final color_helper = Color_helper();
     return GestureDetector(
       onTap: onTap,
-      child: Card(
-        color:
-            (isCompletion ?? false) ? color_helper.HexToColor(habit.color!) : Colors.white,
-        margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        child: ListTile(
-          leading: IconButton(
-            icon: Icon(
-              (isCompletion ?? false)  ? Icons.check_circle : Icons.radio_button_unchecked,
-              color:      (isCompletion ?? false)  ? Colors.green : Colors.grey,
-            ),
-            onPressed: onToggleComplete,
-          ),
-          title: Text(
-            habit.title ?? 'No Title',
-            style: textTheme.titleMedium?.copyWith(color: colorScheme.onPrimary)
-          ),
-          subtitle: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+
+       
+        child: Card(
+          color:
+              (isCompletion ?? false) ? color_helper.HexToColor(habit.color!) : Colors.white,
+          margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          child: 
+        ClipRRect(
+          borderRadius: BorderRadius.circular(12),
+            child: Slidable(
+               startActionPane: ActionPane(
+            motion: const ScrollMotion(),
             children: [
-              if (habit.description != null && habit.description!.isNotEmpty)
-                Text(habit.description!   ,style: textTheme.titleSmall?.copyWith(color: colorScheme.onSurface),),
-              Text(
-                "Due: $dueDateStr ${dueTimeStr.isNotEmpty ? 'at $dueTimeStr' : ''}",
-                style: textTheme.titleSmall?.copyWith(color: colorScheme.onSurface),
+              SlidableAction(
+                onPressed: (context) {
+                  onToggleComplete!();
+                },
+                backgroundColor: colorScheme.tertiary,
+                foregroundColor: Colors.white,
+                icon: Icons.done_outline_rounded,
+                label: 'Done',
               ),
+            
             ],
-          ),
-          trailing: CircleAvatar(
-            backgroundColor: _parseColor(habit.color),
-            radius: 10,
+                    ),
+              child: ListTile(
+               
+                title: Text(
+                  habit.title ?? 'No Title',
+                  style: textTheme.titleMedium?.copyWith(color: colorScheme.onPrimary)
+                ),
+                subtitle: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (habit.description != null && habit.description!.isNotEmpty)
+                      Text(habit.description!   ,style: textTheme.titleSmall?.copyWith(color: colorScheme.onSurface),),
+                    Text(
+                      "Due: $dueDateStr ${dueTimeStr.isNotEmpty ? 'at $dueTimeStr' : ''}",
+                      style: textTheme.titleSmall?.copyWith(color: colorScheme.onSurface),
+                    ),
+                  ],
+                ),
+                trailing: CircleAvatar(
+                  backgroundColor: _parseColor(habit.color),
+                  radius: 10,
+                ),
+              ),
+            ),
           ),
         ),
-      ),
-    );
+      );
+  
   }
 
   Color _parseColor(String? hexColor) {

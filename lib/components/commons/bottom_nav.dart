@@ -22,7 +22,7 @@ class myBottomNav extends StatelessWidget {
           GButton(
             icon: Icons.sticky_note_2_outlined,
 
-            text:  ' N O T E',
+            text: ' N O T E',
             padding: EdgeInsets.all(15),
             textSize: 20,
             textColor: Colors.grey[900],
@@ -43,11 +43,30 @@ class myBottomNav extends StatelessWidget {
                     fit: BoxFit.contain,
                   ),
                 ),
-             
               ],
             ),
           ),
-
+          GButton(
+            icon: Icons.space_bar, // không dùng icon mặc định
+            text: ' C O N T A C T',
+            padding: EdgeInsets.all(15),
+            textSize: 20,
+            leading: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(
+                  height: 30,
+                  width: 30,
+                  child: Lottie.asset(
+                    'assets/lottie/collaborator.json',
+                    fit: BoxFit.contain,
+                      repeat: false,
+                   
+                  ),
+                ),
+              ],
+            ),
+          ),
           GButton(
             icon: Icons.settings,
             text: 'U S E R',
