@@ -38,7 +38,21 @@ const CompletionsSchema = CollectionSchema(
   deserialize: _completionsDeserialize,
   deserializeProp: _completionsDeserializeProp,
   idName: r'id',
-  indexes: {},
+  indexes: {
+    r'isCompleted': IndexSchema(
+      id: -7936144632215868537,
+      name: r'isCompleted',
+      unique: false,
+      replace: false,
+      properties: [
+        IndexPropertySchema(
+          name: r'isCompleted',
+          type: IndexType.value,
+          caseSensitive: false,
+        )
+      ],
+    )
+  },
   links: {},
   embeddedSchemas: {},
   getId: _completionsGetId,
@@ -120,6 +134,14 @@ extension CompletionsQueryWhereSort
       return query.addWhereClause(const IdWhereClause.any());
     });
   }
+
+  QueryBuilder<Completions, Completions, QAfterWhere> anyIsCompleted() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(
+        const IndexWhereClause.any(indexName: r'isCompleted'),
+      );
+    });
+  }
 }
 
 extension CompletionsQueryWhere
@@ -187,6 +209,73 @@ extension CompletionsQueryWhere
         upper: upperId,
         includeUpper: includeUpper,
       ));
+    });
+  }
+
+  QueryBuilder<Completions, Completions, QAfterWhereClause>
+      isCompletedIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'isCompleted',
+        value: [null],
+      ));
+    });
+  }
+
+  QueryBuilder<Completions, Completions, QAfterWhereClause>
+      isCompletedIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'isCompleted',
+        lower: [null],
+        includeLower: false,
+        upper: [],
+      ));
+    });
+  }
+
+  QueryBuilder<Completions, Completions, QAfterWhereClause> isCompletedEqualTo(
+      bool? isCompleted) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'isCompleted',
+        value: [isCompleted],
+      ));
+    });
+  }
+
+  QueryBuilder<Completions, Completions, QAfterWhereClause>
+      isCompletedNotEqualTo(bool? isCompleted) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'isCompleted',
+              lower: [],
+              upper: [isCompleted],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'isCompleted',
+              lower: [isCompleted],
+              includeLower: false,
+              upper: [],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'isCompleted',
+              lower: [isCompleted],
+              includeLower: false,
+              upper: [],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'isCompleted',
+              lower: [],
+              upper: [isCompleted],
+              includeUpper: false,
+            ));
+      }
     });
   }
 }

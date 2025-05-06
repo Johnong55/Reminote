@@ -9,16 +9,16 @@ class StreakAnimation extends StatelessWidget {
   Widget build(BuildContext context) {
 
     return isCompleted == true ? SizedBox(
-      height: 100,
-      width: 100,
+      height: 90,
+      width: 90,
       child: Lottie.asset(
         'assets/lottie/fire.json',
         fit: BoxFit.contain,
         
       ),
     ): SizedBox(
-      height: 100,
-      width: 100,
+      height: 80,
+      width: 80,
       child: Lottie.asset(
         'assets/lottie/offire.json',
         fit: BoxFit.contain,

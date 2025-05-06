@@ -29,8 +29,8 @@ class StreakCalendar extends StatelessWidget {
     final mondayOfWeek = _getMondayOfWeek(today);
 
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
-      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+      margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 0),
+      padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 4),
       decoration: BoxDecoration(
         color: colorScheme.surface,
         borderRadius: BorderRadius.circular(16),
@@ -55,7 +55,7 @@ class StreakCalendar extends StatelessWidget {
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
               physics: const BouncingScrollPhysics(),
-              itemCount: 7, // Monday to Sunday (7 days)
+              itemCount: 10, // Monday to Sunday (7 days)
               padding: const EdgeInsets.symmetric(horizontal: 12),
               itemBuilder: (context, index) {
                 // Calculate date from Monday to Sunday

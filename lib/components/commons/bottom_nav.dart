@@ -9,7 +9,7 @@ class myBottomNav extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 23),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       child: GNav(
         mainAxisAlignment: MainAxisAlignment.center,
         color: Colors.grey[400],
@@ -23,14 +23,14 @@ class myBottomNav extends StatelessWidget {
             icon: Icons.sticky_note_2_outlined,
 
             text: ' N O T E',
-            padding: EdgeInsets.all(15),
+            padding: EdgeInsets.all(10),
             textSize: 20,
             textColor: Colors.grey[900],
           ),
           GButton(
             icon: Icons.space_bar, // không dùng icon mặc định
             text: ' H A B I T',
-            padding: EdgeInsets.all(15),
+            padding: EdgeInsets.all(10),
             textSize: 20,
             leading: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -48,8 +48,8 @@ class myBottomNav extends StatelessWidget {
           ),
           GButton(
             icon: Icons.space_bar, // không dùng icon mặc định
-            text: ' C O N T A C T',
-            padding: EdgeInsets.all(15),
+            text: ' C O L L A B',
+            padding: EdgeInsets.all(10),
             textSize: 20,
             leading: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -74,7 +74,7 @@ class myBottomNav extends StatelessWidget {
             textColor: Colors.grey[900],
             iconSize: 25.0,
             gap: 10.0,
-            padding: EdgeInsets.all(15),
+            padding: EdgeInsets.all(10),
           ),
         ],
       ),

@@ -11,6 +11,8 @@ part 'Habit.g.dart';
 @collection
 class Habit {
   Id id = Isar.autoIncrement;
+
+  String? ID;
   String? title;
   String? description;
   DateTime? due_time;
@@ -27,6 +29,8 @@ class Habit {
   int? target_count; // Number of times the reminder should be completed
   int? start_date;
   String? color;
+  @Index()
+  String? userEmail;
   
   // Getter to convert the stored integer to enum
   @ignore
@@ -73,6 +77,8 @@ class Habit {
     this.target_count,
     this.start_date,
     this.color,
+    this.ID,
+    this.userEmail
   });
 
   // Alternative constructor using the enum
@@ -131,5 +137,21 @@ class Habit {
            'frequencyType: ${frequencyType?.name}, '
            'due_date: $due_date, isCompleted: $isCompleted)'
            'start_date: $start_date, color: $color)';   
+  }
+
+  static Habit fromJson(Map<String, dynamic> data) {
+    return Habit(
+      title: data['title'] as String?,
+      description: data['description'] as String?,
+      due_date: data['due_date'] != null ? DateTime.parse(data['due_date']) : null,
+      due_time: data['due_time'] != null ? DateTime.parse(data['due_time']) : null,
+      isCompleted: data['isCompleted'] as bool?,
+      frequency_type: data['frequency_type'] as int?,
+      target_count: data['target_count'] as int?,
+      start_date: data['start_date'] as int?,
+      color: data['color'] as String?,
+      ID: data['ID'] as String?,
+      userEmail: data['userEmail'] as String?,
+    );
   }
 }

@@ -53,7 +53,7 @@ class StreakDayItem extends StatelessWidget {
       onTap: ontap,
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
-        width: 48,
+        width: 30,
         child: Column(
           children: [
             // Day of week (T2, T3, etc.)
@@ -62,13 +62,14 @@ class StreakDayItem extends StatelessWidget {
               style: textTheme.bodySmall?.copyWith(
                 color: textColor,
                 fontWeight: shouldHighlight ? FontWeight.w800 : FontWeight.w900,
+                fontSize: shouldHighlight ? 10 : 9,
               ),
             ),
             const SizedBox(height: 4),
             // Square with checkmark or X
             Container(
-              width: 36,
-              height: 36,
+              width: 30,
+              height: 30,
               decoration: BoxDecoration(
                 color: isCompleted
                     ? streakColor
