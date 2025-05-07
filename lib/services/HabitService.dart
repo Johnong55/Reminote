@@ -8,48 +8,45 @@ import 'package:study_app/Online_Repository/Habit_Repository_Online.dart';
 import 'package:study_app/models/Habit.dart';
 import 'package:study_app/services/CompletionService.dart';
 
-
 class HabitService {
-  final HabitRepository _offlineRepo  = HabitRepository();
+  final HabitRepository _offlineRepo = HabitRepository();
   final CompletionService completionService = CompletionService();
   final HabitRepoistoryOnline _onlineRepo = HabitRepoistoryOnline();
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final Connectivity _connectivity = Connectivity();
   bool _isInitialized = false;
   late final CollectionReference _cloudCollection;
-  
-  
 
   // Initialize the database
   Future<void> init() async {
-    if(_isInitialized) return;
+    if (_isInitialized) return;
 
-    
     await _offlineRepo.initializeIsar();
     final user = _auth.currentUser;
     _cloudCollection = FirebaseFirestore.instance.collection(
       user != null ? 'users/${user.uid}/Habits' : 'Habits',
     );
-    if(user == null) {
+    if (user == null) {
       print("Warning: User not logged in - Firestore may reject operations");
     }
     _isInitialized = true;
   }
+
   // check Authentication
-  bool _checkAuth(){
+  bool _checkAuth() {
     final user = _auth.currentUser;
-    if(user == null) {
+    if (user == null) {
       print("Error: User not logged in");
       return false;
     }
     return true;
   }
+
   // check Network
   Future<bool> _isNetworkAvailable() async {
     final result = await _connectivity.checkConnectivity();
     return result != ConnectivityResult.none;
   }
-
 
   // Create a habit
   Future<void> addHabit(Habit habit) async {
@@ -57,19 +54,17 @@ class HabitService {
     habit.userEmail = _auth.currentUser?.email ?? "local_user";
 
     await _offlineRepo.createHabit(habit);
-    if(await _isNetworkAvailable() && _onlineRepo.userID !=null){
-      try{
+    if (await _isNetworkAvailable() && _onlineRepo.userID != null) {
+      try {
         habit.userEmail = _auth.currentUser?.email;
         await _onlineRepo.addHabitToFirebase(habit);
-        
-      } catch(e){
+      } catch (e) {
         log("Error adding habit to Firebase: $e");
         habit.userEmail = "local_user";
         await _offlineRepo.updateHabit(habit);
       }
     }
   }
-
 
   // Get all habits
   List<Habit> get allHabits => _offlineRepo.currenthabits;
@@ -101,7 +96,7 @@ class HabitService {
 
   // Toggle a habit's completion state
   Future<void> toggleCompletion(int id, bool isCompleted) async {
-    await completionService.recordCompletion(id,  DateTime.now());
+    await completionService.recordCompletion(id, DateTime.now());
   }
 
   // Get habits for a specific day (including repeating ones)
@@ -143,42 +138,51 @@ class HabitService {
   Future<bool> areAllHabitsCompleted(DateTime date) async {
     return await _offlineRepo.areAllhabitsCompletedForDay(date);
   }
+
   Future<void> pullHabitIntoLocal() async {
+    log("Pulling habits into local storage...");
     if (await _isNetworkAvailable() && _onlineRepo.userID != null) {
       try {
         final user = _auth.currentUser;
-        if(user == null){
+        log("User: ${user?.email}");
+        if (user == null) {
           log("Error: User not logged in");
           return;
         }
-        final snapshot  = await _cloudCollection.get();
-        final List<Habit> habits = snapshot.docs.map((doc) {
-          final data = doc.data() as Map<String, dynamic>;
-          return Habit.fromJson(data);
-        }).toList();
+        final habits = await _onlineRepo.getHabitsByUseEmail();
+        log("Fetched ${habits.length} habits from Firebase");
         for (var habit in habits) {
-          habit.userEmail = user.email;
-          await _offlineRepo.createHabit(habit);
+          if (_offlineRepo.currenthabits
+              .where((h) => h.ID == habit.ID)
+              .isEmpty) {
+            habit.userEmail = user.email;
+            await _offlineRepo.createHabit(habit);
+          }
         }
       } catch (e) {
         log("Sync failed: $e");
       }
     } else {
-      log(_onlineRepo.userID == null ? "Login required to sync" : "No network. Will sync later.");
+      log(
+        _onlineRepo.userID == null
+            ? "Login required to sync"
+            : "No network. Will sync later.",
+      );
     }
   }
-  Future<void> pushHabitToCloud() async{
+
+  Future<void> pushHabitToCloud() async {
     if (await _isNetworkAvailable() && _onlineRepo.userID != null) {
       try {
         final user = _auth.currentUser;
-        if(user == null){
+        if (user == null) {
           log("Error: User not logged in");
           return;
         }
-      await _offlineRepo.fetchhabits();
-            List<Habit> habits = _offlineRepo.currenthabits;
+        await _offlineRepo.fetchhabits();
+        List<Habit> habits = _offlineRepo.currenthabits;
         for (var habit in habits) {
-          if(habit.userEmail == "local_user"){
+          if (habit.userEmail == "local_user") {
             habit.userEmail = user.email;
             _onlineRepo.addHabitToFirebase(habit);
           }
@@ -187,11 +191,31 @@ class HabitService {
         log("Sync failed: $e");
       }
     } else {
-      log(_onlineRepo.userID == null ? "Login required to sync" : "No network. Will sync later.");
+      log(
+        _onlineRepo.userID == null
+            ? "Login required to sync"
+            : "No network. Will sync later.",
+      );
     }
   }
+
   Future<void> syncHabit() async {
     await pullHabitIntoLocal();
     await pushHabitToCloud();
+  }
+
+  Future<void> clearLocalHabitsWhenLogout() async {
+    final userEmail = _auth.currentUser?.email;
+
+    if (userEmail != null) {
+      final habitsToDelete = await _offlineRepo.getHabitByEmail(userEmail);
+      log("Deleting ${habitsToDelete.length} local notes");
+
+      for (var habit in habitsToDelete) {
+        await _offlineRepo.deleteHabit(habit.id);
+      }
+    } else {
+      log("Logout failed: user email is null");
+    }
   }
 }

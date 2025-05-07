@@ -4,7 +4,8 @@ import 'package:study_app/Page/Screens/ContactPage.dart';
 import 'package:study_app/Page/Screens/NoteHome.dart';
 import 'package:study_app/Page/Screens/HabitPage.dart';
 import 'package:study_app/Page/Screens/SettingsPage.dart';
-import 'package:study_app/components/commons/bottom_nav.dart';
+import 'package:study_app/components/widgets/bottom_nav.dart';
+import 'package:study_app/providers/habit_provider.dart';
 import 'package:study_app/providers/note_provider.dart';
 
 class Homepage extends StatefulWidget {
@@ -16,6 +17,8 @@ class Homepage extends StatefulWidget {
 }
 
 class _HomepageState extends State<Homepage> {
+
+  bool isDrawerOpen = false;
   int pageNum = 0;
   bool _isSearching = false;
   final TextEditingController _searchController = TextEditingController();
@@ -40,129 +43,143 @@ class _HomepageState extends State<Homepage> {
   @override
   Widget build(BuildContext context) {
     final noteProvider = Provider.of<NoteProvider>(context, listen: false);
+    final habitProvider = Provider.of<HabitProvider>(context, listen: false);
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
 
     return Scaffold(
-      backgroundColor: colorScheme.background,
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(70),
-        child: AnimatedSwitcher(
-          duration: const Duration(milliseconds: 250),
-          transitionBuilder: (Widget child, Animation<double> animation) {
-            return FadeTransition(opacity: animation, child: child);
-          },
-          child: _isSearching
-              ? AppBar(
-                
-                  key: const ValueKey('searchAppBar'),
-                  leading: IconButton(
-                    icon: const Icon(Icons.arrow_back),
-                    onPressed: () {
-                      setState(() {
-                        FocusScope.of(context).unfocus();
-                        _isSearching = false;
-                        noteProvider.clearSearch();
-                        _searchController.clear();
-                      });
-                    },
-                  ),
-                  title: TextField(
-                    controller: _searchController,
-                    autofocus: true,
-                    style: textTheme.bodyLarge, // Using theme text style
-                    decoration: InputDecoration(
-                      hintText: 'Tìm kiếm...',
-                      hintStyle: textTheme.bodyMedium?.copyWith(
-                        color: colorScheme.onSurface.withOpacity(0.6),
-                      ),
-                      border: InputBorder.none,
-                    ),
-                    onChanged: (value) {
-                      if (pageNum == 0) {
-                        noteProvider.searchNotes(value);
-                     
-                      }
-                    },
-                    onSubmitted: (value) {
-                      noteProvider.searchNotes(value);
-               
-                      FocusScope.of(context).unfocus();
-                    },
-                  ),
-                  actions: [
+        backgroundColor: colorScheme.background,
+        appBar: PreferredSize(
+          preferredSize: const Size.fromHeight(70),
+          child: AnimatedSwitcher(
+            duration: const Duration(milliseconds: 250),
+            transitionBuilder: (Widget child, Animation<double> animation) {
+              return FadeTransition(opacity: animation, child: child);
+            },
+            child: _isSearching
+                ? AppBar(
                     
-                    IconButton(
-                      icon: const Icon(Icons.clear),
+                    key: const ValueKey('searchAppBar'),
+                    leading: IconButton(
+                      icon: const Icon(Icons.arrow_back),
                       onPressed: () {
-                        noteProvider.clearSearch();
-                        _searchController.clear();
+                        setState(() {
+                          FocusScope.of(context).unfocus();
+                          _isSearching = false;
+                          noteProvider.clearSearch();
+                          _searchController.clear();
+                        });
+                      },
+                    ),
+                    title: TextField(
+                      controller: _searchController,
+                      autofocus: true,
+                      style: textTheme.bodyLarge, // Using theme text style
+                      decoration: InputDecoration(
+                        hintText: 'Tìm kiếm...',
+                        hintStyle: textTheme.bodyMedium?.copyWith(
+                          color: colorScheme.onSurface.withOpacity(0.6),
+                        ),
+                        border: InputBorder.none,
+                      ),
+                      onChanged: (value) {
+                        if (pageNum == 0) {
+                          noteProvider.searchNotes(value);
+                       
+                        }
+                      },
+                      onSubmitted: (value) {
+                        noteProvider.searchNotes(value);
+                 
                         FocusScope.of(context).unfocus();
                       },
                     ),
-                  
-                  ],
-                )
-              : AppBar(
-                  key: const ValueKey('normalAppBar'),
-                  title: Text(
-                    'REMINOTE',
-                    style: textTheme.headlineMedium?.copyWith(
-                      fontWeight: FontWeight.w800,
+                    actions: [
+                      
+                      IconButton(
+                        icon: const Icon(Icons.clear),
+                        onPressed: () {
+                          noteProvider.clearSearch();
+                          _searchController.clear();
+                          FocusScope.of(context).unfocus();
+                        },
+                      ),
+                    
+                    ],
+                  )
+                : AppBar(
+                  leading: GestureDetector(
+                    onTap: (){
+                      setState(() {
+                        isDrawerOpen = !isDrawerOpen;
+                      
+                      });
+                    },
+                    child: isDrawerOpen  ?  Icon(Icons.arrow_back): Icon(Icons.menu)),
+
+                    key: const ValueKey('normalAppBar'),
+                    title: Text(
+                      'REMINOTE',
+                      style: textTheme.headlineMedium?.copyWith(
+                        fontWeight: FontWeight.w800,
+                      ),
                     ),
+                    actions: [
+                      Container(
+                        margin: const EdgeInsets.only(right: 10),
+                        decoration: BoxDecoration(
+                          color: colorScheme.surface,
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        child: IconButton(
+                          icon: const Icon(Icons.sync),
+                          
+                          onPressed: () {
+                            noteProvider.syncNotes();
+                            habitProvider.pullHabitWhenLogin();
+                          },
+                        ),
+                      ),
+                      Container(
+                        margin: const EdgeInsets.only(right: 10),
+                        decoration: BoxDecoration(
+                          color: colorScheme.surface,
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        child: IconButton(
+                          icon: const Icon(Icons.search),
+                          tooltip: 'Tìm kiếm',
+                          onPressed: () {
+                            setState(() {
+                              _isSearching = true;
+                            });
+                          },
+                        ),
+                      ),
+                      // Empty container removed as it wasn't serving any purpose
+                    ],
                   ),
-                  actions: [
-                    Container(
-                      margin: const EdgeInsets.only(right: 10),
-                      decoration: BoxDecoration(
-                        color: colorScheme.surface,
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      child: IconButton(
-                        icon: const Icon(Icons.sync),
-                        
-                        onPressed: () {
-                          noteProvider.syncNotes();
-                        },
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(right: 10),
-                      decoration: BoxDecoration(
-                        color: colorScheme.surface,
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      child: IconButton(
-                        icon: const Icon(Icons.search),
-                        tooltip: 'Tìm kiếm',
-                        onPressed: () {
-                          setState(() {
-                            _isSearching = true;
-                          });
-                        },
-                      ),
-                    ),
-                    // Empty container removed as it wasn't serving any purpose
-                  ],
-                ),
+          ),
         ),
-      ),
-      bottomNavigationBar: myBottomNav(
-        onTabChange: (index) {
-          if (pageNum != index) {
-            setState(() {
-              pageNum = index;
-              
-              if (index != 0 && noteProvider.searchQuery.isNotEmpty) {
-                _searchController.clear();
-                noteProvider.searchNotes('');
-                noteProvider.clearSearch();
+        bottomNavigationBar: SafeArea(
+          child: myBottomNav(
+            onTabChange: (index) {
+              if (pageNum != index) {
+                setState(() {
+                  pageNum = index;
+                  
+                  if (index != 0 && noteProvider.searchQuery.isNotEmpty) {
+                    _searchController.clear();
+                    noteProvider.searchNotes('');
+                    noteProvider.clearSearch();
+                  }
+                });
               }
-            });
-          }
-        },
-      ),
-      body: IndexedStack(index: pageNum, children: routes),
-    );
+            },
+          ),
+        ),
+        body: IndexedStack(index: pageNum, children: routes),
+      );
+   
   }
 }

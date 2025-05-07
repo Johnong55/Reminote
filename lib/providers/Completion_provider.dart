@@ -66,4 +66,9 @@ Future<bool> wereCompletedonDate() async {
 
     notifyListeners();
   }
+  Future<void> clearCompletions() async {
+    _completions.clear();
+    _service.deleteAllCompletions();
+    notifyListeners();
+  }
 }

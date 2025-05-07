@@ -30,6 +30,9 @@ class CompletionService {
   Future<void> deleteCompletion(int id) async {
     await _completionsRepository.deleteCompletion(id);
   }
+  Future<void> deleteAllCompletions() async {
+    await _completionsRepository.deleteAllCompletions();
+  }
 
   // Get completions for a date range
   Future<List<Completions>> getCompletionsForDateRange(DateTime startDate, DateTime endDate) async {

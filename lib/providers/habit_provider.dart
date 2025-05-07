@@ -20,10 +20,11 @@ DateTime? _currentDate = DateTime.now(); // Default to today;
  String get searchType => _searchType;
 DateTime? get currentDate => _currentDate;
 Future<void> intialize() async{
-    _setLoading(true);
+  
     await _service.init();
+    
     await fetchHabits();
-    _setLoading(false);
+
 }
 
 Future<void> fetchHabits() async{
@@ -68,7 +69,7 @@ Future<void> updateHabit(Habit habit) async {
   void _setLoading(bool value) {
     if (_isLoading != value) {
       _isLoading = value;
-      notifyListeners();
+ 
     }
 }
 void setCurrentDate(DateTime date){
@@ -77,5 +78,17 @@ void setCurrentDate(DateTime date){
   fetchHabits();
 } 
 
+  Future<void> deleteWhenLogout() async{
+    _isLoading = true;
+    await _service.clearLocalHabitsWhenLogout();
+        _isLoading = false;
+    fetchHabits();
+   
+  }
+  Future<void> pullHabitWhenLogin() async{
 
+    await _service.pullHabitIntoLocal();
+
+    fetchHabits();
+  }
 }
