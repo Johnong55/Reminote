@@ -104,5 +104,10 @@ Future<void> recordCompletion(int habitId, DateTime dateCompleted) async {
     }
     return false;
   }
+  Future<void> deleteAllCompletions() async {
+    await _isar.writeTxn(() async {
+      await _isar.completions.clear();
+    });
+  }
   
 }

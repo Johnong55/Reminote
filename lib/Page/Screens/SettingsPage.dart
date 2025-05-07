@@ -1,6 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:study_app/providers/Completion_provider.dart';
+import 'package:study_app/providers/habit_provider.dart';
+
 import 'package:study_app/providers/note_provider.dart';
 import 'package:study_app/services/Auth_service.dart';
 
@@ -45,7 +48,10 @@ class Settingspage extends StatelessWidget {
                     icon: const Icon(Icons.logout, size: 40),
                     onPressed: () async {
                       final noteProvider = Provider.of<NoteProvider>(context, listen: false);
-
+                      final habitProvider = Provider.of<HabitProvider>(context, listen: false);
+                      final completeProvider = Provider.of<CompletionProvider>(context, listen: false);
+                      await habitProvider.deleteWhenLogout();
+                      await completeProvider.clearCompletions();
                       // Gọi xóa ghi chú trước khi đăng xuất
                       await noteProvider.deleteWhenLogout();
 

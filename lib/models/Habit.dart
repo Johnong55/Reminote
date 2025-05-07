@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart' as firestore;
 import 'package:flutter/material.dart';
 import 'package:isar/isar.dart';
 import 'package:study_app/enums/FrequencyType.dart';
@@ -143,8 +144,8 @@ class Habit {
     return Habit(
       title: data['title'] as String?,
       description: data['description'] as String?,
-      due_date: data['due_date'] != null ? DateTime.parse(data['due_date']) : null,
-      due_time: data['due_time'] != null ? DateTime.parse(data['due_time']) : null,
+      due_date: data['due_date'] != null ? (data['due_date'] as firestore.Timestamp?)?.toDate(): null,
+      due_time: data['due_time'] != null ? (data['due_time'] as firestore.Timestamp?)?.toDate() : null,
       isCompleted: data['isCompleted'] as bool?,
       frequency_type: data['frequency_type'] as int?,
       target_count: data['target_count'] as int?,

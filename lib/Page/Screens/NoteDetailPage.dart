@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:study_app/components/commons/dialog/ColorPickerDialog.dart';
-import 'package:study_app/components/commons/bottom_nav.dart';
+import 'package:study_app/components/widgets/bottom_nav.dart';
 import 'package:study_app/providers/note_provider.dart';
 import 'package:study_app/Page/Screens/NoteHome.dart';
 import 'package:study_app/Page/Screens/HabitPage.dart';

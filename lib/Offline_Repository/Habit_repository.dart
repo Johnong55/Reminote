@@ -229,4 +229,11 @@ class HabitRepository {
 
     return monthlyHabits;
   }
+  Future<List<Habit>> getHabitByEmail(String email) async {
+    return await _isar.habits
+        .filter()
+        .userEmailEqualTo(email)
+        .sortByDue_date()
+        .findAll();
+  }
 }

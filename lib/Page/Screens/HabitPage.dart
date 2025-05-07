@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:study_app/components/commons/List_Streak.dart';
+import 'package:study_app/components/commons/List_Habit.dart';
 
 class Habitpage extends StatelessWidget {
   const Habitpage({super.key});

@@ -28,7 +28,9 @@ class _ListStreakState extends State<ListStreak> {
   @override
   void initState() {
     super.initState();
+       Provider.of<HabitProvider>(context, listen: false).intialize();
 
+           Provider.of<HabitProvider>(context, listen: false).fetchHabits();
     _chosenDate = null;
   }
 
@@ -37,7 +39,7 @@ class _ListStreakState extends State<ListStreak> {
     setState(() {
       _chosenDate = date;
       Provider.of<HabitProvider>(context, listen: false).setCurrentDate(date);
-
+      
       Provider.of<HabitProvider>(context, listen: false).fetchHabits();
       Provider.of<CompletionProvider>(
         context,

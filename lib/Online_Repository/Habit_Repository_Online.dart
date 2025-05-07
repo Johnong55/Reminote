@@ -48,17 +48,7 @@ class HabitRepoistoryOnline{
           .get();
       return habitSnapshot.docs.map((doc){
         final data = doc.data();
-        return Habit(title: data['title'],
-            description: data['description'],
-            due_time: data['due_time'],
-            due_date: data['due_date'],
-            isCompleted: data['isCompleted'],
-            frequency_type: data['frequency_type'],
-            target_count: data['target_count'],
-            start_date: data['start_date'],
-            color: data['color'],
-            userEmail: data['userEmail']
-        )..ID = doc.id;
+        return Habit.fromJson(data)..ID = doc.id;
       }).toList();
       }
       catch(e){
