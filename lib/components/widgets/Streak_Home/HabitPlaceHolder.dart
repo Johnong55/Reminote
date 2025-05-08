@@ -19,9 +19,11 @@ class HabitsPlaceholder extends StatefulWidget {
 }
 
 class _HabitsPlaceholderState extends State<HabitsPlaceholder> {
-  void onToggleComplete(Habit habit) {
-      log("heheh");
-      Provider.of<CompletionProvider>(context,listen: false).recordCompletions(habit.id,widget.chosenDate, true);
+  Future<void> onToggleComplete(Habit habit)  async{
+    
+      final isCompleted =  await Provider.of<CompletionProvider>(context,listen: false).isHabitCompleted(habit.id, widget.chosenDate);
+      log("Toggling completion for habit: ${habit.id} on date: ${widget.chosenDate} isCompleted: $isCompleted");
+      Provider.of<CompletionProvider>(context,listen: false).recordCompletions(habit.id,widget.chosenDate, !isCompleted);
       Provider.of<CompletionProvider>(context,listen: false).wereCompletedonDate();
   }
 

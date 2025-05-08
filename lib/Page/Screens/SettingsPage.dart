@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:study_app/providers/Completion_provider.dart';
 import 'package:study_app/providers/habit_provider.dart';
@@ -36,10 +37,13 @@ class Settingspage extends StatelessWidget {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  CircleAvatar(
-                    radius: 40,
-                    
-                  ),
+                    ClipOval(
+                      child: SizedBox(
+                      width: 100, // Set the desired width
+                      height: 100, // Set the desired height
+                      child: Lottie.asset("assets/lottie/avatar.json"),
+                      ),
+                    ),
                   const SizedBox(height: 10),
                   Text(user.displayName ?? 'Không tên'),
                   Text(user.email ?? 'Không email'),

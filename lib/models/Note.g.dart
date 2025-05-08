@@ -78,7 +78,34 @@ const NoteSchema = CollectionSchema(
   deserialize: _noteDeserialize,
   deserializeProp: _noteDeserializeProp,
   idName: r'id',
-  indexes: {},
+  indexes: {
+    r'ID': IndexSchema(
+      id: 5573724008404263404,
+      name: r'ID',
+      unique: true,
+      replace: false,
+      properties: [
+        IndexPropertySchema(
+          name: r'ID',
+          type: IndexType.hash,
+          caseSensitive: true,
+        )
+      ],
+    ),
+    r'isPinned': IndexSchema(
+      id: 7607338673446676027,
+      name: r'isPinned',
+      unique: false,
+      replace: false,
+      properties: [
+        IndexPropertySchema(
+          name: r'isPinned',
+          type: IndexType.value,
+          caseSensitive: false,
+        )
+      ],
+    )
+  },
   links: {},
   embeddedSchemas: {},
   getId: _noteGetId,
@@ -225,10 +252,72 @@ void _noteAttach(IsarCollection<dynamic> col, Id id, Note object) {
   object.id = id;
 }
 
+extension NoteByIndex on IsarCollection<Note> {
+  Future<Note?> getByID(String? ID) {
+    return getByIndex(r'ID', [ID]);
+  }
+
+  Note? getByIDSync(String? ID) {
+    return getByIndexSync(r'ID', [ID]);
+  }
+
+  Future<bool> deleteByID(String? ID) {
+    return deleteByIndex(r'ID', [ID]);
+  }
+
+  bool deleteByIDSync(String? ID) {
+    return deleteByIndexSync(r'ID', [ID]);
+  }
+
+  Future<List<Note?>> getAllByID(List<String?> IDValues) {
+    final values = IDValues.map((e) => [e]).toList();
+    return getAllByIndex(r'ID', values);
+  }
+
+  List<Note?> getAllByIDSync(List<String?> IDValues) {
+    final values = IDValues.map((e) => [e]).toList();
+    return getAllByIndexSync(r'ID', values);
+  }
+
+  Future<int> deleteAllByID(List<String?> IDValues) {
+    final values = IDValues.map((e) => [e]).toList();
+    return deleteAllByIndex(r'ID', values);
+  }
+
+  int deleteAllByIDSync(List<String?> IDValues) {
+    final values = IDValues.map((e) => [e]).toList();
+    return deleteAllByIndexSync(r'ID', values);
+  }
+
+  Future<Id> putByID(Note object) {
+    return putByIndex(r'ID', object);
+  }
+
+  Id putByIDSync(Note object, {bool saveLinks = true}) {
+    return putByIndexSync(r'ID', object, saveLinks: saveLinks);
+  }
+
+  Future<List<Id>> putAllByID(List<Note> objects) {
+    return putAllByIndex(r'ID', objects);
+  }
+
+  List<Id> putAllByIDSync(List<Note> objects, {bool saveLinks = true}) {
+    return putAllByIndexSync(r'ID', objects, saveLinks: saveLinks);
+  }
+}
+
 extension NoteQueryWhereSort on QueryBuilder<Note, Note, QWhere> {
   QueryBuilder<Note, Note, QAfterWhere> anyId() {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(const IdWhereClause.any());
+    });
+  }
+
+  QueryBuilder<Note, Note, QAfterWhere> anyIsPinned() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(
+        const IndexWhereClause.any(indexName: r'isPinned'),
+      );
     });
   }
 }
@@ -296,6 +385,133 @@ extension NoteQueryWhere on QueryBuilder<Note, Note, QWhereClause> {
         upper: upperId,
         includeUpper: includeUpper,
       ));
+    });
+  }
+
+  QueryBuilder<Note, Note, QAfterWhereClause> iDIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'ID',
+        value: [null],
+      ));
+    });
+  }
+
+  QueryBuilder<Note, Note, QAfterWhereClause> iDIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'ID',
+        lower: [null],
+        includeLower: false,
+        upper: [],
+      ));
+    });
+  }
+
+  QueryBuilder<Note, Note, QAfterWhereClause> iDEqualTo(String? ID) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'ID',
+        value: [ID],
+      ));
+    });
+  }
+
+  QueryBuilder<Note, Note, QAfterWhereClause> iDNotEqualTo(String? ID) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'ID',
+              lower: [],
+              upper: [ID],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'ID',
+              lower: [ID],
+              includeLower: false,
+              upper: [],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'ID',
+              lower: [ID],
+              includeLower: false,
+              upper: [],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'ID',
+              lower: [],
+              upper: [ID],
+              includeUpper: false,
+            ));
+      }
+    });
+  }
+
+  QueryBuilder<Note, Note, QAfterWhereClause> isPinnedIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'isPinned',
+        value: [null],
+      ));
+    });
+  }
+
+  QueryBuilder<Note, Note, QAfterWhereClause> isPinnedIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'isPinned',
+        lower: [null],
+        includeLower: false,
+        upper: [],
+      ));
+    });
+  }
+
+  QueryBuilder<Note, Note, QAfterWhereClause> isPinnedEqualTo(bool? isPinned) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'isPinned',
+        value: [isPinned],
+      ));
+    });
+  }
+
+  QueryBuilder<Note, Note, QAfterWhereClause> isPinnedNotEqualTo(
+      bool? isPinned) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'isPinned',
+              lower: [],
+              upper: [isPinned],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'isPinned',
+              lower: [isPinned],
+              includeLower: false,
+              upper: [],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'isPinned',
+              lower: [isPinned],
+              includeLower: false,
+              upper: [],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'isPinned',
+              lower: [],
+              upper: [isPinned],
+              includeUpper: false,
+            ));
+      }
     });
   }
 }
