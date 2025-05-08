@@ -19,7 +19,7 @@ class AppTheme {
         primary: isDark ? Colors.grey.shade300 : Colors.grey.shade900,
         secondary: isDark ? Colors.grey.shade500 : Colors.grey.shade700,
         background: isDark ? const Color(0xFF121212) : Colors.white,
-        surface: isDark ? const Color(0xFF1E1E1E) : Colors.grey.shade50,
+        surface: isDark ? const Color(0xFF1E1E1E) : Color(0xFFFFDBCF),
         onPrimary: isDark ? Colors.black : Colors.black,
         onSecondary: isDark ? Colors.white : Colors.grey.shade300,
         onBackground: isDark ? Colors.white : Colors.black,
@@ -57,7 +57,7 @@ class AppTheme {
       titleLarge: TextStyle(fontSize: 20, fontWeight: FontWeight.w600, color: baseColor),
       titleMedium: TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: baseColor),
       bodyLarge: TextStyle(fontSize: 18, fontWeight: FontWeight.w400, color: secondary),
-      bodyMedium: TextStyle(fontSize: 16, fontWeight: FontWeight.w400, color: isDark ? Colors.grey.shade400 : Colors.grey.shade700),
+      bodyMedium: TextStyle(fontSize: 15, fontWeight: FontWeight.w400, color: isDark ? Colors.grey.shade400 : Colors.grey.shade700),
       bodySmall: TextStyle(fontSize: 12, fontWeight: FontWeight.w400, color: isDark ? Colors.grey.shade500 : Colors.grey.shade600),
     );
   }

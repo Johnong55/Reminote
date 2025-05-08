@@ -11,7 +11,7 @@ import 'package:study_app/services/CompletionService.dart';
 class HabitService {
   final HabitRepository _offlineRepo = HabitRepository();
   final CompletionService completionService = CompletionService();
-  final HabitRepoistoryOnline _onlineRepo = HabitRepoistoryOnline();
+  final HabitRepositoryOnline _onlineRepo = HabitRepositoryOnline();
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final Connectivity _connectivity = Connectivity();
   bool _isInitialized = false;

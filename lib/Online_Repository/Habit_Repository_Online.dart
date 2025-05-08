@@ -5,7 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:study_app/models/Habit.dart';
 
-class HabitRepoistoryOnline{
+class HabitRepositoryOnline{
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
   String? get userID => _auth.currentUser?.uid;

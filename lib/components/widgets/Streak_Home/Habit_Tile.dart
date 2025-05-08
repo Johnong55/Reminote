@@ -15,12 +15,11 @@ class HabitTile extends StatelessWidget {
     required this.habit,
     this.onTap,
     this.onToggleComplete,
-    required this.isCompletion
+    required this.isCompletion,
   });
 
   @override
   Widget build(BuildContext context) {
-    
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
@@ -32,74 +31,101 @@ class HabitTile extends StatelessWidget {
     final dueTimeStr =
         habit.due_time != null ? DateFormat.Hm().format(habit.due_time!) : '';
 
-    
     final color_helper = Color_helper();
     return GestureDetector(
       onTap: onTap,
 
-       
-        child: Card(
-          color:
-              (isCompletion ?? false) ? color_helper.HexToColor(habit.color!) : Colors.white,
-          margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-          child: 
-        ClipRRect(
+      child: Card(
+        color:
+            (isCompletion ?? false)
+                ? color_helper.HexToColor(habit.color!)
+                : Colors.white,
+        margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        child: ClipRRect(
           borderRadius: BorderRadius.circular(12),
-            child: Slidable(
-               startActionPane: ActionPane(
-            motion: const ScrollMotion(),
-            children: [
-              SlidableAction(
-                onPressed: (context) {
-                  onToggleComplete!();
-                },
-                backgroundColor: colorScheme.tertiary,
-                foregroundColor: Colors.white,
-                icon: Icons.done_outline_rounded,
-                label: 'Done',
+          child: Slidable(
+            startActionPane: ActionPane(
+              motion: const ScrollMotion(),
+              children: [
+                SlidableAction(
+                  onPressed: (context) {
+                    onToggleComplete!();
+                  },
+                  backgroundColor:
+                      habit.color != null && isCompletion == false
+                          ? color_helper.HexToColor(habit.color!)
+                          : Colors.grey.shade100,
+                  foregroundColor: Colors.black,
+                  icon: (isCompletion == false )? Icons.done_outline_rounded : Icons.undo,
+                  label: (isCompletion == false )?'D O N E': "U N D O",
+                ),
+              ],
+            ),
+            endActionPane: ActionPane(
+              motion: const ScrollMotion(),
+              children: [
+                SlidableAction(
+                  onPressed: (context) {
+                    // Handle delete action
+                  },
+                  backgroundColor: colorScheme.error,
+                  foregroundColor: Colors.white,
+                  icon: Icons.delete,
+                  label: 'Delete',
+                ),
+              ],
+            ),
+            child: ListTile(
+              title: Text(
+                habit.title ?? 'No Title',
+                style: textTheme.titleMedium?.copyWith(
+                  color: colorScheme.onPrimary,
+                  decoration:
+                      (isCompletion ?? false)
+                          ? TextDecoration.lineThrough
+                          : null,
+                ),
               ),
-            
-            ],
-                    ),
-              child: ListTile(
-               
-                title: Text(
-                  habit.title ?? 'No Title',
-                  style: textTheme.titleMedium?.copyWith(color: colorScheme.onPrimary)
-                ),
-                subtitle: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    if (habit.description != null && habit.description!.isNotEmpty)
-                      Text(habit.description!   ,style: textTheme.titleSmall?.copyWith(color: colorScheme.onSurface),),
+              subtitle: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (habit.description != null &&
+                      habit.description!.isNotEmpty)
                     Text(
-                      "Due: $dueDateStr ${dueTimeStr.isNotEmpty ? 'at $dueTimeStr' : ''}",
-                      style: textTheme.titleSmall?.copyWith(color: colorScheme.onSurface),
+                      habit.description!,
+                      style: textTheme.titleSmall?.copyWith(
+                        color: colorScheme.onSurface,
+                        decoration:
+                            (isCompletion ?? false)
+                                ? TextDecoration.lineThrough
+                                : null,
+                      ),
                     ),
-                  ],
-                ),
-                trailing: CircleAvatar(
-                  backgroundColor: _parseColor(habit.color),
-                  radius: 10,
-                ),
+                  Text(
+                    "Due: $dueDateStr ${dueTimeStr.isNotEmpty ? 'at $dueTimeStr' : ''}",
+                    style: textTheme.titleSmall?.copyWith(
+                      color: colorScheme.onSurface,
+                      decoration:
+                          (isCompletion ?? false)
+                              ? TextDecoration.lineThrough
+                              : null,
+                    ),
+                  ),
+                ],
+              ),
+              trailing: Icon(
+                Icons.check_circle,
+
+                color:
+                    (isCompletion ?? false)
+                        ? colorScheme.tertiary
+                        : Colors.grey,
               ),
             ),
           ),
         ),
-      );
-  
-  }
-
-  Color _parseColor(String? hexColor) {
-    if (hexColor == null || hexColor.isEmpty) {
-      return Colors.grey;
-    }
-
-    try {
-      return Color(int.parse(hexColor.replaceFirst('#', '0xff')));
-    } catch (e) {
-      return Colors.grey;
-    }
+      ),
+    );
   }
 }

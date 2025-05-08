@@ -59,7 +59,7 @@ class StreakDayItem extends StatelessWidget {
             // Day of week (T2, T3, etc.)
             Text(
               isToday ? "Today" : dayOfWeek,
-              style: textTheme.bodySmall?.copyWith(
+              style: textTheme.bodyMedium?.copyWith(
                 color: textColor,
                 fontWeight: shouldHighlight ? FontWeight.w800 : FontWeight.w900,
                 fontSize: shouldHighlight ? 10 : 9,
@@ -101,7 +101,7 @@ class StreakDayItem extends StatelessWidget {
             // Day of month (01, 02, etc.)
             Text(
               dayOfMonth,
-              style: textTheme.bodySmall?.copyWith(
+              style: textTheme.bodyMedium?.copyWith(
                 color: textColor,
                 fontWeight: shouldHighlight ? FontWeight.bold : FontWeight.normal,
               ),

@@ -15,7 +15,7 @@ class CompletionsRepository {
     _isar = await IsarUtil.getIsarInstance();
   }
   
-Future<void> recordCompletion(int habitId, DateTime dateCompleted) async {
+Future<void> recordCompletion(int habitId,  DateTime dateCompleted,{bool iscompleted = true}) async {
   final normalizedDate = DateTime(dateCompleted.year, dateCompleted.month, dateCompleted.day);
 
   final existing = await _isar.completions
@@ -26,8 +26,7 @@ Future<void> recordCompletion(int habitId, DateTime dateCompleted) async {
 
   if (existing != null) {
     // 🔁 Đã tồn tại → cập nhật
-    existing.isCompleted = !existing.isCompleted!;
-
+    existing.isCompleted = iscompleted ;
     await _isar.writeTxn(() async {
       await _isar.completions.put(existing);
     });
@@ -37,8 +36,11 @@ Future<void> recordCompletion(int habitId, DateTime dateCompleted) async {
     final completion = Completions()
       ..habitID = habitId
       ..isCompleted = true
-      ..dateCompleted = normalizedDate;
-
+      ..dateCompleted = normalizedDate
+      ..ID = "local_${DateTime.now().millisecondsSinceEpoch}"
+      ..userEmail = "local_user" 
+    ;
+    
     await _isar.writeTxn(() async {
       await _isar.completions.put(completion);
     });
@@ -46,7 +48,11 @@ Future<void> recordCompletion(int habitId, DateTime dateCompleted) async {
   }
 }
 
-  
+  Future<void> updateCompletion(Completions completion) async {
+    await _isar.writeTxn(() async {
+      await _isar.completions.put(completion);
+    });
+  }
   // Get completions for a specific date
   Future<List<Completions>> getCompletionsForDate(DateTime date) async {
     final startOfDay = DateTime(date.year, date.month, date.day);
