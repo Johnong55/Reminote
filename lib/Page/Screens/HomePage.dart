@@ -24,7 +24,7 @@ class _HomepageState extends State<Homepage> {
   final List<Widget> routes = [
     const Notehome(), 
     const Habitpage(), 
-    const Contactpage(),
+     const ContactPage(),
     const Settingspage()
   ];
 
