@@ -63,7 +63,7 @@ Widget build(BuildContext context) {
         '/settings': (context) => const Settingspage(),
         '/signup': (context) => const SignUpScreen(),
         '/login' : (context) => const LoginScreen(),
-        '/contact': (context) => const Contactpage(),
+        '/contact': (context) => const ContactPage(),
         '/habit': (context) => const Habitpage(),
         '/auth': (context) => const AuthPage(),
       },

@@ -42,9 +42,9 @@ class _HabitsPlaceholderState extends State<HabitsPlaceholder> {
         boxShadow: [
           if (!isDarkMode)
             BoxShadow(
-              color: Colors.black.withOpacity(0.3),
+              color: Colors.black.withOpacity(0.2),
               blurRadius: 6,
-              offset: const Offset(0, 2),
+              offset: const Offset(0, 1),
             ),
         ],
       ),

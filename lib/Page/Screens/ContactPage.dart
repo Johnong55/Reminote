@@ -1,47 +1,74 @@
-import 'package:flutter/material.dart';
+import 'dart:developer';
 
-class Contactpage extends StatelessWidget {
-  const Contactpage({super.key});
+import 'package:flutter/material.dart';
+import 'package:study_app/components/widgets/CustomSelectedContainer.dart';
+
+class ContactPage extends StatefulWidget {
+  const ContactPage({super.key});
+
+  @override
+  State<ContactPage> createState() => _ContactPageState();
+}
+
+class _ContactPageState extends State<ContactPage> {
+  String selectedTab = "Contact";
+
+  void onTabChange(String value) {
+    setState(() {
+      selectedTab = value;
+    });
+
+    switch (value) {
+      case "Contact":
+        log("Contact");
+        break;
+      case "Feedback":
+        log("Feedback");
+        break;
+      default:
+        log("Default");
+        break;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar:
       body: Container(
+        height: 70,
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.surface,
-          borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20), bottomRight: Radius.circular(20)),
+          borderRadius: const BorderRadius.only(
+            bottomLeft: Radius.circular(20),
+            bottomRight: Radius.circular(20),
+          ),
           boxShadow: [
             BoxShadow(
-              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.2),
+              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.1),
               spreadRadius: 5,
               blurRadius: 7,
-              offset: Offset(0, 3), // changes position of shadow
+              offset: const Offset(0, 0.5),
             ),
           ],
         ),
-        height: 70,
-       
-        child: Center(
-          child: ListView.builder(
-            
-            itemCount: 2,
-            itemBuilder: (context, index) {
-              return ListTile(
-                title: Text(
-                  'Contact Us',
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
-                subtitle: Text(
-          'Email: contact@example.com',
-        ),
-
-    );
-
-            },
-          ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Customselectedcontainer(
+              title: "F R I E N D S",
+              isSelect: selectedTab == "Contact",
+              leftorRight: true,
+              onTap: () => onTabChange("Contact"),
+            ),
+            Customselectedcontainer(
+              title: "G R O U P S",
+              isSelect: selectedTab == "Feedback",
+              leftorRight: false,
+              onTap: () => onTabChange("Feedback"),
+            ),
+          ],
         ),
       ),
     );
-}
+  }
 }
