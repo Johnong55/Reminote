@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:study_app/Offline_Repository/Completions_repository.dart';
-import 'package:study_app/models/Habit.dart';
+import 'package:study_app/models/Offine/Habit.dart';
 import 'package:study_app/utils/Isar_Util.dart';
 
 class HabitRepository {
@@ -162,7 +162,7 @@ class HabitRepository {
   Future<List<Habit>> getListDailyHabits(DateTime date) async {
     
       final dateinmilli = date.millisecondsSinceEpoch;
-    log("date: ${date.microsecondsSinceEpoch}");
+   
   
     final dailyHabit =
         await _isar.habits

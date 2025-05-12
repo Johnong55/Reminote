@@ -7,7 +7,7 @@ import 'package:study_app/Page/Screens/NoteHome.dart';
 import 'package:study_app/Page/Screens/HabitPage.dart';
 import 'package:study_app/config/app_theme.dart';
 
-import 'package:study_app/models/Note.dart';
+import 'package:study_app/models/Offine/Note.dart';
 import 'package:intl/intl.dart';
 import 'package:study_app/utils/Color_helper.dart';
 

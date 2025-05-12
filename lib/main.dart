@@ -10,7 +10,9 @@ import 'package:study_app/Page/Screens/SettingsPage.dart';
 import 'package:study_app/Page/Screens/SignIn.dart';
 import 'package:study_app/Page/Screens/SignUp.dart';
 import 'package:study_app/config/app_theme.dart';
+import 'package:study_app/models/Offine/Streak.dart';
 import 'package:study_app/providers/Completion_provider.dart';
+import 'package:study_app/providers/Streak_provider.dart';
 import 'package:study_app/providers/habit_provider.dart';
 import 'package:study_app/providers/note_provider.dart';
 
@@ -23,24 +25,27 @@ void main() async {
   // Đảm bảo Flutter đã được khởi tạo
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  await FirebaseApi().initNotifications();
+
 
 
   // Khởi tạo NoteProvider và chờ nó hoàn tất khởi tạo
   final noteProvider = NoteProvider();
   final habitProvider  = HabitProvider();
     final CompletionProvider completionProvider = CompletionProvider();  
+    final StreakProvider streakProvider = StreakProvider();
+   
     completionProvider.intialize();
   await noteProvider.initialize(); // Phương thức này sẽ khởi tạo Isar và tải notes
   await habitProvider.intialize();
-  runApp(MyApp(noteProvider: noteProvider,habitProvider: habitProvider,completionProvider: completionProvider,));
+  runApp(MyApp(noteProvider: noteProvider,habitProvider: habitProvider,completionProvider: completionProvider,streakProvider: streakProvider,));
 }
 
 class MyApp extends StatelessWidget {
   final NoteProvider noteProvider;
   final HabitProvider habitProvider;
   final CompletionProvider completionProvider;
-  const MyApp({Key? key, required this.noteProvider , required this.habitProvider, required this.completionProvider}) : super(key: key);
+  final StreakProvider streakProvider;
+  const MyApp({Key? key, required this.noteProvider , required this.habitProvider, required this.completionProvider,required this.streakProvider}) : super(key: key);
 @override
 Widget build(BuildContext context) {
   return MultiProvider(
@@ -49,6 +54,7 @@ Widget build(BuildContext context) {
       ChangeNotifierProvider.value(value: noteProvider),
       ChangeNotifierProvider.value(value: habitProvider),
       ChangeNotifierProvider.value(value: completionProvider),
+      ChangeNotifierProvider.value(value: streakProvider),
     ],
     child: MaterialApp(
       debugShowCheckedModeBanner: false,

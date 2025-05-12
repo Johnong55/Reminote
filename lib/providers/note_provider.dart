@@ -1,6 +1,6 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
-import 'package:study_app/models/Note.dart';
+import 'package:study_app/models/Offine/Note.dart';
 import 'package:study_app/services/NoteService.dart';
 
 class NoteProvider extends ChangeNotifier {

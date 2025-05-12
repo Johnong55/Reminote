@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:study_app/models/Completions.dart';
+import 'package:study_app/models/Offine/Completions.dart';
 import 'package:study_app/services/CompletionService.dart';
 
 class CompletionProvider extends ChangeNotifier {
@@ -54,7 +54,7 @@ Future<bool> isHabitCompleted(int habitID, DateTime date) async {
     return await _service.isHabitCompleted(habitID, date) ;
 }
 Future<bool> wereCompletedonDate() async {
-  // KHÔNG gọi _setloading ở đây
+
  _completed  =   await _service.wereAllCompletedOnDate(DateTime.now());
  notifyListeners();
  return _completed!;

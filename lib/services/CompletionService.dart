@@ -5,21 +5,17 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:study_app/Offline_Repository/Completions_repository.dart';
 import 'package:study_app/Online_Repository/Completion_Repository_Online.dart';
-import 'package:study_app/models/Completions.dart';
+import 'package:study_app/models/Offine/Completions.dart';
 
 class CompletionService {
   final CompletionsRepository _completionsRepository = CompletionsRepository();
   final CompletionRepositoryOnline _completionsRepositoryOnline =  CompletionRepositoryOnline();
    final FirebaseAuth _auth = FirebaseAuth.instance;
    final Connectivity _connectivity = Connectivity();
-   late final CollectionReference _cloudCollection;
   // Initialize the repository
   Future<void> initialize() async {
     await _completionsRepository.initializeIsar();
     final user = _auth.currentUser;
-    _cloudCollection = FirebaseFirestore.instance.collection(
-      user != null ? 'users/${user.uid}/Completions' : 'Completions',
-    );
     if (user == null) {
       print("Warning: User not logged in - Firestore may reject operations");
     }

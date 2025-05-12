@@ -3,7 +3,7 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:study_app/models/Completions.dart';
+import 'package:study_app/models/Offine/Completions.dart';
 
 class CompletionRepositoryOnline {
     final FirebaseFirestore _firestore = FirebaseFirestore.instance;

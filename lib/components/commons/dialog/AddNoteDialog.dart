@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:study_app/models/Note.dart';
+import 'package:study_app/models/Offine/Note.dart';
 
 import 'package:study_app/utils/Color_helper.dart';
 

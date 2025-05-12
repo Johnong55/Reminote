@@ -17,28 +17,33 @@ const StreakSchema = CollectionSchema(
   name: r'Streak',
   id: 2927724474768415338,
   properties: {
-    r'currentStreak': PropertySchema(
+    r'ID': PropertySchema(
       id: 0,
+      name: r'ID',
+      type: IsarType.string,
+    ),
+    r'currentStreak': PropertySchema(
+      id: 1,
       name: r'currentStreak',
       type: IsarType.long,
     ),
     r'lastCompletedDate': PropertySchema(
-      id: 1,
+      id: 2,
       name: r'lastCompletedDate',
       type: IsarType.dateTime,
     ),
     r'lastUpdated': PropertySchema(
-      id: 2,
+      id: 3,
       name: r'lastUpdated',
       type: IsarType.dateTime,
     ),
     r'streakStartDate': PropertySchema(
-      id: 3,
+      id: 4,
       name: r'streakStartDate',
       type: IsarType.dateTime,
     ),
     r'userID': PropertySchema(
-      id: 4,
+      id: 5,
       name: r'userID',
       type: IsarType.string,
     )
@@ -64,6 +69,12 @@ int _streakEstimateSize(
 ) {
   var bytesCount = offsets.last;
   {
+    final value = object.ID;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
+  {
     final value = object.userID;
     if (value != null) {
       bytesCount += 3 + value.length * 3;
@@ -78,11 +89,12 @@ void _streakSerialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  writer.writeLong(offsets[0], object.currentStreak);
-  writer.writeDateTime(offsets[1], object.lastCompletedDate);
-  writer.writeDateTime(offsets[2], object.lastUpdated);
-  writer.writeDateTime(offsets[3], object.streakStartDate);
-  writer.writeString(offsets[4], object.userID);
+  writer.writeString(offsets[0], object.ID);
+  writer.writeLong(offsets[1], object.currentStreak);
+  writer.writeDateTime(offsets[2], object.lastCompletedDate);
+  writer.writeDateTime(offsets[3], object.lastUpdated);
+  writer.writeDateTime(offsets[4], object.streakStartDate);
+  writer.writeString(offsets[5], object.userID);
 }
 
 Streak _streakDeserialize(
@@ -92,11 +104,12 @@ Streak _streakDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = Streak(
-    currentStreak: reader.readLongOrNull(offsets[0]),
-    lastCompletedDate: reader.readDateTimeOrNull(offsets[1]),
-    lastUpdated: reader.readDateTimeOrNull(offsets[2]),
-    streakStartDate: reader.readDateTimeOrNull(offsets[3]),
-    userID: reader.readStringOrNull(offsets[4]),
+    ID: reader.readStringOrNull(offsets[0]),
+    currentStreak: reader.readLongOrNull(offsets[1]),
+    lastCompletedDate: reader.readDateTimeOrNull(offsets[2]),
+    lastUpdated: reader.readDateTimeOrNull(offsets[3]),
+    streakStartDate: reader.readDateTimeOrNull(offsets[4]),
+    userID: reader.readStringOrNull(offsets[5]),
   );
   object.id = id;
   return object;
@@ -110,14 +123,16 @@ P _streakDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
-      return (reader.readLongOrNull(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 1:
-      return (reader.readDateTimeOrNull(offset)) as P;
+      return (reader.readLongOrNull(offset)) as P;
     case 2:
       return (reader.readDateTimeOrNull(offset)) as P;
     case 3:
       return (reader.readDateTimeOrNull(offset)) as P;
     case 4:
+      return (reader.readDateTimeOrNull(offset)) as P;
+    case 5:
       return (reader.readStringOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -212,6 +227,150 @@ extension StreakQueryWhere on QueryBuilder<Streak, Streak, QWhereClause> {
 }
 
 extension StreakQueryFilter on QueryBuilder<Streak, Streak, QFilterCondition> {
+  QueryBuilder<Streak, Streak, QAfterFilterCondition> iDIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'ID',
+      ));
+    });
+  }
+
+  QueryBuilder<Streak, Streak, QAfterFilterCondition> iDIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'ID',
+      ));
+    });
+  }
+
+  QueryBuilder<Streak, Streak, QAfterFilterCondition> iDEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'ID',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Streak, Streak, QAfterFilterCondition> iDGreaterThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'ID',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Streak, Streak, QAfterFilterCondition> iDLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'ID',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Streak, Streak, QAfterFilterCondition> iDBetween(
+    String? lower,
+    String? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'ID',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Streak, Streak, QAfterFilterCondition> iDStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'ID',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Streak, Streak, QAfterFilterCondition> iDEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'ID',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Streak, Streak, QAfterFilterCondition> iDContains(String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'ID',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Streak, Streak, QAfterFilterCondition> iDMatches(String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'ID',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Streak, Streak, QAfterFilterCondition> iDIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'ID',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<Streak, Streak, QAfterFilterCondition> iDIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'ID',
+        value: '',
+      ));
+    });
+  }
+
   QueryBuilder<Streak, Streak, QAfterFilterCondition> currentStreakIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
@@ -697,6 +856,18 @@ extension StreakQueryObject on QueryBuilder<Streak, Streak, QFilterCondition> {}
 extension StreakQueryLinks on QueryBuilder<Streak, Streak, QFilterCondition> {}
 
 extension StreakQuerySortBy on QueryBuilder<Streak, Streak, QSortBy> {
+  QueryBuilder<Streak, Streak, QAfterSortBy> sortByID() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'ID', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Streak, Streak, QAfterSortBy> sortByIDDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'ID', Sort.desc);
+    });
+  }
+
   QueryBuilder<Streak, Streak, QAfterSortBy> sortByCurrentStreak() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'currentStreak', Sort.asc);
@@ -759,6 +930,18 @@ extension StreakQuerySortBy on QueryBuilder<Streak, Streak, QSortBy> {
 }
 
 extension StreakQuerySortThenBy on QueryBuilder<Streak, Streak, QSortThenBy> {
+  QueryBuilder<Streak, Streak, QAfterSortBy> thenByID() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'ID', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Streak, Streak, QAfterSortBy> thenByIDDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'ID', Sort.desc);
+    });
+  }
+
   QueryBuilder<Streak, Streak, QAfterSortBy> thenByCurrentStreak() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'currentStreak', Sort.asc);
@@ -833,6 +1016,13 @@ extension StreakQuerySortThenBy on QueryBuilder<Streak, Streak, QSortThenBy> {
 }
 
 extension StreakQueryWhereDistinct on QueryBuilder<Streak, Streak, QDistinct> {
+  QueryBuilder<Streak, Streak, QDistinct> distinctByID(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'ID', caseSensitive: caseSensitive);
+    });
+  }
+
   QueryBuilder<Streak, Streak, QDistinct> distinctByCurrentStreak() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'currentStreak');
@@ -869,6 +1059,12 @@ extension StreakQueryProperty on QueryBuilder<Streak, Streak, QQueryProperty> {
   QueryBuilder<Streak, int, QQueryOperations> idProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'id');
+    });
+  }
+
+  QueryBuilder<Streak, String?, QQueryOperations> IDProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'ID');
     });
   }
 

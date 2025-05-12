@@ -5,7 +5,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:study_app/Offline_Repository/Habit_repository.dart';
 import 'package:study_app/Online_Repository/Habit_Repository_Online.dart';
-import 'package:study_app/models/Habit.dart';
+import 'package:study_app/models/Offine/Habit.dart';
 import 'package:study_app/services/CompletionService.dart';
 
 class HabitService {

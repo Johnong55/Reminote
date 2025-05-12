@@ -3,8 +3,8 @@ import 'dart:developer';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:study_app/Offline_Repository/Habit_repository.dart';
-import 'package:study_app/models/Completions.dart';
-import 'package:study_app/models/Habit.dart';
+import 'package:study_app/models/Offine/Completions.dart';
+import 'package:study_app/models/Offine/Habit.dart';
 import 'package:study_app/utils/Isar_Util.dart';
 
 class CompletionsRepository {
@@ -68,12 +68,13 @@ Future<void> recordCompletion(int habitId,  DateTime dateCompleted,{bool iscompl
   
   // Check if all habits were completed on a specific date
   Future<bool> wereAllCompletedOnDate(DateTime date) async {
-    log("wereAllCompletedOnDate: $date");
+
 
     List<Completions> completions = await getCompletionsForDate(date);
+
     List<Habit> habits = await  habitRepository.getListHabitInSpecDay(date) ; 
 
-    log("completions : ${completions.length}, habit: ${habits.length}");// Assuming this method exists in HabitRepository
+   
     return habits.isNotEmpty && completions.length == habits.length; // Check if all habits are completed
   
     // Check if at least one completion exists and all are marked as allCompleted=true

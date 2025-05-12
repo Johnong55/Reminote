@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:lottie/lottie.dart';
 
 class StreakDayItem extends StatelessWidget {
   final DateTime date;
@@ -33,15 +34,13 @@ class StreakDayItem extends StatelessWidget {
   
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
+  
     final textTheme = Theme.of(context).textTheme;
    
     final dayOfWeek = _getDayOfWeek();
     final dayOfMonth = _getDayOfMonth();
     
-    // Determine which item should be highlighted
-    // Default: Today is highlighted
-    // After selection: Only the chosen item is highlighted
+    
     final bool shouldHighlight = isChosen || (isToday && !isAnyItemChosen());
     
     // Determine text color based on highlight state
@@ -93,7 +92,10 @@ class StreakDayItem extends StatelessWidget {
               ),
               child: Center(
                 child: isCompleted
-                    ? const Icon(Icons.check, size: 20, color: Colors.white)
+                    ? SizedBox(
+                      width: 19,
+                      height: 19,
+                      child: Lottie.asset("assets/lottie/fire.json"))
                     : Icon(Icons.close_rounded, size: 20, color: isDarkMode ? Colors.grey.shade500 : Colors.grey.shade400),
               ),
             ),

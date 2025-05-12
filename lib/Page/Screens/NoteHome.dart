@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:study_app/Page/Screens/NoteDetailPage.dart';
 import 'package:study_app/components/commons/dialog/AddNoteDialog.dart';
 import 'package:study_app/components/commons/Note_Tile.dart';
-import 'package:study_app/models/Note.dart';
+import 'package:study_app/models/Offine/Note.dart';
 import 'package:study_app/providers/note_provider.dart';
 
 class Notehome extends StatefulWidget {
