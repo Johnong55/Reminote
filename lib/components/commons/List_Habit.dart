@@ -40,7 +40,7 @@ class _ListStreakState extends State<ListStreak> {
     streakProvider = Provider.of<StreakProvider>(context, listen: false);
     streakProvider.initialize();
     streakProvider.currentStreakValue;
-
+    completionProvider.getAllCompletionOnline();
     habitProvider.intialize();
     habitProvider.fetchHabits();
     _chosenDate = null;
@@ -52,7 +52,7 @@ class _ListStreakState extends State<ListStreak> {
       _chosenDate = date;
       habitProvider.setCurrentDate(date);
       habitProvider.fetchHabits();
-      completionProvider.wereCompletedonDate();
+    
       log("Selected date: $_chosenDate");
     });
   }

@@ -55,7 +55,7 @@ class _HabitsPlaceholderState extends State<HabitsPlaceholder> {
    await completionProvider.recordCompletions(
       habit.id,
       widget.chosenDate,
-      !isCompleted,
+     !isCompleted,
     );
    bool dayCompleted = await  completionProvider.wereCompletedonDate();
    log("dayCompleted = $dayCompleted");

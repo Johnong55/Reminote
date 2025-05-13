@@ -45,7 +45,7 @@ class StreakDayItem extends StatelessWidget {
     
     // Determine text color based on highlight state
     Color textColor = shouldHighlight 
-        ? streakColor 
+        ? Colors.deepOrangeAccent 
         : (isDarkMode ? Colors.grey.shade400 : Colors.grey.shade600);
     
     return GestureDetector(

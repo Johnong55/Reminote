@@ -12,7 +12,7 @@ class NoteService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final Connectivity _connectivity = Connectivity();
 
-  late final CollectionReference _cloudCollection;
+   CollectionReference? _cloudCollection;
   bool _isInitialized = false;
   List<Note> currentNotes = [];
 

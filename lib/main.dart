@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:study_app/API/firebase_api.dart';
-import 'package:study_app/Offline_Repository/Note_repository_Offline.dart';
 import 'package:study_app/Page/Authentication/Auth_page.dart';
 import 'package:study_app/Page/Screens/ContactPage.dart';
 import 'package:study_app/Page/Screens/HabitPage.dart';
@@ -10,7 +9,6 @@ import 'package:study_app/Page/Screens/SettingsPage.dart';
 import 'package:study_app/Page/Screens/SignIn.dart';
 import 'package:study_app/Page/Screens/SignUp.dart';
 import 'package:study_app/config/app_theme.dart';
-import 'package:study_app/models/Offine/Streak.dart';
 import 'package:study_app/providers/Completion_provider.dart';
 import 'package:study_app/providers/Streak_provider.dart';
 import 'package:study_app/providers/habit_provider.dart';

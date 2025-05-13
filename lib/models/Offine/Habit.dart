@@ -33,6 +33,7 @@ class Habit {
   @Index()
   String? userEmail;
   
+  bool? isSync;
   // Getter to convert the stored integer to enum
   @ignore
   FrequencyType get frequencyType {

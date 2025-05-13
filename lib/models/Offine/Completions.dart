@@ -47,7 +47,8 @@ class Completions {
     return "Completion: habitID=$habitID, "
         "dateCompleted=$dateCompleted, "
         "isCompleted=$isCompleted, "
-        "needsSync=$needsSync";
+        "needsSync=$needsSync"
+        "ID = $ID";
   }
 
   // Create from Firestore document
@@ -70,12 +71,12 @@ class Completions {
     return Completions(
       ID: json['ID'] as String?,
       habitID: json['habitID'] as int?,
-      isCompleted: json['isCompleted'] as bool?,
+      isCompleted: json['completed'] as bool?,
       dateCompleted:
-          json['dateCompleted'] is firestore.Timestamp
-              ? (json['dateCompleted'] as firestore.Timestamp).toDate()
-              : json['dateCompleted'] != null
-              ? DateTime.parse(json['dateCompleted'].toString())
+          json['completedDate'] is firestore.Timestamp
+              ? (json['completedDate'] as firestore.Timestamp).toDate()
+              : json['completedDate'] != null
+              ? DateTime.parse(json['completedDate'].toString())
               : null,
       userEmail: json['userEmail'] as String?,
       lastModified:
@@ -130,4 +131,7 @@ class Completions {
       needsSync: needsSync ?? this.needsSync,
     );
   }
+
+  
+  
 }
