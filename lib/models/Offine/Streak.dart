@@ -1,12 +1,11 @@
-
 import 'package:isar/isar.dart';
-import 'package:study_app/models/User.dart';
 
 part 'Streak.g.dart';
 
 @Collection()
-class Streak{
+class Streak {
   Id id = Isar.autoIncrement;
+  String? ID;
   int? currentStreak;
   DateTime? lastUpdated;
   DateTime? lastCompletedDate;
@@ -18,9 +17,11 @@ class Streak{
     this.lastCompletedDate,
     this.streakStartDate,
     this.userID,
+    this.ID,
   });
-  void addTheStreak()
-  {
-    this.currentStreak = (this.currentStreak ?? 0) + 1;
+  @override
+  String toString() {
+    // TODO: implement toString
+    return 'Streak{id: $id, ID: $ID, currentStreak: $currentStreak, lastUpdated: $lastUpdated, lastCompletedDate: $lastCompletedDate, streakStartDate: $streakStartDate, userID: $userID}';
   }
-} 
+}

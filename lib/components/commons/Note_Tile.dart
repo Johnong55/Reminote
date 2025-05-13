@@ -6,7 +6,7 @@ import 'package:study_app/components/commons/dialog/confirm_dialog.dart';
 import 'package:study_app/components/widgets/Note_Home/Note_Content.dart';
 import 'package:study_app/components/widgets/Note_Home/NoteDate.dart';
 import 'package:study_app/components/widgets/Note_Home/NoteHeader.dart';
-import 'package:study_app/models/Note.dart';
+import 'package:study_app/models/Offine/Note.dart';
 import 'package:study_app/utils/Color_helper.dart';
 
 class NoteTile extends StatelessWidget {

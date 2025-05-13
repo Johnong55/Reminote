@@ -1,15 +1,16 @@
-// StreakCalendar.dart
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:study_app/components/widgets/Streak_Home/StreakDayItem.dart';
 import 'package:intl/intl.dart';
+import 'package:study_app/providers/Completion_provider.dart';
 
-class StreakCalendar extends StatelessWidget {
+class StreakCalendar extends StatefulWidget {
   final List<bool> completedDays;
   final Color streakColor;
   final bool isDarkMode;
-  final DateTime? chosenDate; // Can be null if no date is chosen yet
+  final DateTime? chosenDate;
   final void Function(DateTime) onDateSelected;
-  
+  final bool isCompletedToday;
   const StreakCalendar({
     super.key,
     required this.completedDays,
@@ -17,25 +18,44 @@ class StreakCalendar extends StatelessWidget {
     required this.isDarkMode,
     required this.chosenDate,
     required this.onDateSelected,
+    required this.isCompletedToday,
   });
+
+  @override
+  State<StreakCalendar> createState() => _StreakCalendarState();
+}
+
+class _StreakCalendarState extends State<StreakCalendar> {
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    // Delay scroll until after first frame render
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      // Each item is ~64px wide (adjust if needed)
+      double itemWidth = 64;
+      int todayIndex = 4; // Center of 9-day list (index 4)
+      _scrollController.jumpTo((itemWidth * todayIndex) - (MediaQuery.of(context).size.width / 2) + (itemWidth / 2));
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
-    
-    // Get the date of Monday of the current week
+
     final today = DateTime.now();
-    final mondayOfWeek = _getMondayOfWeek(today);
+    final startDate = today.subtract(const Duration(days: 4)); // 4 days before today
 
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 0),
+      margin: const EdgeInsets.symmetric(horizontal: 24),
       padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 4),
       decoration: BoxDecoration(
         color: colorScheme.surface,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
-          if (!isDarkMode)
+          if (!widget.isDarkMode)
             BoxShadow(
               color: Colors.black.withOpacity(0.05),
               blurRadius: 4,
@@ -51,34 +71,30 @@ class StreakCalendar extends StatelessWidget {
             child: Text('Your streak history', style: textTheme.titleMedium),
           ),
           SizedBox(
-            height: 80, // Increased height for date display
+            height: 80,
             child: ListView.builder(
+              controller: _scrollController,
               scrollDirection: Axis.horizontal,
               physics: const BouncingScrollPhysics(),
-              itemCount: 10, // Monday to Sunday (7 days)
+              itemCount: 9,
               padding: const EdgeInsets.symmetric(horizontal: 12),
               itemBuilder: (context, index) {
-                // Calculate date from Monday to Sunday
-                final date = mondayOfWeek.add(Duration(days: index));
-                
-                // Check if day is completed based on index
-                final isCompleted = 
-                    completedDays.length > index ? completedDays[index] : false;
-                
-                // Check if this is the chosen date
-                final isChosen = chosenDate != null && _isSameDay(date, chosenDate!);
-                
-                // Check if this is today
+                final date = startDate.add(Duration(days: index));
+                final isCompleted = widget.completedDays.length > index
+                    ? widget.completedDays[index]
+                    : false;
+                final isChosen = widget.chosenDate != null &&
+                    _isSameDay(date, widget.chosenDate!);
                 final isToday = _isSameDay(date, today);
 
                 return StreakDayItem(
                   date: date,
                   isToday: isToday,
                   isChosen: isChosen,
-                  isCompleted: isCompleted,
-                  streakColor: streakColor,
-                  isDarkMode: isDarkMode,
-                  ontap: () => onDateSelected(date),
+                  isCompleted: isToday? widget.isCompletedToday: isCompleted ,
+                  streakColor: widget.streakColor,
+                  isDarkMode: widget.isDarkMode,
+                  ontap: () => widget.onDateSelected(date),
                 );
               },
             ),
@@ -87,18 +103,8 @@ class StreakCalendar extends StatelessWidget {
       ),
     );
   }
-  
-  // Helper to get Monday of the current week
-  DateTime _getMondayOfWeek(DateTime date) {
-    // Weekday is 1-based where 1 is Monday and 7 is Sunday
-    int difference = date.weekday - 1;
-    return date.subtract(Duration(days: difference));
-  }
-  
-  // Helper to check if two dates are the same day
-  bool _isSameDay(DateTime date1, DateTime date2) {
-    return date1.year == date2.year && 
-           date1.month == date2.month && 
-           date1.day == date2.day;
+
+  bool _isSameDay(DateTime d1, DateTime d2) {
+    return d1.year == d2.year && d1.month == d2.month && d1.day == d2.day;
   }
 }

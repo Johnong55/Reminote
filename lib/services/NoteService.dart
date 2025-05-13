@@ -3,7 +3,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:study_app/Online_Repository/Note_repository_Online.dart';
-import 'package:study_app/models/Note.dart';
+import 'package:study_app/models/Offine/Note.dart';
 import 'package:study_app/Offline_Repository/Note_repository_Offline.dart';
 
 class NoteService {
@@ -12,7 +12,7 @@ class NoteService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final Connectivity _connectivity = Connectivity();
 
-  late final CollectionReference _cloudCollection;
+   CollectionReference? _cloudCollection;
   bool _isInitialized = false;
   List<Note> currentNotes = [];
 

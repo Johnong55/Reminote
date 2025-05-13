@@ -1,7 +1,7 @@
 // animated_habit_list.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:study_app/models/Habit.dart';
+import 'package:study_app/models/Offine/Habit.dart';
 import 'package:study_app/components/widgets/Streak_Home/Habit_Tile.dart';
 import 'package:study_app/providers/Completion_provider.dart';
 

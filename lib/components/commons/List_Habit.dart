@@ -7,6 +7,7 @@ import 'package:study_app/components/widgets/Streak_Home/HabitPlaceHolder.dart';
 import 'package:study_app/components/widgets/Streak_Home/StreakCalendar.dart';
 import 'package:study_app/components/widgets/Streak_Home/streak_header.dart';
 import 'package:study_app/providers/Completion_provider.dart';
+import 'package:study_app/providers/Streak_provider.dart';
 import 'package:study_app/providers/habit_provider.dart';
 
 class ListStreak extends StatefulWidget {
@@ -18,19 +19,30 @@ class ListStreak extends StatefulWidget {
 
 class _ListStreakState extends State<ListStreak> {
   // Example streak data (you may want to get this from a provider/controller)
-  final int currentStreak = 5;
+  late HabitProvider habitProvider;
+  late CompletionProvider completionProvider;
+  late StreakProvider streakProvider;
 
-  final List<bool> completedDays = [true, true, true, true, true, false, false];
+ 
 
   // Initially null, which means no day is selected yet and today will be highlighted
   DateTime? _chosenDate;
 
   @override
   void initState() {
+    log("start init");
     super.initState();
-       Provider.of<HabitProvider>(context, listen: false).intialize();
-
-           Provider.of<HabitProvider>(context, listen: false).fetchHabits();
+    habitProvider = Provider.of<HabitProvider>(context, listen: false);
+    completionProvider = Provider.of<CompletionProvider>(
+      context,
+      listen: false,
+    ); 
+    streakProvider = Provider.of<StreakProvider>(context, listen: false);
+    streakProvider.initialize();
+    streakProvider.currentStreakValue;
+    completionProvider.getAllCompletionOnline();
+    habitProvider.intialize();
+    habitProvider.fetchHabits();
     _chosenDate = null;
   }
 
@@ -38,13 +50,9 @@ class _ListStreakState extends State<ListStreak> {
   void _onDateSelected(DateTime date) {
     setState(() {
       _chosenDate = date;
-      Provider.of<HabitProvider>(context, listen: false).setCurrentDate(date);
-      
-      Provider.of<HabitProvider>(context, listen: false).fetchHabits();
-      Provider.of<CompletionProvider>(
-        context,
-        listen: false,
-      ).wereCompletedonDate();
+      habitProvider.setCurrentDate(date);
+      habitProvider.fetchHabits();
+    
       log("Selected date: $_chosenDate");
     });
   }
@@ -52,14 +60,15 @@ class _ListStreakState extends State<ListStreak> {
   @override
   Widget build(BuildContext context) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    final streakColor = Colors.orange; // You can customize this color
+    final streakColor = Colors.grey.shade200; // You can customize this color
 
     return Column(
       children: [
         // 🔥 Header with animation and current streak
-        Consumer<CompletionProvider>(
-          builder: (context, provider, _) {
-            final isCompleted = provider.completed;
+        Consumer2<CompletionProvider, StreakProvider>(
+          builder: (context, completionProvider, streakProvider, _) {
+            final isCompleted = completionProvider.completed;
+            final currentStreak = streakProvider.currentStreakValue;
             return StreakHeader(
               currentStreak: currentStreak,
               isCompleted: isCompleted,
@@ -68,12 +77,19 @@ class _ListStreakState extends State<ListStreak> {
         ),
 
         // 📅 Calendar showing streak history - now with Monday to Sunday
-        StreakCalendar(
-          completedDays: completedDays,
-          streakColor: streakColor,
-          isDarkMode: isDarkMode,
-          chosenDate: _chosenDate,
-          onDateSelected: _onDateSelected,
+        Consumer2<CompletionProvider,StreakProvider>(
+          builder: (context,provider,streakProvider,_){
+            final bool isCompleted = provider.completed;
+            return StreakCalendar(
+              isCompletedToday: isCompleted,
+            completedDays: streakProvider.completedDays,
+            streakColor: streakColor,
+            isDarkMode: isDarkMode,
+            chosenDate: _chosenDate,
+            onDateSelected: _onDateSelected,
+          );
+          },
+         
         ),
 
         // ✅ Placeholder for habits of the chosen date

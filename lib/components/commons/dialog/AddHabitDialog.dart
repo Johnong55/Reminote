@@ -3,7 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'dart:math';
 
-import 'package:study_app/models/Habit.dart';
+import 'package:study_app/models/Offine/Habit.dart';
 import 'package:study_app/providers/habit_provider.dart';
 
 class AddHabitDialog extends StatefulWidget {
@@ -22,8 +22,9 @@ class _AddHabitDialogState extends State<AddHabitDialog> {
 
   DateTime? _dueDate;
   TimeOfDay? _dueTime;
+  bool _isAllDay = true;
   bool _isCompleted = false;
-  int _frequencyType = 0; // Default: Once
+  int _frequencyType = 0;
   int _targetCount = 1;
   int? _startDate;
   String _color =
@@ -37,22 +38,29 @@ class _AddHabitDialogState extends State<AddHabitDialog> {
     'Custom',
   ];
   final List<String> _colorOptions = [
-    '#FFECB3', // Amber light
-    '#FFCCBC', // Deep Orange light
-    '#C8E6C9', // Green light
-    '#BBDEFB', // Blue light
-    '#D1C4E9', // Deep Purple light
-    '#F8BBD0', // Pink light
-    '#B2DFDB', // Teal light
-    '#E1BEE7', // Purple light
+    '#FFECB3',
+    '#FFCCBC',
+    '#C8E6C9',
+    '#BBDEFB',
+    '#D1C4E9',
+    '#F8BBD0',
+    '#B2DFDB',
+    '#E1BEE7',
   ];
 
   @override
   void initState() {
     super.initState();
-    final currentDate = Provider.of<HabitProvider>(context, listen: false).currentDate!;
-    _startDate = DateTime(currentDate.year, currentDate.month, currentDate.day).millisecondsSinceEpoch;
+    final currentDate =
+        Provider.of<HabitProvider>(context, listen: false).currentDate!;
+    _startDate =
+        DateTime(
+          currentDate.year,
+          currentDate.month,
+          currentDate.day,
+        ).millisecondsSinceEpoch;
   }
+
   @override
   void dispose() {
     _titleController.dispose();
@@ -71,14 +79,23 @@ class _AddHabitDialogState extends State<AddHabitDialog> {
     if (pickedDate != null) {
       setState(() {
         _dueDate = pickedDate;
-        final currentDate = Provider.of<HabitProvider>(context, listen: false).currentDate!;
-        _startDate = DateTime(currentDate.year, currentDate.month, currentDate.day).millisecondsSinceEpoch;
-   
+        final currentDate =
+            Provider.of<HabitProvider>(context, listen: false).currentDate!;
+        _startDate =
+            DateTime(
+              currentDate.year,
+              currentDate.month,
+              currentDate.day,
+            ).millisecondsSinceEpoch;
       });
-    }
-    else{
-      setState((){
-        _startDate = DateTime(DateTime.now().year,DateTime.now().month, DateTime.now().day).millisecondsSinceEpoch;
+    } else {
+      setState(() {
+        _startDate =
+            DateTime(
+              DateTime.now().year,
+              DateTime.now().month,
+              DateTime.now().day,
+            ).millisecondsSinceEpoch;
       });
     }
   }
@@ -98,20 +115,34 @@ class _AddHabitDialogState extends State<AddHabitDialog> {
 
   void _saveHabit() {
     if (_formKey.currentState!.validate()) {
+      final selectedDate = _dueDate ?? DateTime.now();
+      final dueTime =
+          ( !_isAllDay && _dueTime != null)
+              ? DateTime(
+                selectedDate.year,
+                selectedDate.month,
+                selectedDate.day,
+                _dueTime!.hour,
+                _dueTime!.minute,
+              )
+              : DateTime(
+                selectedDate.year,
+                selectedDate.month,
+                selectedDate.day,
+              );
+
       final newHabit = Habit(
         title: _titleController.text,
         description: _descriptionController.text,
-        due_date: _frequencyType == 0 ? DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day) : _dueDate,
-        due_time:
-            _frequencyType != 0 && _dueDate != null && _dueTime != null
+        due_date:
+            _frequencyType == 0
                 ? DateTime(
-                  _dueDate!.year,
-                  _dueDate!.month,
-                  _dueDate!.day,
-                  _dueTime!.hour,
-                  _dueTime!.minute,
+                  DateTime.now().year,
+                  DateTime.now().month,
+                  DateTime.now().day,
                 )
-                : DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day),
+                : selectedDate,
+        due_time: dueTime,
         isCompleted: _isCompleted,
         frequency_type: _frequencyType,
         target_count: _frequencyType == 0 ? 1 : _targetCount,
@@ -124,11 +155,10 @@ class _AddHabitDialogState extends State<AddHabitDialog> {
     }
   }
 
-  // Helper method to convert hex string to Color
   Color _hexToColor(String hexString) {
     hexString = hexString.replaceFirst('#', '');
     if (hexString.length == 6) {
-      hexString = 'FF' + hexString;
+      hexString = 'FF$hexString';
     }
     return Color(int.parse(hexString, radix: 16));
   }
@@ -212,7 +242,18 @@ class _AddHabitDialogState extends State<AddHabitDialog> {
                   },
                 ),
                 const SizedBox(height: 16),
-                // Only show date/time pickers if frequency is not "Once"
+                   const SizedBox(height: 8),
+                  SwitchListTile(
+                    title: const Text('All Day'),
+                    value: _isAllDay,
+                    onChanged: (value) {
+                      setState(() {
+                        _isAllDay = value;
+                        if (_isAllDay) _dueTime = null;
+                      });
+                    },
+                    contentPadding: EdgeInsets.zero,
+                  ),
                 if (_frequencyType != 0) ...[
                   Row(
                     children: [
@@ -232,26 +273,10 @@ class _AddHabitDialogState extends State<AddHabitDialog> {
                           ),
                         ),
                       ),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: InkWell(
-                          onTap: _pickTime,
-                          child: InputDecorator(
-                            decoration: const InputDecoration(
-                              labelText: 'Due Time',
-                              border: OutlineInputBorder(),
-                            ),
-                            child: Text(
-                              _dueTime != null
-                                  ? _dueTime!.format(context)
-                                  : 'Select Time',
-                            ),
-                          ),
-                        ),
-                      ),
                     ],
                   ),
-                  const SizedBox(height: 16),
+                 
+                  
                   Row(
                     children: [
                       const Text('Target Count:'),
@@ -279,6 +304,22 @@ class _AddHabitDialogState extends State<AddHabitDialog> {
                   ),
                   const SizedBox(height: 16),
                 ],
+                if (!_isAllDay)
+                    InkWell(
+                      onTap: _pickTime,
+                      child: InputDecorator(
+                        decoration: const InputDecoration(
+                          labelText: 'Due Time',
+                          border: OutlineInputBorder(),
+                        ),
+                        child: Text(
+                          _dueTime != null
+                              ? _dueTime!.format(context)
+                              : 'Select Time',
+                        ),
+                      ),
+                    ),
+                  const SizedBox(height: 16),
                 const Text(
                   'Color',
                   style: TextStyle(fontWeight: FontWeight.bold),
@@ -293,7 +334,6 @@ class _AddHabitDialogState extends State<AddHabitDialog> {
                         (context, index) => const SizedBox(width: 8),
                     itemBuilder: (context, index) {
                       final color = _colorOptions[index];
-
                       return GestureDetector(
                         onTap: () {
                           setState(() {

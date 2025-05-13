@@ -5,7 +5,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:study_app/Offline_Repository/Habit_repository.dart';
 import 'package:study_app/Online_Repository/Habit_Repository_Online.dart';
-import 'package:study_app/models/Habit.dart';
+import 'package:study_app/models/Offine/Habit.dart';
 import 'package:study_app/services/CompletionService.dart';
 
 class HabitService {
@@ -15,7 +15,7 @@ class HabitService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final Connectivity _connectivity = Connectivity();
   bool _isInitialized = false;
-  late final CollectionReference _cloudCollection;
+  CollectionReference? _cloudCollection;
 
   // Initialize the database
   Future<void> init() async {
@@ -208,12 +208,9 @@ class HabitService {
     final userEmail = _auth.currentUser?.email;
 
     if (userEmail != null) {
-      final habitsToDelete = await _offlineRepo.getHabitByEmail(userEmail);
-      log("Deleting ${habitsToDelete.length} local notes");
-
-      for (var habit in habitsToDelete) {
-        await _offlineRepo.deleteHabit(habit.id);
-      }
+   await _offlineRepo.deleteAllhabits();
+      
+   
     } else {
       log("Logout failed: user email is null");
     }

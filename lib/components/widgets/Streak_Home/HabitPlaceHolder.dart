@@ -1,4 +1,3 @@
-
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
@@ -6,8 +5,11 @@ import 'package:provider/provider.dart';
 import 'package:study_app/components/commons/dialog/AddHabitDialog.dart';
 import 'package:study_app/components/widgets/Streak_Home/AnimatedList.dart';
 
-import 'package:study_app/models/Habit.dart';
+import 'package:study_app/models/Offine/Habit.dart';
+
 import 'package:study_app/providers/Completion_provider.dart';
+import 'package:study_app/providers/Streak_provider.dart';
+
 import 'package:study_app/providers/habit_provider.dart';
 
 class HabitsPlaceholder extends StatefulWidget {
@@ -19,12 +21,50 @@ class HabitsPlaceholder extends StatefulWidget {
 }
 
 class _HabitsPlaceholderState extends State<HabitsPlaceholder> {
-  Future<void> onToggleComplete(Habit habit)  async{
+  Future<void> onToggleComplete(Habit habit) async {
+    final now = DateTime.now();
+    final startOfDay = DateTime(now.year, now.month, now.day);
+    final endOfDay = DateTime(now.year, now.month, now.day, 23, 59, 59);
+
+    if (widget.chosenDate.isBefore(startOfDay) ||
+        widget.chosenDate.isAfter(endOfDay)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: const Color.fromARGB(255, 247, 223, 216),
+          content: const Text(
+            'You cannot mark a habit as completed for a date outside today.',
+            style: TextStyle(fontSize: 16, color: Colors.black),
+          ),
+          duration: const Duration(seconds: 2),
+        ),
+      );
+      return;
+    }
+
+    final completionProvider = Provider.of<CompletionProvider>(
+      context,
+      listen: false,
+    );
+    final streakProvider = Provider.of<StreakProvider>(context, listen: false);
     
-      final isCompleted =  await Provider.of<CompletionProvider>(context,listen: false).isHabitCompleted(habit.id, widget.chosenDate);
-      log("Toggling completion for habit: ${habit.id} on date: ${widget.chosenDate} isCompleted: $isCompleted");
-      Provider.of<CompletionProvider>(context,listen: false).recordCompletions(habit.id,widget.chosenDate, !isCompleted);
-      Provider.of<CompletionProvider>(context,listen: false).wereCompletedonDate();
+    final isCompleted = await completionProvider.isHabitCompleted(
+      habit.id,
+      widget.chosenDate,
+    );
+
+   await completionProvider.recordCompletions(
+      habit.id,
+      widget.chosenDate,
+     !isCompleted,
+    );
+   bool dayCompleted = await  completionProvider.wereCompletedonDate();
+   log("dayCompleted = $dayCompleted");
+   if(dayCompleted == true){
+
+      streakProvider.completeToday();
+      streakProvider.setCompletedDay();
+      
+   }
   }
 
   @override
@@ -33,7 +73,7 @@ class _HabitsPlaceholderState extends State<HabitsPlaceholder> {
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    
+
     return Container(
       margin: const EdgeInsets.fromLTRB(16, 8, 16, 8),
       decoration: BoxDecoration(
@@ -78,7 +118,10 @@ class _HabitsPlaceholderState extends State<HabitsPlaceholder> {
                               context,
                               listen: false,
                             ).createHabit(habit);
-                            Provider.of<CompletionProvider>(context,listen: false).wereCompletedonDate();
+                            Provider.of<CompletionProvider>(
+                              context,
+                              listen: false,
+                            ).wereCompletedonDate();
                           },
                         );
                       },

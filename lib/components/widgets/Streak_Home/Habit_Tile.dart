@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:intl/intl.dart'; // For date formatting
-import 'package:study_app/models/Completions.dart';
-import 'package:study_app/models/Habit.dart';
+import 'package:study_app/models/Offine/Completions.dart';
+import 'package:study_app/models/Offine/Habit.dart';
 import 'package:study_app/utils/Color_helper.dart';
 
 class HabitTile extends StatelessWidget {

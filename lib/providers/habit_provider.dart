@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:study_app/models/Habit.dart';
+import 'package:study_app/models/Offine/Habit.dart';
 import 'package:study_app/services/HabitService.dart';
 
 class HabitProvider extends ChangeNotifier { 
@@ -28,12 +28,9 @@ Future<void> intialize() async{
 }
 
 Future<void> fetchHabits() async{
-  log("--------------------------");
     _setLoading(true);
     _habits = await _service.getHabitsForDay(currentDate?? DateTime.now());
-    for(var habit in _habits){
-      log("habit startDate : ${habit.start_date}");
-    }
+
     _setLoading(false);
     notifyListeners();
 
@@ -41,10 +38,10 @@ Future<void> fetchHabits() async{
 Future<void> createHabit(Habit habit ) async{
   _setLoading(true);
   try{
-    log("Creatingg habit ${habit}");
+  
     await _service.addHabit(habit);
     fetchHabits();
-    log(habit.toString());
+ 
   }
   catch (e) {
     log("error when creating.....");

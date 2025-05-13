@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:study_app/models/Note.dart';
+import 'package:study_app/models/Offine/Note.dart';
 
 class NoteRepositoryOnline {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;

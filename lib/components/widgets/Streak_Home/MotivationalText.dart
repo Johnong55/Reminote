@@ -8,7 +8,7 @@ class MotivationalText extends StatelessWidget {
 
   String _getText(int streak) {
     if(isCompleted) return 'Great job! You completed your tasks today!';
-    if(!isCompleted)  return "You nearly miss today, but don't worry! You have time to do sthis!";
+    if(!isCompleted)  return "You nearly miss today! Hurry up !!!";
     if (streak == 0) return 'Start your streak today!';
     if (streak < 3) return 'Good start, keep going!';
     if (streak < 7) return 'Great work, keep it up!';

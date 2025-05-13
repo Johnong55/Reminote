@@ -3,7 +3,7 @@ import 'dart:developer';
 
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:study_app/models/Note.dart';
+import 'package:study_app/models/Offine/Note.dart';
 import 'package:study_app/utils/Isar_Util.dart';
 
 class NoteRepositoryOffline{

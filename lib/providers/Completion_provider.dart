@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:study_app/models/Completions.dart';
+
+import 'package:study_app/models/Offine/Completions.dart';
 import 'package:study_app/services/CompletionService.dart';
 
 class CompletionProvider extends ChangeNotifier {
@@ -20,7 +21,7 @@ class CompletionProvider extends ChangeNotifier {
   Future<void> intialize() async{
     _setloading(true);
     await _service.initialize();
-
+  
     await _service.getCompletionsForDate(currentDate!);
     _completed = await _service.wereAllCompletedOnDate(currentDate!);
     _setloading(false);
@@ -70,5 +71,9 @@ Future<bool> wereCompletedonDate() async {
     _completions.clear();
     _service.deleteAllCompletions();
     notifyListeners();
+  }
+  Future<void> getAllCompletionOnline() async{
+      await _service.getCompletionsOnline();
+      notifyListeners();
   }
 }

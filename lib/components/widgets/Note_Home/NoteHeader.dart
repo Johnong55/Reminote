@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:study_app/components/commons/dialog/confirm_dialog.dart';
 import 'package:study_app/components/widgets/Note_Home/NoteDate.dart';
-import 'package:study_app/models/Note.dart';
+import 'package:study_app/models/Offine/Note.dart';
 
 class NoteHeader extends StatelessWidget {
   final Note note;
