@@ -65,6 +65,10 @@ class _HabitsPlaceholderState extends State<HabitsPlaceholder> {
       streakProvider.setCompletedDay();
       
    }
+   else{
+     streakProvider.unCompleteToday();
+     streakProvider.setCompletedDay();
+   }
   }
 
   @override

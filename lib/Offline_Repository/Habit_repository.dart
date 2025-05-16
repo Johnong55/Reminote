@@ -132,19 +132,35 @@ class HabitRepository {
 
   Future<List<Habit>> getListHabitInSpecDay(DateTime date) async {
     final specificHabits = await getListOnceTimeHabits(date);
-
     final dailyHabits = await getListDailyHabits(date);
     final weeklyHabits = await getListWeeklyHabit(date);
     final monthlyHabits = await getListMonthlyHabits(date);
-  
-    return [
+
+    // Gộp tất cả các danh sách habit
+    final allHabits = [
       ...specificHabits,
       ...dailyHabits,
       ...weeklyHabits,
       ...monthlyHabits,
     ];
-  }
 
+    // Sắp xếp theo due_time
+    allHabits.sort((a, b) {
+      // Đưa các habit không có due_time xuống cuối danh sách
+      if (a.due_time == null && b.due_time == null) {
+        return 0; // Cả hai đều null, giữ nguyên thứ tự
+      } else if (a.due_time == null) {
+        return 1; // a.due_time là null, đưa a xuống cuối
+      } else if (b.due_time == null) {
+        return -1; // b.due_time là null, đưa b xuống cuối
+      }
+
+      // So sánh theo due_time (giờ:phút)
+      return a.due_time!.compareTo(b.due_time!);
+    });
+
+    return allHabits;
+  }
   Future<List<Habit>> getListOnceTimeHabits(DateTime date) async {
     final onceHabit =
       await _isar.habits
