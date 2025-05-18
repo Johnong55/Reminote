@@ -79,7 +79,7 @@ class CompletionService {
     }
   }
 
-  Future<bool> isHabitCompleted(int habitID, DateTime date) async {
+  Future<bool> isHabitCompleted(int habitID, DateTime date) async { 
     return await _completionsRepository.isHabitCompletedOnDate(habitID, date);
   }
 

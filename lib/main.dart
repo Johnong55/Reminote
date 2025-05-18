@@ -3,6 +3,7 @@ import 'package:study_app/API/firebase_api.dart';
 import 'package:study_app/Page/Authentication/Auth_page.dart';
 import 'package:study_app/Page/Screens/ContactPage.dart';
 import 'package:study_app/Page/Screens/HabitPage.dart';
+import 'package:study_app/Page/Screens/HeatMapCalendar.dart';
 import 'package:study_app/Page/Screens/HomePage.dart';
 import 'package:study_app/Page/Screens/NoteHome.dart';
 import 'package:study_app/Page/Screens/SettingsPage.dart';
@@ -39,8 +40,7 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
-  final NoteProvider noteProvider;
-  final HabitProvider habitProvider;
+  final NoteProvider noteProvider;  final HabitProvider habitProvider;
   final CompletionProvider completionProvider;
   final StreakProvider streakProvider;
   const MyApp({Key? key, required this.noteProvider , required this.habitProvider, required this.completionProvider,required this.streakProvider}) : super(key: key);
@@ -70,6 +70,7 @@ Widget build(BuildContext context) {
         '/contact': (context) => const ContactPage(),
         '/habit': (context) => const Habitpage(),
         '/auth': (context) => const AuthPage(),
+      
       },
     ),
   );

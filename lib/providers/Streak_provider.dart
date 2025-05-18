@@ -25,10 +25,12 @@ class StreakProvider extends ChangeNotifier {
   Future<void> initialize() async {
 
     await _streakService.init();
+
     await _loadCurrentStreak();
     await _checkStreakStatus();
     _completionService.initialize();
     await setCompletedDay();
+    await _streakService.getAllStreaks();
 
   }
 
@@ -57,18 +59,29 @@ class StreakProvider extends ChangeNotifier {
     _isStreakActive = true;
     _setLoading(false);
   }
+  // Method to call when  user  try to remove completes their daily task
+  Future<void> unCompleteToday() async {
+    log("==================");
+      final updatedStreak = await _streakService.updateStreakAfterUnCompletion();
+      _currentStreakValue = updatedStreak.currentStreak ?? 0;
+      _isStreakActive = false;
+      notifyListeners();
+
+  }
 
   Future<void> setCompletedDay() async {
  
     bool checking = await _completionService.wereAllCompletedOnDate(DateTime.now());
     
-    int undone = 4 - currentStreakValue > 0 ? 4 - currentStreakValue : 4;
+    int undone = 4 - currentStreakValue >= 0 ? 4 - currentStreakValue : -1;
     undone = checking == true ? undone + 1 : undone ;
-    _completedDays = List.generate(undone, (index) => false);
-    for(int i =0 ;i < currentStreakValue ; i++)
+    print(undone);
+    _completedDays = List.generate(undone < 0 ? 0 : undone, (index) => false);
+    for (int i = 0; i < (currentStreakValue >= 5 ? 5 : currentStreakValue); i++)
     {
       _completedDays.add(true);
     }
+    log(_completedDays.toString());
     notifyListeners();
   }
 }

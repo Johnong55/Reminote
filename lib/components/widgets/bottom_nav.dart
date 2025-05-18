@@ -12,7 +12,7 @@ class myBottomNav extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       child: GNav(
         mainAxisAlignment: MainAxisAlignment.center,
-        color: Colors.grey[900],
+        color: Colors.grey[300],
         activeColor: Colors.grey[900],
         tabActiveBorder: Border.all(color: Colors.grey.shade200),
         tabBackgroundColor: Color.fromARGB(255, 247, 223, 216),

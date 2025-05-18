@@ -48,58 +48,63 @@ class _StreakCalendarState extends State<StreakCalendar> {
     final today = DateTime.now();
     final startDate = today.subtract(const Duration(days: 4)); // 4 days before today
 
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 24),
-      padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 4),
-      decoration: BoxDecoration(
-        color: colorScheme.surface,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          if (!widget.isDarkMode)
-            BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              blurRadius: 4,
-              offset: const Offset(0, 2),
+    return GestureDetector(
+      onTap:() {
+       
+      } ,
+      child: Container( 
+        margin: const EdgeInsets.symmetric(horizontal: 24),
+        padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 4),
+        decoration: BoxDecoration(
+          color: colorScheme.surface,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            if (!widget.isDarkMode)
+              BoxShadow(
+                color: Colors.black.withOpacity(0.05),
+                blurRadius: 4,
+                offset: const Offset(0, 2),
+              ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              child: Text('Your streak history', style: textTheme.titleMedium),
             ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: Text('Your streak history', style: textTheme.titleMedium),
-          ),
-          SizedBox(
-            height: 80,
-            child: ListView.builder(
-              controller: _scrollController,
-              scrollDirection: Axis.horizontal,
-              physics: const BouncingScrollPhysics(),
-              itemCount: 9,
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              itemBuilder: (context, index) {
-                final date = startDate.add(Duration(days: index));
-                final isCompleted = widget.completedDays.length > index
-                    ? widget.completedDays[index]
-                    : false;
-                final isChosen = widget.chosenDate != null &&
-                    _isSameDay(date, widget.chosenDate!);
-                final isToday = _isSameDay(date, today);
-
-                return StreakDayItem(
-                  date: date,
-                  isToday: isToday,
-                  isChosen: isChosen,
-                  isCompleted: isToday? widget.isCompletedToday: isCompleted ,
-                  streakColor: widget.streakColor,
-                  isDarkMode: widget.isDarkMode,
-                  ontap: () => widget.onDateSelected(date),
-                );
-              },
+            SizedBox(
+              height: 80,
+              child: ListView.builder(
+                controller: _scrollController,
+                scrollDirection: Axis.horizontal,
+                physics: const BouncingScrollPhysics(),
+                itemCount: 9,
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                itemBuilder: (context, index) {
+                  final date = startDate.add(Duration(days: index));
+                  final isCompleted = widget.completedDays.length > index
+                      ? widget.completedDays[index]
+                      : false;
+                  final isChosen = widget.chosenDate != null &&
+                      _isSameDay(date, widget.chosenDate!);
+                  final isToday = _isSameDay(date, today);
+      
+                  return StreakDayItem(
+                    date: date,
+                    isToday: isToday,
+                    isChosen: isChosen,
+                    isCompleted: isToday? widget.isCompletedToday: isCompleted ,
+                    streakColor: widget.streakColor,
+                    isDarkMode: widget.isDarkMode,
+                    ontap: () => widget.onDateSelected(date),
+                  );
+                },
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

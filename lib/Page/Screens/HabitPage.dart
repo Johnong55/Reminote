@@ -9,7 +9,8 @@ class Habitpage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
-      body: ListStreak()
+      body: ListStreak(),
+
     );
   }
 }
