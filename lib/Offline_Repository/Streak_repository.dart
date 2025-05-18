@@ -20,10 +20,13 @@ class StreakRepository {
   Future<Streak?> getLastestStreak() async {
     Streak? streak =
         await _isar.streaks.where().sortByLastCompletedDateDesc().findFirst();
+
     if (streak?.lastCompletedDate == null) {
       return null;
     } else {
-      if (isConsecutiveDay(streak!.lastCompletedDate, DateTime.now())) {
+      if (isConsecutiveDay(streak!.lastCompletedDate, DateTime.now()) || isSameDay(streak!.lastCompletedDate,DateTime.now()) ) {
+        log("streakLastCompletedDate: ${streak.lastCompletedDate} , now : ${DateTime.now()}");
+        log("Streak : ${streak.toString()}");
         return streak;
       }
     }
@@ -46,8 +49,9 @@ class StreakRepository {
 
     // Get existing streak
     Streak? streak = await getLastestStreak();
-
+  
     if (streak == null) {
+       log("after a  completions i found i cant show the streak , help me pls");
       // First time, create new streak record
       streak = Streak(
         currentStreak: 1,
@@ -74,11 +78,13 @@ class StreakRepository {
       // If already completed today, don't increment the streak
       if (isSameDay(completionDay, lastCompletionDay)) {
         // Just update the lastUpdated timestamp
+        log("i was in same date to day");
         streak.lastUpdated = DateTime.now();
       }
       // If this is the next consecutive day (yesterday was the last completion)
       else if (isConsecutiveDay(completionDay, lastCompletionDay)) {
         // Increment streak counter
+        log("oh my fcking god bro");
         streak.currentStreak = (streak.currentStreak ?? 0) + 1;
         streak.lastCompletedDate = completionDay;
         streak.lastUpdated = DateTime.now();
@@ -110,6 +116,7 @@ class StreakRepository {
 
     if (streak == null) {
       // First time, create new streak record
+       log("after an  uncompletions i found i cant show the streak , help me pls");
       streak = Streak(
         currentStreak: 0,
         lastUpdated: DateTime.now(),
@@ -137,7 +144,7 @@ class StreakRepository {
         // Just update the lastUpdated timestamp
         streak.lastUpdated = DateTime.now();
         streak.currentStreak = (streak.currentStreak ?? 0) - 1;
-        streak.lastCompletedDate = streak.currentStreak ==0 ? null : DateTime.now().subtract(Duration(days: 1));
+        streak.lastCompletedDate =  DateTime.now().subtract(Duration(days: 1));
       }
       // If this is the next consecutive day (yesterday was the last completion)
       else if (isConsecutiveDay(completionDay, lastCompletionDay)) {
@@ -183,8 +190,8 @@ class StreakRepository {
   }
 
   /// Helper method to check if two dates are the same day
-  bool isSameDay(DateTime date1, DateTime date2) {
-    return date1.year == date2.year &&
+  bool isSameDay(DateTime? date1, DateTime date2) {
+    return date1!.year == date2.year &&
         date1.month == date2.month &&
         date1.day == date2.day;
   }
@@ -194,11 +201,11 @@ class StreakRepository {
     // Create dates with only day information
     final DateTime d1 = DateTime(date1!.year, date1.month, date1.day);
     final DateTime d2 = DateTime(date2.year, date2.month, date2.day);
-
+    log("d1 : ${d1}, d2 : ${d2}");
     // Get the difference in days
     final difference = d1.difference(d2).inDays;
-
+    log("difference :${difference}");
     // Return true if date1 is exactly one day after date2
-    return difference <= 1;
+    return difference == 1 || difference == -1;
   }
 }

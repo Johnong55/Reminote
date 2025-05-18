@@ -73,13 +73,15 @@ class StreakProvider extends ChangeNotifier {
  
     bool checking = await _completionService.wereAllCompletedOnDate(DateTime.now());
     
-    int undone = 4 - currentStreakValue > 0 ? 4 - currentStreakValue : 4;
+    int undone = 4 - currentStreakValue >= 0 ? 4 - currentStreakValue : -1;
     undone = checking == true ? undone + 1 : undone ;
-    _completedDays = List.generate(undone, (index) => false);
-    for(int i =0 ;i < currentStreakValue ; i++)
+    print(undone);
+    _completedDays = List.generate(undone < 0 ? 0 : undone, (index) => false);
+    for (int i = 0; i < (currentStreakValue >= 5 ? 5 : currentStreakValue); i++)
     {
       _completedDays.add(true);
     }
+    log(_completedDays.toString());
     notifyListeners();
   }
 }
