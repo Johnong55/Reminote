@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:study_app/providers/Completion_provider.dart';
+import 'package:study_app/providers/Streak_provider.dart';
 import 'package:study_app/providers/habit_provider.dart';
 
 import 'package:study_app/providers/note_provider.dart';
@@ -54,11 +55,12 @@ class Settingspage extends StatelessWidget {
                       final noteProvider = Provider.of<NoteProvider>(context, listen: false);
                       final habitProvider = Provider.of<HabitProvider>(context, listen: false);
                       final completeProvider = Provider.of<CompletionProvider>(context, listen: false);
+                      final streakProvider = Provider.of<StreakProvider>(context, listen: false);
                       await habitProvider.deleteWhenLogout();
                       await completeProvider.clearCompletions();
                       // Gọi xóa ghi chú trước khi đăng xuất
                       await noteProvider.deleteWhenLogout();
-
+                      await streakProvider.deleteStreakWhenLogout();
                       // Sau đó đăng xuất
                       await _auth.signOut();
                     },

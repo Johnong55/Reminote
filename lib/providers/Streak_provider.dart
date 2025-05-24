@@ -54,7 +54,9 @@ class StreakProvider extends ChangeNotifier {
   // Method to call when user completes their daily task
   Future<void> completeToday() async {
     _setLoading(true);
+    
     final updatedStreak = await _streakService.updateStreakAfterCompletion();
+    await updateStreakIntoFireBase(updatedStreak);
     _currentStreakValue = updatedStreak.currentStreak ?? 0;
     _isStreakActive = true;
     _setLoading(false);
@@ -63,10 +65,18 @@ class StreakProvider extends ChangeNotifier {
   Future<void> unCompleteToday() async {
     log("==================");
       final updatedStreak = await _streakService.updateStreakAfterUnCompletion();
+          await updateStreakIntoFireBase(updatedStreak);
       _currentStreakValue = updatedStreak.currentStreak ?? 0;
       _isStreakActive = false;
       notifyListeners();
 
+  }
+  Future<void> getStreakFromFireBase() async {
+    await _streakService.getStreakFromFireBase();
+    
+  }
+  Future<void> updateStreakIntoFireBase(Streak streak) async {
+    await _streakService.updateStreakIntoFireBase(streak);
   }
 
   Future<void> setCompletedDay() async {
@@ -82,6 +92,13 @@ class StreakProvider extends ChangeNotifier {
       _completedDays.add(true);
     }
     log(_completedDays.toString());
+    notifyListeners();
+  }
+  Future<void> deleteStreakWhenLogout() async{
+    await _streakService.deleteStreakWhenLogOut();
+    _currentStreakValue = 0;
+    _isStreakActive = false;
+    _completedDays = [];
     notifyListeners();
   }
 }

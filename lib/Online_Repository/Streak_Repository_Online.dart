@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:study_app/models/Offine/Streak.dart';
 
-class NoteRepositoryOnline {
+class StreakRepositoryOnline {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -35,18 +35,27 @@ class NoteRepositoryOnline {
       if (this.userID == null) {
         throw Exception("User hasn't logged in");
       }
-      await _firestore
+      if(streak.ID == null) {
+       await _firestore
           .collection("users")
           .doc(userID)
           .collection("Streak")
-          .add(streak.toJson());
+          .add(streak.toJson()).then((value) {
+        streak.ID = value.id;
+          });
+      }
+      else{
+        updateStreakInFireBase(streak);
+      }
+      log("Streak added to Firestore: ${streak.toJson()}");  
       log("Streak added successfully");
     } catch (e) {
       log("Error while adding streak: $e");
     }
+    
   }
 
-  Future<void> updateStreakInFireBase(String streakId, Streak updatedStreak) async {
+  Future<void> updateStreakInFireBase(Streak streak) async {
     try {
       if (this.userID == null) {
         throw Exception("User hasn't logged in");
@@ -55,8 +64,8 @@ class NoteRepositoryOnline {
           .collection("users")
           .doc(userID)
           .collection("Streak")
-          .doc(streakId)
-          .update(updatedStreak.toJson());
+          .doc(streak.ID)
+          .update(streak.toJson());
       log("Streak updated successfully");
     } catch (e) {
       log("Error while updating streak: $e");
