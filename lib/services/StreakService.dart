@@ -1,12 +1,12 @@
 import 'dart:developer';
 
 import 'package:study_app/Offline_Repository/Streak_repository.dart';
+import 'package:study_app/Online_Repository/Streak_Repository_Online.dart';
 import 'package:study_app/models/Offine/Streak.dart';
 
 class StreakService {
-  final StreakRepository _repository =  StreakRepository();
-
-
+  final StreakRepository _repository = StreakRepository();
+  final StreakRepositoryOnline _repositoryOnline = StreakRepositoryOnline();
 
   /// Initialize the local database
   Future<void> init() async {
@@ -15,8 +15,8 @@ class StreakService {
 
   /// Lấy tất cả các streak
   Future<List<Streak>> getAllStreaks() async {
-        List<Streak> streaks =  await _repository.getAllStreak();
-    for(Streak i  in streaks){
+    List<Streak> streaks = await _repository.getAllStreak();
+    for (Streak i in streaks) {
       log(i.toString());
     }
     return streaks;
@@ -29,15 +29,36 @@ class StreakService {
 
   /// Cập nhật streak sau khi hoàn thành một thói quen hôm nay
   Future<Streak> updateStreakAfterCompletion() async {
-    return await _repository.updateStreakAfterCompletion();
+    Streak streak = await _repository.updateStreakAfterCompletion();
+    return streak;
   }
 
   Future<Streak> updateStreakAfterUnCompletion() async {
     return await _repository.updateStreakAfterUnCompletion();
-
   }
+
   /// Kiểm tra xem streak hiện tại có đang hoạt động không
   Future<bool> isStreakActive() async {
     return await _repository.isStreakActive();
+  }
+
+  Future<void> updateStreakIntoFireBase(Streak streak) async {
+    await _repositoryOnline.addStreakToFireBase(streak);
+    await _repository.saveStreak(streak);
+  }
+
+  Future<void> getStreakFromFireBase() async {
+    final List<Streak> streaks = await _repositoryOnline.getStreakByUserEmail();
+    streaks.forEach((streak) {
+      log("Streak from FireBase: ${streak.toString()}");
+    });
+  }
+
+  Future<void> pushStreakFromFirebase(Streak streak) async {
+    await _repositoryOnline.addStreakToFireBase(streak);
+  }
+
+  Future<void> deleteStreakWhenLogOut() async {
+    await _repository.deleteAllStreak();
   }
 }

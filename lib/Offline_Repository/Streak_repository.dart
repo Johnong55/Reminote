@@ -25,13 +25,13 @@ class StreakRepository {
       return null;
     } else {
       if (isConsecutiveDay(streak!.lastCompletedDate, DateTime.now()) || isSameDay(streak!.lastCompletedDate,DateTime.now()) ) {
-        log("streakLastCompletedDate: ${streak.lastCompletedDate} , now : ${DateTime.now()}");
-        log("Streak : ${streak.toString()}");
+   
         return streak;
       }
     }
     return null;
   }
+
 
   // Create or update streak data
   Future<void> saveStreak(Streak streak) async {
@@ -39,8 +39,8 @@ class StreakRepository {
       await _isar.streaks.put(streak);
     });
   }
-
   Future<Streak> updateStreakAfterCompletion() async {
+    
     final DateTime completionDay = DateTime(
       DateTime.now().year,
       DateTime.now().month,
@@ -51,7 +51,7 @@ class StreakRepository {
     Streak? streak = await getLastestStreak();
   
     if (streak == null) {
-       log("after a  completions i found i cant show the streak , help me pls");
+
       // First time, create new streak record
       streak = Streak(
         currentStreak: 1,
@@ -77,14 +77,13 @@ class StreakRepository {
 
       // If already completed today, don't increment the streak
       if (isSameDay(completionDay, lastCompletionDay)) {
-        // Just update the lastUpdated timestamp
-        log("i was in same date to day");
+        // Just update the lastUpdated time
         streak.lastUpdated = DateTime.now();
       }
       // If this is the next consecutive day (yesterday was the last completion)
       else if (isConsecutiveDay(completionDay, lastCompletionDay)) {
         // Increment streak counter
-        log("oh my fcking god bro");
+ 
         streak.currentStreak = (streak.currentStreak ?? 0) + 1;
         streak.lastCompletedDate = completionDay;
         streak.lastUpdated = DateTime.now();
@@ -116,16 +115,15 @@ class StreakRepository {
 
     if (streak == null) {
       // First time, create new streak record
-       log("after an  uncompletions i found i cant show the streak , help me pls");
+
       streak = Streak(
         currentStreak: 0,
         lastUpdated: DateTime.now(),
         lastCompletedDate: completionDay,
         streakStartDate: completionDay,
       );
-
-      await saveStreak(streak);
       return streak;
+   
     }
 
     // Update existing streak
@@ -147,26 +145,10 @@ class StreakRepository {
         streak.lastCompletedDate =  DateTime.now().subtract(Duration(days: 1));
       }
       // If this is the next consecutive day (yesterday was the last completion)
-      else if (isConsecutiveDay(completionDay, lastCompletionDay)) {
-        // Increment streak counter
-        streak.currentStreak = (streak.currentStreak ?? 0) - 1;
-        streak.lastCompletedDate = completionDay;
-
-        streak.lastUpdated = DateTime.now();
-        log("isComsecutive : ${streak.currentStreak}");   
-      }
-      // If it's been more than one day since the last completion
-      else if (completionDay.isAfter(lastCompletionDay)) {
-        // Start a new streak
-        streak.currentStreak = 0;
-        streak.streakStartDate = completionDay;
-        streak.lastCompletedDate = completionDay;
-        streak.lastUpdated = DateTime.now();
-      }
-
+   
       await _isar.streaks.put(streak);
     });
-    log(streak.toString());
+
 
     return streak;
   }
@@ -201,11 +183,21 @@ class StreakRepository {
     // Create dates with only day information
     final DateTime d1 = DateTime(date1!.year, date1.month, date1.day);
     final DateTime d2 = DateTime(date2.year, date2.month, date2.day);
-    log("d1 : ${d1}, d2 : ${d2}");
+   
     // Get the difference in days
     final difference = d1.difference(d2).inDays;
-    log("difference :${difference}");
+
     // Return true if date1 is exactly one day after date2
     return difference == 1 || difference == -1;
+  }
+  Future<void> deleteStreak(Streak streak) async {
+    await _isar.writeTxn(() async {
+      await _isar.streaks.delete(streak.id);
+    });
+  }
+  Future<void> deleteAllStreak() async {
+    await _isar.writeTxn(() async {
+      await _isar.streaks.clear();
+    });
   }
 }

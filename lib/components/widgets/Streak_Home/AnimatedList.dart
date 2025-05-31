@@ -9,12 +9,14 @@ class AnimatedHabitList extends StatefulWidget {
   final List<Habit> habits;
   final DateTime chosenDate;
   final void Function(Habit habit) onToggleComplete;
+  final void Function(Habit habit) onDeleteHabit;
 
   const AnimatedHabitList({
     super.key,
     required this.habits,
     required this.onToggleComplete,
     required this.chosenDate,
+    required this.onDeleteHabit,
   });
 
   @override
@@ -76,6 +78,7 @@ class _AnimatedHabitListState extends State<AnimatedHabitList> {
                   habit: habit,
                   isCompletion: isCompletion,
                   onToggleComplete: () => widget.onToggleComplete(habit),
+                  onDelete: () => widget.onDeleteHabit(habit),
                 );
               },
             );
@@ -104,6 +107,7 @@ class _AnimatedHabitListState extends State<AnimatedHabitList> {
                   habit: habit,
                   isCompletion: isCompletion,
                   onToggleComplete: () => widget.onToggleComplete(habit),
+                  onDelete: () => widget.onDeleteHabit(habit),
                 );
               },
             );

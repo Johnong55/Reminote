@@ -69,6 +69,18 @@ Future<void> updateHabit(Habit habit) async {
  
     }
 }
+
+Future<void> deleteHabit(int id) async{
+  _setLoading(true);
+  try {
+    await _service.deleteHabit(id);
+    await fetchHabits();
+  } catch (e) {
+    log("Error deleting habit: $e");
+  } finally {
+    _setLoading(false);
+  }
+}
 void setCurrentDate(DateTime date){
   _currentDate  = date;
   notifyListeners();

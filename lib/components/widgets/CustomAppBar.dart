@@ -1,5 +1,9 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:study_app/providers/Completion_provider.dart';
+import 'package:study_app/providers/Streak_provider.dart';
 import 'package:study_app/providers/note_provider.dart';
 import 'package:study_app/providers/habit_provider.dart';
 
@@ -45,6 +49,8 @@ class _CustomAppBarState extends State<CustomAppBar> {
   Widget build(BuildContext context) {
     final noteProvider = Provider.of<NoteProvider>(context, listen: false);
     final habitProvider = Provider.of<HabitProvider>(context, listen: false);
+    final completedProvider = Provider.of<CompletionProvider>(context, listen: false);
+    final streakProvider = Provider.of<StreakProvider>(context, listen: false);
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
 
@@ -126,9 +132,13 @@ class _CustomAppBarState extends State<CustomAppBar> {
                     ),
                     child: IconButton(
                       icon: const Icon(Icons.sync),
-                      onPressed: () {
-                        noteProvider.syncNotes();
-                        habitProvider.pullHabitWhenLogin();
+                      onPressed: () async {
+                       await noteProvider.syncNotes();
+                       await habitProvider.pullHabitWhenLogin();
+                      await  completedProvider.getAllCompletionOnline();
+                         await  streakProvider.getStreakFromFireBase();
+                        await completedProvider.wereCompletedonDate() ? streakProvider.completeToday() : log("Today is not completed"); 
+                        
                       },
                     ),
                   ),

@@ -21,7 +21,7 @@ class CompletionProvider extends ChangeNotifier {
   Future<void> intialize() async{
     _setloading(true);
     await _service.initialize();
-  
+   
     await _service.getCompletionsForDate(currentDate!);
     _completed = await _service.wereAllCompletedOnDate(currentDate!);
     _setloading(false);
@@ -34,6 +34,7 @@ class CompletionProvider extends ChangeNotifier {
        notifyListeners();
   
   }
+  
   Future<void> recordCompletions(int habit, DateTime date, bool isCompleted) async {
     _setloading(true);
     await _service.recordCompletion(habit,  date, isCompleted: isCompleted );
@@ -75,5 +76,16 @@ Future<bool> wereCompletedonDate() async {
   Future<void> getAllCompletionOnline() async{
       await _service.getCompletionsOnline();
       notifyListeners();
+  }
+  Future<void> deleteCompletions(int habitID) async {
+    _setloading(true);
+    await _service.deleteCompletion(habitID);
+    await getCompletionsForDate(currentDate!);
+    _setloading(false);
+  }
+  Future<void> getAllCompletions() async{
+
+    await _service.getAllCompletions();
+
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:intl/intl.dart'; // For date formatting
+import 'package:study_app/components/commons/dialog/confirm_dialog.dart';
 import 'package:study_app/models/Offine/Completions.dart';
 import 'package:study_app/models/Offine/Habit.dart';
 import 'package:study_app/utils/Color_helper.dart';
@@ -9,6 +10,7 @@ class HabitTile extends StatelessWidget {
   final Habit habit;
   final VoidCallback? onTap;
   final VoidCallback? onToggleComplete;
+  final VoidCallback? onDelete;
   final bool? isCompletion;
   const HabitTile({
     super.key,
@@ -16,6 +18,7 @@ class HabitTile extends StatelessWidget {
     this.onTap,
     this.onToggleComplete,
     required this.isCompletion,
+    this.onDelete,
   });
 
   @override
@@ -118,9 +121,18 @@ class HabitTile extends StatelessWidget {
                     motion: const ScrollMotion(),
                     children: [
                       SlidableAction(
-                        onPressed: (context) {
-                          // Handle delete action
+                        onPressed: (context) => {
+                      DeleteConfirmationDialog.show(
+                        context: context,
+                        title: 'Xác nhận xóa',
+                        content: 'Bạn có chắc chắn muốn xóa ghi chú này không?',
+                        onConfirm: () {
+                          if (onDelete != null) {
+                            onDelete!();
+                          }
                         },
+                      ),
+                    },
                         backgroundColor: colorScheme.error,
                         foregroundColor: Colors.white,
                         icon: Icons.delete,

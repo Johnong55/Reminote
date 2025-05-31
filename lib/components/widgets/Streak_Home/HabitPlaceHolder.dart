@@ -21,6 +21,17 @@ class HabitsPlaceholder extends StatefulWidget {
 }
 
 class _HabitsPlaceholderState extends State<HabitsPlaceholder> {
+  Future<void> onDeleteHabit(Habit habit) async {
+    final habitProvider = Provider.of<HabitProvider>(context, listen: false);
+    final completionProvider = Provider.of<CompletionProvider>(
+      context,
+      listen: false,
+    );
+    log("Deleting habit with ID: ${habit.id}");
+    await completionProvider.deleteCompletions(habit.id);
+    await habitProvider.deleteHabit(habit.id);
+  }
+
   Future<void> onToggleComplete(Habit habit) async {
     final now = DateTime.now();
     final startOfDay = DateTime(now.year, now.month, now.day);
@@ -46,29 +57,26 @@ class _HabitsPlaceholderState extends State<HabitsPlaceholder> {
       listen: false,
     );
     final streakProvider = Provider.of<StreakProvider>(context, listen: false);
-    
+
     final isCompleted = await completionProvider.isHabitCompleted(
       habit.id,
       widget.chosenDate,
     );
 
-   await completionProvider.recordCompletions(
+    await completionProvider.recordCompletions(
       habit.id,
       widget.chosenDate,
-     !isCompleted,
+      !isCompleted,
     );
-   bool dayCompleted = await  completionProvider.wereCompletedonDate();
-   log("dayCompleted = $dayCompleted");
-   if(dayCompleted == true){
-
+    bool dayCompleted = await completionProvider.wereCompletedonDate();
+    log("dayCompleted = $dayCompleted");
+    if (dayCompleted == true) {
       streakProvider.completeToday();
       streakProvider.setCompletedDay();
-      
-   }
-   else{
-     streakProvider.unCompleteToday();
-     streakProvider.setCompletedDay();
-   }
+    } else {
+      streakProvider.unCompleteToday();
+      streakProvider.setCompletedDay();
+    }
   }
 
   @override
@@ -143,6 +151,7 @@ class _HabitsPlaceholderState extends State<HabitsPlaceholder> {
                 habits: habitProvider.habits,
                 chosenDate: widget.chosenDate,
                 onToggleComplete: onToggleComplete,
+                onDeleteHabit: onDeleteHabit,
               ),
             ),
           ),

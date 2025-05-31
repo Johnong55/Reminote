@@ -37,12 +37,13 @@ class _ListStreakState extends State<ListStreak> {
       context,
       listen: false,
     ); 
+    completionProvider.getAllCompletions();
     streakProvider = Provider.of<StreakProvider>(context, listen: false);
     streakProvider.initialize();
     streakProvider.currentStreakValue;
-    completionProvider.getAllCompletionOnline();
     habitProvider.intialize();
     habitProvider.fetchHabits();
+   
     _chosenDate = null;
   }
 

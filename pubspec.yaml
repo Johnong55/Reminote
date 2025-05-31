@@ -60,7 +60,25 @@ dependencies:
   chat_bubbles: ^1.5.0
   image_picker: ^1.1.2
   firebase_storage: ^12.4.5
+  flutter_launcher_icons: "^0.14.3"
 
+flutter_launcher_icons:
+  android: "ic_launcher"
+  ios: true
+  image_path: "assets/images/png/Icon.png"
+  min_sdk_android: 21 # android min sdk min:16, default 21
+  web:
+    generate: true
+    image_path: "path/to/image.png"
+    background_color: "#hexcode"
+    theme_color: "#hexcode"
+  windows:
+    generate: true
+    image_path: "path/to/image.png"
+    icon_size: 48 # min:48, max:256, default: 48
+  macos:
+    generate: true
+    image_path: "path/to/image.png"
 dev_dependencies:
   flutter_test:
     sdk: flutter

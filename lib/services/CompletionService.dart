@@ -133,4 +133,14 @@ class CompletionService {
   Future<bool> wereAllCompletedOnDate(DateTime date) async {
     return await _completionsRepository.wereAllCompletedOnDate(date);
   }
+  Future<List<Completions>> getAllCompletions() async {
+    List<Completions> completions =
+        await _completionsRepository.getAllCompletions();
+        log("list of completions: ${completions.length}");
+    for (Completions i in completions) {
+        log("completions: ${i.toString()}");
+
+    }
+    return completions;
+  }
 }
