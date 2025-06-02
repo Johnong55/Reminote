@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:study_app/API/firebase_api.dart';
 import 'package:study_app/Page/Authentication/Auth_page.dart';
+import 'package:study_app/Page/Screens/ChatPage.dart';
 import 'package:study_app/Page/Screens/ContactPage.dart';
 import 'package:study_app/Page/Screens/HabitPage.dart';
 import 'package:study_app/Page/Screens/HeatMapCalendar.dart';
@@ -70,9 +71,32 @@ Widget build(BuildContext context) {
         '/contact': (context) => const ContactPage(),
         '/habit': (context) => const Habitpage(),
         '/auth': (context) => const AuthPage(),
+        '/chat': (context) =>  ChatPage(users: [],)
       
       },
     ),
   );
 }
 }
+// import 'package:flutter/material.dart';
+// import 'package:firebase_core/firebase_core.dart';
+// import 'package:study_app/Page/Screens/ChatPage.dart';
+
+
+// void main() async {
+//   WidgetsFlutterBinding.ensureInitialized();
+//   await Firebase.initializeApp();
+//   runApp(const MyApp());
+// }
+
+// class MyApp extends StatelessWidget {
+//   const MyApp({super.key});
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return MaterialApp(
+//       title: 'Chat App',
+//       home: ChatPage(),
+//     );
+//   }
+// }
