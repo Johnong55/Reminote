@@ -1,8 +1,10 @@
  import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:study_app/components/commons/List_Friend.dart';
 import 'package:study_app/components/widgets/CustomSelectedContainer.dart';
+import 'package:study_app/providers/Chat_Provider.dart';
 
 class ContactPage extends StatefulWidget {
   const ContactPage({super.key});
@@ -75,11 +77,17 @@ class _ContactPageState extends State<ContactPage> {
           Expanded(
             child: Container(
               color: Theme.of(context).colorScheme.background,
-              child: ListFriend()
+              child: Consumer<ChatProvider>(
+                
+                builder: (context,chatProvider, snapshot) {
+                  return ListFriend(chatmessages: chatProvider.messages);
+                }
+              )
             ),
           ),
         ],
       ),
+      floatingActionButton: Icon(Icons.plus_one_outlined),
     );
   }
 }

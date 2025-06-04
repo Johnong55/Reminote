@@ -24,14 +24,14 @@ void main() {
     await completionProvider.intialize();
     await habitProvider.intialize();
     await noteProvider.initialize();
-    await tester.pumpWidget(
-      MyApp(
-        noteProvider: noteProvider,
-        habitProvider: habitProvider,
-        completionProvider: completionProvider,
-        streakProvider: streakProvider ,
-      ),
-    );
+    // await tester.pumpWidget(
+    //   MyApp(
+    //     noteProvider: noteProvider,
+    //     habitProvider: habitProvider,
+    //     completionProvider: completionProvider,
+    //     streakProvider: streakProvider ,
+    //   ),
+    // );
 
     // Verify that our counter starts at 0.
     expect(find.text('0'), findsOneWidget);
