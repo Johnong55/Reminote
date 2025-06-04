@@ -165,9 +165,8 @@ Dự án này được phân phối dưới giấy phép MIT. Xem file [LICENSE]
 
 Nếu bạn có câu hỏi hoặc đề xuất, hãy liên hệ:
 
-- 📧 Email: [your-email@example.com]
-- 💬 Discord: [Your Discord]
-- 🐦 Twitter: [@YourTwitter]
+- 📧 Email: trijohn124@gmail.com   
+-    Facebook: facebook.com/tri.ong.946179
 
 ---
 
