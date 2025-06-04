@@ -18,9 +18,7 @@ REMINOTE giúp bạn ghi chú nhanh chóng và quản lý nhắc nhở hiệu qu
 - 🏷️ **Phân loại**: Tổ chức ghi chú theo danh mục
 - 🌙 **Chế độ tối**: Hỗ trợ giao diện sáng/tối
 
-## 📱 Screenshots
 
-*Thêm screenshots của ứng dụng tại đây*
 
 ## 🚀 Bắt đầu
 
@@ -90,9 +88,9 @@ lib/
 
 - **Framework**: Flutter
 - **Ngôn ngữ**: Dart
-- **Database**: SQLite (sqflite)
+- **Database**: Isar
 - **State Management**: Provider / Riverpod
-- **Local Storage**: SharedPreferences
+- **Local Storage**: Isar
 - **Notifications**: flutter_local_notifications
 - **Date/Time**: intl package
 
@@ -110,13 +108,6 @@ dependencies:
   path: ^1.8.3
 ```
 
-## 🎯 Roadmap
-
-- [ ] **v1.1**: Thêm tính năng xuất/nhập dữ liệu
-- [ ] **v1.2**: Hỗ trợ hình ảnh trong ghi chú
-- [ ] **v1.3**: Đồng bộ cloud (Google Drive, iCloud)
-- [ ] **v1.4**: Widget cho màn hình chính
-- [ ] **v1.5**: Chia sẻ ghi chú
 
 ## 🤝 Đóng góp
 
