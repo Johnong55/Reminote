@@ -24,6 +24,7 @@ class StreakService {
 
   /// Lấy streak hiện tại (dựa vào ngày hôm qua)
   Future<Streak?> getCurrentStreak() async {
+
     return await _repository.getLastestStreak();
   }
 
@@ -50,8 +51,10 @@ class StreakService {
   Future<void> getStreakFromFireBase() async {
     final List<Streak> streaks = await _repositoryOnline.getStreakByUserEmail();
     streaks.forEach((streak) {
-      log("Streak from FireBase: ${streak.toString()}");
+      log(streak.toString());
+      _repository.saveStreak(streak);
     });
+
   }
 
   Future<void> pushStreakFromFirebase(Streak streak) async {

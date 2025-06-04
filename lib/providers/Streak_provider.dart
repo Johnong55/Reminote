@@ -25,7 +25,7 @@ class StreakProvider extends ChangeNotifier {
   Future<void> initialize() async {
 
     await _streakService.init();
-
+    
     await _loadCurrentStreak();
     await _checkStreakStatus();
     _completionService.initialize();

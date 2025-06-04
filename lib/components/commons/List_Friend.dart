@@ -1,19 +1,21 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:study_app/models/Online/ChatMessage.dart';
+import 'package:study_app/models/Online/Friends.dart';
 
 class ListFriend extends StatelessWidget {
-  List<ChatMessage> chatmessages ;
-   ListFriend({super.key, required this.chatmessages});
+  List<Friend> friends; 
+    ListFriend({super.key , required this.friends});
 
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      itemCount: 1,
+      itemCount: friends.length,
       itemBuilder: (context, index) {
         return GestureDetector(
           onTap: () {
-              Navigator.pushNamed(context,"/chat");
-              
+          log("chat with ${friends[index].displayName}");
           },
           child: Padding(
           
@@ -29,7 +31,7 @@ class ListFriend extends StatelessWidget {
                   backgroundColor: Colors.blue,
                   child: Image.asset("assets/images/png/account.png")
                 ),
-                title: Text('khaitran955@gmail.com', style: TextStyle( fontSize: 15),),
+                title: Text('${friends[index].displayName}', style: TextStyle( fontSize: 15,fontWeight: FontWeight.bold),),
                 subtitle: Text('Subtitle $index',style: TextStyle(fontSize: 12),),
                 trailing: Padding(
                   padding: EdgeInsets.only(bottom: 10 , top: 5),

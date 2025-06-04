@@ -1,6 +1,6 @@
 
 class Friend {
-  final String uid;
+   String uid;
   final String? email;
   final String? displayName;
 
