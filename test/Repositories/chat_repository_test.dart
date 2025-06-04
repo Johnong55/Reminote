@@ -34,7 +34,7 @@ void main() {
 
     final repo = ChatRepository(auth: mockAuth, database: mockDatabase);
 
-    expect(repo.ref, mockRef);
+    expect(repo.database.ref, mockRef);
   });
 
   test('sendMessage should call ref.set with correct data', () async {

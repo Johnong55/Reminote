@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:study_app/models/Online/ChatMessage.dart';
 
 class ListFriend extends StatelessWidget {
-  const ListFriend({super.key});
+  List<ChatMessage> chatmessages ;
+   ListFriend({super.key, required this.chatmessages});
 
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      itemCount: 10,
+      itemCount: 1,
       itemBuilder: (context, index) {
         return GestureDetector(
           onTap: () {
@@ -27,12 +29,12 @@ class ListFriend extends StatelessWidget {
                   backgroundColor: Colors.blue,
                   child: Image.asset("assets/images/png/account.png")
                 ),
-                title: Text('Friend $index'),
-                subtitle: Text('Subtitle $index'),
+                title: Text('khaitran955@gmail.com', style: TextStyle( fontSize: 15),),
+                subtitle: Text('Subtitle $index',style: TextStyle(fontSize: 12),),
                 trailing: Padding(
-                  padding: EdgeInsets.only(bottom: 10 ),
+                  padding: EdgeInsets.only(bottom: 10 , top: 5),
                   child: Column(
-                    spacing: 3,
+                    spacing: 5,
                     children: [
                       Text("Just Now"),
                       Container(
