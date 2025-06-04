@@ -88,6 +88,7 @@ class _NotehomeState extends State<Notehome> {
               ],
             ),
       floatingActionButton: FloatingActionButton(
+        heroTag: 'addNote',
         shape: const CircleBorder(),
         elevation: 2,
         onPressed: () {

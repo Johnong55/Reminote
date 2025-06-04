@@ -1,10 +1,13 @@
- import 'dart:developer';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:study_app/components/commons/List_Friend.dart';
+import 'package:study_app/components/commons/dialog/addFriend.dart';
 import 'package:study_app/components/widgets/CustomSelectedContainer.dart';
+import 'package:study_app/models/Online/Friends.dart';
 import 'package:study_app/providers/Chat_Provider.dart';
+import 'package:study_app/providers/Friend_Provider.dart';
 
 class ContactPage extends StatefulWidget {
   const ContactPage({super.key});
@@ -14,6 +17,7 @@ class ContactPage extends StatefulWidget {
 }
 
 class _ContactPageState extends State<ContactPage> {
+  late FriendProvider friendProvider =Provider.of<FriendProvider>(context, listen: false) ;
   String selectedTab = "Contact";
 
   void onTabChange(String value) {
@@ -34,6 +38,8 @@ class _ContactPageState extends State<ContactPage> {
     }
   }
 
+  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,7 +55,9 @@ class _ContactPageState extends State<ContactPage> {
               ),
               boxShadow: [
                 BoxShadow(
-                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.1),
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.onSurface.withOpacity(0.1),
                   spreadRadius: 5,
                   blurRadius: 7,
                   offset: const Offset(0, 0.5),
@@ -77,17 +85,33 @@ class _ContactPageState extends State<ContactPage> {
           Expanded(
             child: Container(
               color: Theme.of(context).colorScheme.background,
-              child: Consumer<ChatProvider>(
-                
-                builder: (context,chatProvider, snapshot) {
-                  return ListFriend(chatmessages: chatProvider.messages);
-                }
-              )
+              child: Consumer<FriendProvider>(
+                builder: (context, FriendProvider, child) {
+                  friendProvider.QueryFriends();
+                  return ListFriend(friends: FriendProvider.friends);
+                },
+              ),
             ),
           ),
         ],
       ),
-      floatingActionButton: Icon(Icons.plus_one_outlined),
+      
+      floatingActionButton: FloatingActionButton(
+        heroTag: 'AddFriend',
+        onPressed: () {
+          showDialog(
+            context: context,
+            builder:
+                (context) => AddFriendDialog(
+                  onAddFriend: (Friend newFriend) {
+                    friendProvider.addFriend(newFriend);
+                  },
+                ),
+          );
+        },
+        child: const Icon(Icons.person_add),
+        backgroundColor: Colors.deepOrange,
+      ),
     );
   }
 }

@@ -4,7 +4,7 @@ import 'package:study_app/models/Online/Friends.dart';
 
 class FriendService {
   final FriendRepository _friendRepository = FriendRepository();
-
+  
   Future<void> sendFriendRequest(String friendUID, String email, String? name) async {
     final friend = Friend(
       uid: friendUID,
