@@ -7,7 +7,7 @@ import 'package:study_app/services/Chat_service.dart';
 
 class ChatProvider extends ChangeNotifier  {
   final ChatService chatService;
-  final Friend? opponent;
+   Friend? opponent;
   List<ChatMessage> messages = [];
   bool isloading = false;
   String? error;
@@ -17,6 +17,8 @@ class ChatProvider extends ChangeNotifier  {
     
   }
   void listenToMessage(){
+    if(opponent == null)
+    { return ;}
     chatService.streamMessagesWith(opponent!).listen((newMessage){
       messages = newMessage;
       notifyListeners();
@@ -51,5 +53,13 @@ class ChatProvider extends ChangeNotifier  {
 
     notifyListeners();
 
+  }
+void setOpponent(Friend newOpponent) {
+    if (opponent?.uid == newOpponent.uid) return; // Avoid re-listening if same opponent
+    opponent = newOpponent;
+    messages = [];
+    error = null;
+    listenToMessage();
+    notifyListeners();
   }
 }

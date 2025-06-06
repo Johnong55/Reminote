@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:study_app/Page/Screens/ChatPage.dart';
 import 'package:study_app/models/Online/ChatMessage.dart';
 import 'package:study_app/models/Online/Friends.dart';
 
@@ -15,7 +16,7 @@ class ListFriend extends StatelessWidget {
       itemBuilder: (context, index) {
         return GestureDetector(
           onTap: () {
-          log("chat with ${friends[index].displayName}");
+              navigateToChatPage(friends[index],context);
           },
           child: Padding(
           
@@ -32,7 +33,7 @@ class ListFriend extends StatelessWidget {
                   child: Image.asset("assets/images/png/account.png")
                 ),
                 title: Text('${friends[index].displayName}', style: TextStyle( fontSize: 15,fontWeight: FontWeight.bold),),
-                subtitle: Text('Subtitle $index',style: TextStyle(fontSize: 12),),
+                subtitle: Text('Last Message',style: TextStyle(fontSize: 12),),
                 trailing: Padding(
                   padding: EdgeInsets.only(bottom: 10 , top: 5),
                   child: Column(
@@ -56,5 +57,9 @@ class ListFriend extends StatelessWidget {
         );
       },
     );
+  }
+  void navigateToChatPage(Friend friend,BuildContext context)
+  {
+    Navigator.pushNamed(context,'/chat');
   }
 }

@@ -18,7 +18,7 @@ class ContactPage extends StatefulWidget {
 
 class _ContactPageState extends State<ContactPage> {
   late FriendProvider friendProvider =Provider.of<FriendProvider>(context, listen: false) ;
-  String selectedTab = "Contact";
+  String selectedTab = "Friend";
 
   void onTabChange(String value) {
     setState(() {
@@ -26,11 +26,11 @@ class _ContactPageState extends State<ContactPage> {
     });
 
     switch (value) {
-      case "Contact":
-        log("Contact");
+      case "Friends":
+        log("Friends");
         break;
-      case "Feedback":
-        log("Feedback");
+      case "Group":
+        log("Group");
         break;
       default:
         log("Default");
@@ -69,15 +69,15 @@ class _ContactPageState extends State<ContactPage> {
               children: [
                 Customselectedcontainer(
                   title: "F R I E N D S",
-                  isSelect: selectedTab == "Contact",
+                  isSelect: selectedTab == "Friends",
                   leftorRight: true,
-                  onTap: () => onTabChange("Contact"),
+                  onTap: () => onTabChange("Friends"),
                 ),
                 Customselectedcontainer(
                   title: "G R O U P S",
-                  isSelect: selectedTab == "Feedback",
+                  isSelect: selectedTab == "Group",
                   leftorRight: false,
-                  onTap: () => onTabChange("Feedback"),
+                  onTap: () => onTabChange("Group"),
                 ),
               ],
             ),

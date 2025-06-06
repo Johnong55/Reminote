@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:study_app/Page/Screens/loginScreen/animations/change_screen_animation.dart';
+import 'package:study_app/Page/Screens/LoginScreen/animations/change_screen_animation.dart';
 import 'package:study_app/config/constants.dart';
 import 'package:study_app/config/helper_functions.dart';
 

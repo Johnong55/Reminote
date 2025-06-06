@@ -31,7 +31,7 @@ class AppTheme {
       ),
       textTheme: _getTextTheme(isDark),
       appBarTheme: _getAppBarTheme(isDark),
-      cardTheme: _getCardTheme(isDark),
+      
       elevatedButtonTheme: _getElevatedButtonTheme(isDark),
       textButtonTheme: _getTextButtonTheme(isDark),
       outlinedButtonTheme: _getOutlinedButtonTheme(isDark),

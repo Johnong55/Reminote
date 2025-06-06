@@ -4,7 +4,7 @@ import 'package:study_app/models/Offine/Completions.dart';
 import 'package:study_app/services/CompletionService.dart';
 
 class CompletionProvider extends ChangeNotifier {
-  static CompletionService _service = CompletionService();
+  final  CompletionService _service = CompletionService();
   DateTime? _currentDate = DateTime.now();
   List<Completions> _completions = [];
   bool? _completed = false;

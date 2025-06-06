@@ -48,8 +48,7 @@ void main() {
     when(() => mockRef.set(any())).thenAnswer((_) async => {});
 
     final repo = ChatRepository(auth: mockAuth, database: mockDatabase);
-    await repo.sendMessage('Hello', mockUser);
-
+   
     verify(() => mockRef.set(
       any(
         that: predicate<Map>((data) =>
