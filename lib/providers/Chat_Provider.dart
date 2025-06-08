@@ -1,4 +1,6 @@
 
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 
 import 'package:study_app/models/Online/ChatMessage.dart';
@@ -35,6 +37,7 @@ class ChatProvider extends ChangeNotifier  {
 
     } catch(e){
       error = e.toString();
+      log("error:  ${error}" );
       notifyListeners();
     }
   }
@@ -59,6 +62,7 @@ void setOpponent(Friend newOpponent) {
     opponent = newOpponent;
     messages = [];
     error = null;
+    log("set the opponent as ${opponent.toString()}");
     listenToMessage();
     notifyListeners();
   }

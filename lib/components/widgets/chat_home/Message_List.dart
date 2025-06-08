@@ -22,7 +22,7 @@ class MessageList extends StatelessWidget {
           itemBuilder: (context,index)
             {
               
-            return  MessageTile(text: "hehehehe",);
+            return  MessageTile(text: "hehehehe", isMe: index%2 == 0 ? true  :false,timestamp: DateTime.now(),);
           }
         );
       }

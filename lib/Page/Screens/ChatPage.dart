@@ -23,10 +23,9 @@ class _ChatPageState extends State<ChatPage> {
   void _sendMessage() {
     final text = _messageController.text.trim();
     if (text.isNotEmpty) {
-      log("Bạn vừa gửi: $text"); // hoặc print(text)
-      setState(() {
-        messages.add(text); // Thêm vào danh sách hiển thị
-      });
+        chatProvider.sendMessage(text);
+        
+      
       _messageController.clear(); // Xoá sau khi gửi
     }
   }

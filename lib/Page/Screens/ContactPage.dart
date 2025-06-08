@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:study_app/components/commons/List_Friend.dart';
@@ -18,7 +19,7 @@ class ContactPage extends StatefulWidget {
 
 class _ContactPageState extends State<ContactPage> {
   late FriendProvider friendProvider =Provider.of<FriendProvider>(context, listen: false) ;
-  String selectedTab = "Friend";
+  String selectedTab = "Friends";
 
   void onTabChange(String value) {
     setState(() {
@@ -87,7 +88,11 @@ class _ContactPageState extends State<ContactPage> {
               color: Theme.of(context).colorScheme.background,
               child: Consumer<FriendProvider>(
                 builder: (context, FriendProvider, child) {
-                  friendProvider.QueryFriends();
+                  if(FirebaseAuth.instance.currentUser == null ){
+
+                  } 
+                  else{
+                    friendProvider.QueryFriends();}
                   return ListFriend(friends: FriendProvider.friends);
                 },
               ),

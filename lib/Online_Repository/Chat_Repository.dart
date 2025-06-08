@@ -10,8 +10,8 @@ class ChatRepository {
     : auth = auth ?? FirebaseAuth.instance,
       database = database ?? FirebaseDatabase.instance;
 
-  String _getChatId(String email1, String email2) {
-    final sorted = [email1, email2]..sort();
+  String _getChatId(String UID1, String UID2) {
+    final sorted = [UID1, UID2]..sort();
     return '${sorted[0]}_${sorted[1]}';
   }
 
@@ -19,7 +19,7 @@ class ChatRepository {
     final me = auth.currentUser;
     if (me == null) throw Exception("Not logged in");
 
-    final chatId = _getChatId(me.email!, otherUser.email!);
+    final chatId = _getChatId(me.uid, otherUser.uid);
     return database.ref('chats/$chatId');
   }
 
@@ -30,9 +30,10 @@ class ChatRepository {
     final ref = _chatRefWith(otherUser).push();
     await ref.set({
       'sender': me.email,
-      'receiver': otherUser.email,
+      'isSeen': false,
       'message': message,
       'time': DateTime.now().toIso8601String(),
+      'receive': otherUser.email
     });
   }
 

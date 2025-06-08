@@ -25,4 +25,9 @@ class Friend {
       'userName': displayName,
     };
   }
+  @override
+  String toString() {
+    // TODO: implement toString
+    return "UID : ${uid} ,  emai : ${email} , displayName : ${displayName}";
+  }
 }
