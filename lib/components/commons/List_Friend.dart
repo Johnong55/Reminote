@@ -298,8 +298,8 @@ class ListFriend extends StatelessWidget {
     
     Navigator.pushNamed(
       context,
-      '/chat',
-      arguments: friend,
+      '/chat'
+   
     );
   }
 

@@ -72,7 +72,8 @@ class StreakProvider extends ChangeNotifier {
 
   }
   Future<void> getStreakFromFireBase() async {
-    await _streakService.getStreakFromFireBase();
+    await _streakService.getStreakFromFireBase(); 
+
     
   }
   Future<void> updateStreakIntoFireBase(Streak streak) async {
@@ -85,7 +86,7 @@ class StreakProvider extends ChangeNotifier {
     
     int undone = 4 - currentStreakValue >= 0 ? 4 - currentStreakValue : -1;
     undone = checking == true ? undone + 1 : undone ;
-    print(undone);
+    log("undone : ${undone}");
     _completedDays = List.generate(undone < 0 ? 0 : undone, (index) => false);
     for (int i = 0; i < (currentStreakValue >= 5 ? 5 : currentStreakValue); i++)
     {

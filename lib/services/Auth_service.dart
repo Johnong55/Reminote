@@ -26,7 +26,9 @@ class AuthService {
       final credential = await _auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
+        
       );
+      credential.user?.updateDisplayName(displayName);
 
       final uid = credential.user!.uid;
 

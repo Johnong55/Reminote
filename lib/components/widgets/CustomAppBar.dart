@@ -138,7 +138,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
                       await  completedProvider.getAllCompletionOnline();
                          await  streakProvider.getStreakFromFireBase();
                         await completedProvider.wereCompletedonDate() ? streakProvider.completeToday() : log("Today is not completed"); 
-                        
+                        await streakProvider.setCompletedDay();
                       },
                     ),
                   ),

@@ -1,10 +1,13 @@
 import 'package:flutter/foundation.dart';
+import 'package:study_app/models/Online/ChatMessage.dart';
 import 'package:study_app/models/Online/Friends.dart';
 import 'package:study_app/services/Friend_service.dart';
 
 class FriendProvider extends ChangeNotifier {
-  final FriendService friendService;
-  final List<Friend> friends = [];
+   FriendService friendService;
+   List<Friend> friends = [];
+  late  Map<Friend,ChatMessage> lastMessage;
+  
   bool isLoading = false;
   String? error;
   FriendProvider({required this.friendService}) {
@@ -31,5 +34,5 @@ class FriendProvider extends ChangeNotifier {
     
     notifyListeners();
   }
-
+  
 }

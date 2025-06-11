@@ -58,8 +58,8 @@ class MessageTile extends StatelessWidget {
                   gradient: isMe
                       ? LinearGradient(
                           colors: [
-                            theme.colorScheme.primary,
-                            theme.colorScheme.primary.withOpacity(0.8),
+                            Color.fromARGB(255, 247, 216, 207),
+                            Color.fromARGB(255, 243, 200, 188),
                           ],
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
@@ -112,7 +112,7 @@ class MessageTile extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 16,
                           color: isMe
-                              ? Colors.white
+                              ? Colors.brown
                               : isDarkMode
                                   ? Colors.white
                                   : Colors.black87,

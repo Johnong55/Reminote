@@ -115,7 +115,7 @@ class _ContactPageState extends State<ContactPage> {
           );
         },
         child: const Icon(Icons.person_add),
-        backgroundColor: Colors.deepOrange,
+        backgroundColor: Color.fromARGB(255, 247, 216, 207),
       ),
     );
   }

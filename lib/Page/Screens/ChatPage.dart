@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:study_app/components/widgets/chat_home/Message_List.dart';
-import 'package:study_app/models/Online/Friends.dart';
+
 import 'package:study_app/providers/Chat_Provider.dart';
 
 class ChatPage extends StatefulWidget {
@@ -29,10 +29,11 @@ class _ChatPageState extends State<ChatPage> {
       _messageController.clear(); // Xoá sau khi gửi
     }
   }
-  @override
+  @override 
   void initState()
   {
     super.initState();
+
   }
   @override
   Widget build(BuildContext context) {
@@ -40,7 +41,7 @@ class _ChatPageState extends State<ChatPage> {
       appBar:  AppBar(
         key : const ValueKey("ChatBar"),
             title: Text(
-              ""
+             "${chatProvider.opponent!.displayName  }"
             ),
             actions: [
               IconButton(onPressed: (){log("voice call");}, icon: Icon(Icons.call)),
